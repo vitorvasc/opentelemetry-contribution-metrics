@@ -1,0 +1,6708 @@
+[
+  {
+    "lang": "pt",
+    "number": 8477,
+    "title": "[pt] Update End-user section",
+    "created_at": "2025-11-21T08:55:11Z",
+    "closed_at": "2025-11-26T08:33:52Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8477"
+  },
+  {
+    "lang": "pt",
+    "number": 8469,
+    "title": "[pt][i18n] Add Portuguese translations for alert types",
+    "created_at": "2025-11-20T15:25:27Z",
+    "closed_at": "2025-11-21T11:30:32Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8469"
+  },
+  {
+    "lang": "pt",
+    "number": 8443,
+    "title": "[pt] Localize in instrumentation.md",
+    "created_at": "2025-11-19T10:34:46Z",
+    "closed_at": "2025-11-19T12:05:39Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8443"
+  },
+  {
+    "lang": "pt",
+    "number": 8436,
+    "title": "Refresh refcache",
+    "created_at": "2025-11-18T09:48:43Z",
+    "closed_at": "2025-11-19T10:10:35Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8436"
+  },
+  {
+    "lang": "pt",
+    "number": 8410,
+    "title": "[pt] Localize content/pt/docs/languages/js/context.md",
+    "created_at": "2025-11-13T11:58:19Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8410"
+  },
+  {
+    "lang": "pt",
+    "number": 8409,
+    "title": "[pt] Locailze content/en/docs/languages/js/context.md",
+    "created_at": "2025-11-13T11:55:40Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:pt",
+      "triage:accepted"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/8409"
+  },
+  {
+    "lang": "pt",
+    "number": 8408,
+    "title": "[pt] Localize content/pt/docs/languages/js/exporters.md",
+    "created_at": "2025-11-13T11:18:54Z",
+    "closed_at": "2025-11-26T08:33:52Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8408"
+  },
+  {
+    "lang": "pt",
+    "number": 8407,
+    "title": "[pt] Localize content/en/docs/languages/js/exporters.md",
+    "created_at": "2025-11-13T11:15:06Z",
+    "closed_at": "2025-11-26T08:33:53Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "triage:accepted"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/8407"
+  },
+  {
+    "lang": "pt",
+    "number": 8406,
+    "title": "[pt] Localize content/en/docs/languages/js/libraries.md",
+    "created_at": "2025-11-13T10:39:10Z",
+    "closed_at": "2025-11-24T09:25:40Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8406"
+  },
+  {
+    "lang": "pt",
+    "number": 8405,
+    "title": "[pt] Localize content/en/docs/languages/js/libraries.md",
+    "created_at": "2025-11-13T10:38:19Z",
+    "closed_at": "2025-11-24T09:25:41Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "triage:accepted"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/8405"
+  },
+  {
+    "lang": "pt",
+    "number": 8404,
+    "title": "Refresh refcache",
+    "created_at": "2025-11-13T09:55:22Z",
+    "closed_at": "2025-11-13T18:48:15Z",
+    "state": "closed",
+    "labels": [
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8404"
+  },
+  {
+    "lang": "pt",
+    "number": 8390,
+    "title": "Declarative config fixes",
+    "created_at": "2025-11-11T13:11:54Z",
+    "closed_at": "2025-11-17T18:09:21Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "sig:java",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8390"
+  },
+  {
+    "lang": "pt",
+    "number": 8388,
+    "title": "[pt] Localize content/en/docs/languages/js/instrumentation.md",
+    "created_at": "2025-11-11T11:53:30Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8388"
+  },
+  {
+    "lang": "pt",
+    "number": 8387,
+    "title": "[pt] Localize content/en/docs/languages/js/instrumentation.md",
+    "created_at": "2025-11-11T11:51:02Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:pt",
+      "triage:accepted"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/8387"
+  },
+  {
+    "lang": "pt",
+    "number": 8385,
+    "title": "[pt] Localize content/en/docs/languages/js pages",
+    "created_at": "2025-11-11T09:36:05Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt",
+      "triage:accepted:needs-pr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/8385"
+  },
+  {
+    "lang": "pt",
+    "number": 8384,
+    "title": "[pt] fix: add heading ID to section in index-intro.md",
+    "created_at": "2025-11-11T09:19:53Z",
+    "closed_at": "2025-11-11T09:29:21Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8384"
+  },
+  {
+    "lang": "pt",
+    "number": 8366,
+    "title": "[pt][editorial] Java API - fix link for (upcoming) specs reference",
+    "created_at": "2025-11-08T13:24:05Z",
+    "closed_at": "2025-11-08T14:20:37Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8366"
+  },
+  {
+    "lang": "pt",
+    "number": 8333,
+    "title": "Refresh refcache",
+    "created_at": "2025-11-05T18:00:47Z",
+    "closed_at": "2025-11-06T01:37:54Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8333"
+  },
+  {
+    "lang": "pt",
+    "number": 8303,
+    "title": "Update drifted status of pages",
+    "created_at": "2025-10-31T14:41:25Z",
+    "closed_at": "2025-10-31T15:11:55Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "lang:bn",
+      "lang:uk",
+      "lang:ro"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8303"
+  },
+  {
+    "lang": "pt",
+    "number": 8294,
+    "title": "Updated the demo docs to include the new product reviews service",
+    "created_at": "2025-10-30T23:36:33Z",
+    "closed_at": "2025-11-07T18:20:06Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "docs:registry",
+      "sig:demo",
+      "sig:security",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "lang:bn",
+      "lang:uk",
+      "lang:ro"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8294"
+  },
+  {
+    "lang": "pt",
+    "number": 8257,
+    "title": "[locales] Fix: prevent dark mode inversion for course badge image in Training page",
+    "created_at": "2025-10-28T12:18:50Z",
+    "closed_at": "2025-10-28T14:36:26Z",
+    "state": "closed",
+    "labels": [
+      "lang:zh",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8257"
+  },
+  {
+    "lang": "pt",
+    "number": 8222,
+    "title": "[pt] Localize `content/pt/docs/languages/js/_index.md`",
+    "created_at": "2025-10-24T12:08:36Z",
+    "closed_at": "2025-11-11T08:48:47Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8222"
+  },
+  {
+    "lang": "pt",
+    "number": 8221,
+    "title": "[pt] Update drifted content for `content/pt/docs/languages/go/_index.md`",
+    "created_at": "2025-10-24T12:06:55Z",
+    "closed_at": "2025-10-29T12:48:17Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8221"
+  },
+  {
+    "lang": "pt",
+    "number": 8220,
+    "title": "[pt] Update drifted content under `content/pt/docs/concepts/`",
+    "created_at": "2025-10-24T11:50:03Z",
+    "closed_at": "2025-10-29T16:27:45Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8220"
+  },
+  {
+    "lang": "pt",
+    "number": 8219,
+    "title": "[pt] Update drifted content for `content/pt/docs/languages/_index.md`",
+    "created_at": "2025-10-24T11:30:50Z",
+    "closed_at": "2025-10-29T12:43:55Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8219"
+  },
+  {
+    "lang": "pt",
+    "number": 8218,
+    "title": "[pt] Update drifted content under `content/pt/docs/languages/java`",
+    "created_at": "2025-10-24T11:22:20Z",
+    "closed_at": "2025-10-29T14:17:15Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8218"
+  },
+  {
+    "lang": "pt",
+    "number": 8217,
+    "title": "[pt] Update drifted content for `content/pt/docs/languages/sdk-configuration/general.md`",
+    "created_at": "2025-10-24T11:10:40Z",
+    "closed_at": "2025-10-29T12:42:12Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8217"
+  },
+  {
+    "lang": "pt",
+    "number": 8216,
+    "title": "[pt] Update drifted content for `content/pt/docs/languages/js/getting-started/nodejs.md`",
+    "created_at": "2025-10-24T10:58:54Z",
+    "closed_at": "2025-11-13T09:42:36Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8216"
+  },
+  {
+    "lang": "pt",
+    "number": 8215,
+    "title": "[pt] Update drifted content under `content/pt/docs/languages/python`",
+    "created_at": "2025-10-24T10:37:23Z",
+    "closed_at": "2025-10-29T12:48:17Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8215"
+  },
+  {
+    "lang": "pt",
+    "number": 8214,
+    "title": "[pt] Update drifted content under `content/pt/docs/languages/go`",
+    "created_at": "2025-10-24T10:15:54Z",
+    "closed_at": "2025-10-29T17:13:06Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8214"
+  },
+  {
+    "lang": "pt",
+    "number": 8212,
+    "title": "[pt] Update `content/pt/docs/_index.md`",
+    "created_at": "2025-10-24T09:50:52Z",
+    "closed_at": "2025-10-24T13:49:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8212"
+  },
+  {
+    "lang": "pt",
+    "number": 8205,
+    "title": "[pt] Update drifted content under `content/pt/docs/languages/_includes`",
+    "created_at": "2025-10-23T11:24:47Z",
+    "closed_at": "2025-10-23T15:36:19Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8205"
+  },
+  {
+    "lang": "pt",
+    "number": 8203,
+    "title": "[pt] Update drifted content: `content/pt/docs/what-is-opentelemetry.md`",
+    "created_at": "2025-10-23T10:54:17Z",
+    "closed_at": "2025-10-23T13:12:43Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8203"
+  },
+  {
+    "lang": "pt",
+    "number": 8202,
+    "title": "[pt] Update drifted content under `content/pt/docs/contributing`",
+    "created_at": "2025-10-23T10:51:44Z",
+    "closed_at": "2025-10-24T13:48:43Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8202"
+  },
+  {
+    "lang": "pt",
+    "number": 8195,
+    "title": "[es] new translation - docs/concepts/sampling/index",
+    "created_at": "2025-10-22T16:40:43Z",
+    "closed_at": "2025-10-23T10:39:42Z",
+    "state": "closed",
+    "labels": [
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "lang:uk"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8195"
+  },
+  {
+    "lang": "pt",
+    "number": 8184,
+    "title": "[pt] fix(blog): fixing example",
+    "created_at": "2025-10-21T14:21:34Z",
+    "closed_at": "2025-10-21T18:13:52Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8184"
+  },
+  {
+    "lang": "pt",
+    "number": 8121,
+    "title": "[pt] Update drifted content for `content/pt/docs/concepts/signals/metrics.md`",
+    "created_at": "2025-10-16T11:35:34Z",
+    "closed_at": "2025-10-20T21:06:01Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8121"
+  },
+  {
+    "lang": "pt",
+    "number": 8120,
+    "title": "[pt] Update drifted content for `content/pt/docs/concepts/signals/metrics.md`",
+    "created_at": "2025-10-16T11:34:07Z",
+    "closed_at": "2025-10-20T21:06:02Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/8120"
+  },
+  {
+    "lang": "pt",
+    "number": 8119,
+    "title": "[pt] Update drifted content for `content/pt/docs/concepts/signals/traces.md`",
+    "created_at": "2025-10-16T11:28:03Z",
+    "closed_at": "2025-10-20T21:10:10Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8119"
+  },
+  {
+    "lang": "pt",
+    "number": 8118,
+    "title": "[pt] Update drifted content for `content/pt/docs/concepts/signals/traces.md`",
+    "created_at": "2025-10-16T11:26:11Z",
+    "closed_at": "2025-10-20T21:10:11Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/8118"
+  },
+  {
+    "lang": "pt",
+    "number": 8117,
+    "title": "[pt] Update drifted content for `content/pt/docs/concepts/glossary.md`",
+    "created_at": "2025-10-16T11:15:12Z",
+    "closed_at": "2025-10-20T18:46:18Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8117"
+  },
+  {
+    "lang": "pt",
+    "number": 8116,
+    "title": "[pt] Update drifted content for `content/pt/docs/concepts/glossary.md`",
+    "created_at": "2025-10-16T11:13:23Z",
+    "closed_at": "2025-10-20T18:46:19Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/8116"
+  },
+  {
+    "lang": "pt",
+    "number": 8113,
+    "title": "Refresh refcache",
+    "created_at": "2025-10-16T09:48:46Z",
+    "closed_at": "2025-10-16T10:28:43Z",
+    "state": "closed",
+    "labels": [
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8113"
+  },
+  {
+    "lang": "pt",
+    "number": 8108,
+    "title": "Replace OTEP 4673 links by reference to OTel spec trace/tracestate-probability-sampling",
+    "created_at": "2025-10-15T18:15:49Z",
+    "closed_at": "2025-10-16T08:27:25Z",
+    "state": "closed",
+    "labels": [
+      "type:copyedit",
+      "sig:spec",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8108"
+  },
+  {
+    "lang": "pt",
+    "number": 8083,
+    "title": "[pt] Localize content/pt/docs/languages/java/configuration.md",
+    "created_at": "2025-10-14T09:58:46Z",
+    "closed_at": "2025-11-24T09:25:57Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8083"
+  },
+  {
+    "lang": "pt",
+    "number": 8078,
+    "title": "[editorial] Fix lint errors and drift status after markdownlint upgrade",
+    "created_at": "2025-10-13T16:59:05Z",
+    "closed_at": "2025-10-13T17:27:05Z",
+    "state": "closed",
+    "labels": [
+      "dependencies",
+      "docs:CI/infra",
+      "type:copyedit",
+      "docs:blog",
+      "sig:cpp",
+      "sig:java",
+      "sig:javascript",
+      "sig:python",
+      "sig:enduser",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "sig:obi"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8078"
+  },
+  {
+    "lang": "pt",
+    "number": 8067,
+    "title": "[pt] Localize content/pt/docs/languages/java/api.md",
+    "created_at": "2025-10-13T10:30:33Z",
+    "closed_at": "2025-11-07T17:46:45Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8067"
+  },
+  {
+    "lang": "pt",
+    "number": 8064,
+    "title": "Use canonical link to moved page that is now OTEP 4673",
+    "created_at": "2025-10-11T15:00:06Z",
+    "closed_at": "2025-10-13T13:05:38Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "sig:spec",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8064"
+  },
+  {
+    "lang": "pt",
+    "number": 8060,
+    "title": "[pt] Localization of blog post for declarative configuration",
+    "created_at": "2025-10-10T16:00:52Z",
+    "closed_at": "2025-10-20T15:25:03Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8060"
+  },
+  {
+    "lang": "pt",
+    "number": 8045,
+    "title": "[i18n] Update drifted status of non-en pages",
+    "created_at": "2025-10-09T20:59:43Z",
+    "closed_at": "2025-10-09T21:08:58Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "lang:bn"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8045"
+  },
+  {
+    "lang": "pt",
+    "number": 8027,
+    "title": "[pt] Update drifted content for content/pt/docs/contributing/blog.md and content/pt/docs/contributing/localization.md",
+    "created_at": "2025-10-08T10:43:33Z",
+    "closed_at": "2025-10-14T07:07:07Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8027"
+  },
+  {
+    "lang": "pt",
+    "number": 8025,
+    "title": "[pt] Update drifted content for content/pt/docs/_includes/exporters/intro.md",
+    "created_at": "2025-10-08T09:40:01Z",
+    "closed_at": "2025-10-09T06:03:02Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8025"
+  },
+  {
+    "lang": "pt",
+    "number": 8024,
+    "title": "[pt] Update drifted content for content/pt/announcements/_index.md",
+    "created_at": "2025-10-08T09:34:28Z",
+    "closed_at": "2025-10-20T21:00:35Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8024"
+  },
+  {
+    "lang": "pt",
+    "number": 8023,
+    "title": "[pt] Update drifted content under `content/pt/ecosystem`",
+    "created_at": "2025-10-08T09:06:30Z",
+    "closed_at": "2025-10-09T07:22:05Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8023"
+  },
+  {
+    "lang": "pt",
+    "number": 7956,
+    "title": "[pt] Localize content/pt/docs/languages/java/intro.md",
+    "created_at": "2025-10-01T09:35:58Z",
+    "closed_at": "2025-10-07T11:35:33Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7956"
+  },
+  {
+    "lang": "pt",
+    "number": 7955,
+    "title": "[pt] Localize content/en/docs/languages/java/intro.md",
+    "created_at": "2025-10-01T09:35:41Z",
+    "closed_at": "2025-10-07T11:35:34Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7955"
+  },
+  {
+    "lang": "pt",
+    "number": 7872,
+    "title": "Update specification to v1.50.0 (from spec-integration)",
+    "created_at": "2025-09-25T10:44:17Z",
+    "closed_at": "2025-10-17T15:37:11Z",
+    "state": "closed",
+    "labels": [
+      "docs:registry",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7872"
+  },
+  {
+    "lang": "pt",
+    "number": 7851,
+    "title": "Fix `page-drifted-msg.md` banner showing raw template code",
+    "created_at": "2025-09-24T10:22:24Z",
+    "closed_at": "2025-09-25T14:23:02Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7851"
+  },
+  {
+    "lang": "pt",
+    "number": 7834,
+    "title": "pt(docs/demo): localize telemetry features section (index + coverage …",
+    "created_at": "2025-09-22T22:06:56Z",
+    "closed_at": "2025-09-23T10:39:12Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7834"
+  },
+  {
+    "lang": "pt",
+    "number": 7833,
+    "title": "pt(docs/demo): localize collector data flow dashboard page",
+    "created_at": "2025-09-22T22:01:13Z",
+    "closed_at": "2025-09-23T10:39:23Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7833"
+  },
+  {
+    "lang": "pt",
+    "number": 7832,
+    "title": "pt(docs/demo): localize all services section pages",
+    "created_at": "2025-09-22T21:55:05Z",
+    "closed_at": "2025-09-23T10:39:30Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7832"
+  },
+  {
+    "lang": "pt",
+    "number": 7831,
+    "title": "pt(docs/demo): localize screenshots index page",
+    "created_at": "2025-09-22T21:32:36Z",
+    "closed_at": "2025-09-23T10:39:36Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7831"
+  },
+  {
+    "lang": "pt",
+    "number": 7830,
+    "title": "pt(docs/demo): localize Requirements (index, application, architectur…",
+    "created_at": "2025-09-22T20:49:20Z",
+    "closed_at": "2025-09-23T10:39:44Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7830"
+  },
+  {
+    "lang": "pt",
+    "number": 7829,
+    "title": "pt(docs/demo): localize Feature Flags (index + recommendation-cache)",
+    "created_at": "2025-09-22T20:35:38Z",
+    "closed_at": "2025-09-23T10:39:51Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7829"
+  },
+  {
+    "lang": "pt",
+    "number": 7828,
+    "title": "Feat/ptbr demo k8s deployment",
+    "created_at": "2025-09-22T20:12:28Z",
+    "closed_at": "2025-09-23T10:40:00Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7828"
+  },
+  {
+    "lang": "pt",
+    "number": 7827,
+    "title": "pt(docs/demo): add top-level Portuguese pages ",
+    "created_at": "2025-09-22T19:45:35Z",
+    "closed_at": "2025-09-23T10:40:19Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7827"
+  },
+  {
+    "lang": "pt",
+    "number": 7822,
+    "title": "[pt] Add Portuguese localization for feedback-survey.md",
+    "created_at": "2025-09-22T11:49:55Z",
+    "closed_at": "2025-10-02T08:55:13Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7822"
+  },
+  {
+    "lang": "pt",
+    "number": 7821,
+    "title": "[pt] Add Portuguese localization for interviews-feedback.md",
+    "created_at": "2025-09-22T11:49:52Z",
+    "closed_at": "2025-09-25T11:34:33Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7821"
+  },
+  {
+    "lang": "pt",
+    "number": 7820,
+    "title": "[pt] Add Portuguese translation for community/end-user/issue-participation.md",
+    "created_at": "2025-09-22T09:46:39Z",
+    "closed_at": "2025-09-27T07:58:24Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7820"
+  },
+  {
+    "lang": "pt",
+    "number": 7819,
+    "title": "[pt] Localize content/en/community/end-user/issue-participation.md",
+    "created_at": "2025-09-22T09:45:25Z",
+    "closed_at": "2025-09-27T07:58:25Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7819"
+  },
+  {
+    "lang": "pt",
+    "number": 7818,
+    "title": "[pt] Localize content/en/community/end-user/interviews-feedback.md",
+    "created_at": "2025-09-22T09:45:21Z",
+    "closed_at": "2025-09-25T11:34:34Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7818"
+  },
+  {
+    "lang": "pt",
+    "number": 7817,
+    "title": "[pt] Localize content/en/community/end-user/feedback-survey.md",
+    "created_at": "2025-09-22T09:45:15Z",
+    "closed_at": "2025-10-01T08:56:09Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7817"
+  },
+  {
+    "lang": "pt",
+    "number": 7804,
+    "title": "Add instrumentations to registry",
+    "created_at": "2025-09-19T06:39:24Z",
+    "closed_at": "2025-10-16T08:56:50Z",
+    "state": "closed",
+    "labels": [
+      "blocked",
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:python",
+      "sig:swift",
+      "docs:registry",
+      "sig:demo",
+      "sig:enduser",
+      "sig:security",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "lang:bn",
+      "sig:obi",
+      "ready-to-be-merged",
+      "lang:uk",
+      "lang:ro"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7804"
+  },
+  {
+    "lang": "pt",
+    "number": 7758,
+    "title": "[pt] Localization of blog post \"How to Contribute to OpenTelemetry\"",
+    "created_at": "2025-09-12T12:38:01Z",
+    "closed_at": "2025-09-15T17:37:55Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7758"
+  },
+  {
+    "lang": "pt",
+    "number": 7736,
+    "title": "Localize to pt-br otel-in-pratice, slack-channel and discussion-group",
+    "created_at": "2025-09-09T01:40:51Z",
+    "closed_at": "2025-09-10T08:17:38Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7736"
+  },
+  {
+    "lang": "pt",
+    "number": 7708,
+    "title": "[pt] feat: add localization pt content/pt/docs/languages/python/cookbook.md",
+    "created_at": "2025-09-05T11:01:48Z",
+    "closed_at": "2025-09-28T15:13:44Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7708"
+  },
+  {
+    "lang": "pt",
+    "number": 7703,
+    "title": "Update go getting-started examples in non-english",
+    "created_at": "2025-09-04T07:40:08Z",
+    "closed_at": "2025-09-04T14:39:16Z",
+    "state": "closed",
+    "labels": [
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7703"
+  },
+  {
+    "lang": "pt",
+    "number": 7681,
+    "title": "[pt] Translate 'How to Name Your Metrics' blog post",
+    "created_at": "2025-09-02T10:59:08Z",
+    "closed_at": "2025-09-15T09:39:25Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7681"
+  },
+  {
+    "lang": "pt",
+    "number": 7668,
+    "title": "[pt] Localize content/pt/community/end-user/_index.md",
+    "created_at": "2025-08-29T17:33:16Z",
+    "closed_at": "2025-09-03T10:25:46Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7668"
+  },
+  {
+    "lang": "pt",
+    "number": 7654,
+    "title": "[i18n][pt] Localize content/pt/_includes/page-drifted-msg.md",
+    "created_at": "2025-08-27T17:23:30Z",
+    "closed_at": "2025-08-27T17:52:37Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7654"
+  },
+  {
+    "lang": "pt",
+    "number": 7618,
+    "title": "[pt] Translate 'How to Name Your Span Attributes' blog post",
+    "created_at": "2025-08-22T10:59:33Z",
+    "closed_at": "2025-08-29T22:44:09Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7618"
+  },
+  {
+    "lang": "pt",
+    "number": 7592,
+    "title": "[pt] Localize content/pt/training/index.md",
+    "created_at": "2025-08-18T14:38:24Z",
+    "closed_at": "2025-08-19T12:19:33Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7592"
+  },
+  {
+    "lang": "pt",
+    "number": 7586,
+    "title": "[pt] Localize content/pt/training/index.md",
+    "created_at": "2025-08-18T02:00:57Z",
+    "closed_at": "2025-08-18T14:38:14Z",
+    "state": "closed",
+    "labels": [
+      "missing:cla",
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7586"
+  },
+  {
+    "lang": "pt",
+    "number": 7576,
+    "title": "[pt] Translate 'How to Name Your Spans' blog post",
+    "created_at": "2025-08-14T21:55:15Z",
+    "closed_at": "2025-08-17T13:56:02Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "missing:sig-approval",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7576"
+  },
+  {
+    "lang": "pt",
+    "number": 7575,
+    "title": "[i18n] Convert page-outdated banner into an include file",
+    "created_at": "2025-08-14T21:19:05Z",
+    "closed_at": "2025-08-27T17:18:02Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7575"
+  },
+  {
+    "lang": "pt",
+    "number": 7545,
+    "title": "[pt] Localize content/en/docs/platforms pages",
+    "created_at": "2025-08-13T11:28:51Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt",
+      "triage:accepted:needs-pr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7545"
+  },
+  {
+    "lang": "pt",
+    "number": 7544,
+    "title": "[pt] Localize content/en/docs/demo pages",
+    "created_at": "2025-08-13T11:23:16Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt",
+      "triage:accepted:needs-pr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7544"
+  },
+  {
+    "lang": "pt",
+    "number": 7538,
+    "title": "[pt] Localize /training page",
+    "created_at": "2025-08-12T20:55:01Z",
+    "closed_at": "2025-08-19T12:19:34Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7538"
+  },
+  {
+    "lang": "pt",
+    "number": 7493,
+    "title": "[pt] add drifted_from_default to out-of-date pt pages",
+    "created_at": "2025-08-06T21:27:41Z",
+    "closed_at": "2025-08-06T22:15:59Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7493"
+  },
+  {
+    "lang": "pt",
+    "number": 7492,
+    "title": "[pt] 34 pages are out-of-date",
+    "created_at": "2025-08-06T21:24:39Z",
+    "closed_at": "2025-10-30T12:03:59Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "docs:cleanup/refactoring",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7492"
+  },
+  {
+    "lang": "pt",
+    "number": 7484,
+    "title": "Add cardinality definition to Portuguese glossary",
+    "created_at": "2025-08-06T12:22:08Z",
+    "closed_at": "2025-08-07T18:19:45Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7484"
+  },
+  {
+    "lang": "pt",
+    "number": 7476,
+    "title": "[pt] Localize pages under /content/en/community",
+    "created_at": "2025-08-05T12:31:28Z",
+    "closed_at": "2025-08-07T18:08:01Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7476"
+  },
+  {
+    "lang": "pt",
+    "number": 7475,
+    "title": "[pt] Localize /community pages",
+    "created_at": "2025-08-05T11:44:55Z",
+    "closed_at": "2025-09-30T19:53:33Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7475"
+  },
+  {
+    "lang": "pt",
+    "number": 7460,
+    "title": "[pt] Localize content/pt/docs/contributing/localization.md",
+    "created_at": "2025-08-02T21:44:16Z",
+    "closed_at": "2025-08-06T10:40:25Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7460"
+  },
+  {
+    "lang": "pt",
+    "number": 7452,
+    "title": "[i18n] Move alert prose from `native-libraries` partial into an include file",
+    "created_at": "2025-08-01T00:03:10Z",
+    "closed_at": "2025-08-01T00:20:21Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "sig:java",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7452"
+  },
+  {
+    "lang": "pt",
+    "number": 7450,
+    "title": "[pt] Creating the issues.md in portuguese",
+    "created_at": "2025-07-31T21:27:58Z",
+    "closed_at": "2025-08-04T17:42:37Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7450"
+  },
+  {
+    "lang": "pt",
+    "number": 7449,
+    "title": "[pt] Creating the issues.md in portuguese",
+    "created_at": "2025-07-31T18:45:39Z",
+    "closed_at": "2025-07-31T21:29:09Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7449"
+  },
+  {
+    "lang": "pt",
+    "number": 7443,
+    "title": "Update broken Prometheus URLs in localizations and blog, update refcache",
+    "created_at": "2025-07-31T10:43:04Z",
+    "closed_at": "2025-07-31T12:50:10Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7443"
+  },
+  {
+    "lang": "pt",
+    "number": 7433,
+    "title": "[experimental] enable pt/ja maintainers to merge PRs",
+    "created_at": "2025-07-30T08:52:49Z",
+    "closed_at": "2025-08-06T17:40:26Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7433"
+  },
+  {
+    "lang": "pt",
+    "number": 7413,
+    "title": "feat(blog): add 'How to Name Your Spans' blog post",
+    "created_at": "2025-07-28T07:54:26Z",
+    "closed_at": "2025-08-11T12:51:04Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7413"
+  },
+  {
+    "lang": "pt",
+    "number": 7367,
+    "title": "[pt] Localize content/pt/docs/contributing/blog.md",
+    "created_at": "2025-07-22T11:01:12Z",
+    "closed_at": "2025-07-29T09:26:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7367"
+  },
+  {
+    "lang": "pt",
+    "number": 7366,
+    "title": "[pt] Localize content/pt/docs/contributing/pr-checks.md",
+    "created_at": "2025-07-22T10:36:30Z",
+    "closed_at": "2025-07-31T13:29:17Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7366"
+  },
+  {
+    "lang": "pt",
+    "number": 7365,
+    "title": "[pt] Localize content/pt/docs/contributing/announcements.md",
+    "created_at": "2025-07-22T10:11:16Z",
+    "closed_at": "2025-07-31T13:30:39Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7365"
+  },
+  {
+    "lang": "pt",
+    "number": 7303,
+    "title": "[pt] feat: add localization development content/en/docs/contributing/development.md",
+    "created_at": "2025-07-11T11:45:03Z",
+    "closed_at": "2025-07-16T08:57:07Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7303"
+  },
+  {
+    "lang": "pt",
+    "number": 7301,
+    "title": "[pt] - add localization content/pt/docs/contributing/acknowledgements.md",
+    "created_at": "2025-07-11T10:46:44Z",
+    "closed_at": "2025-07-16T08:40:57Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7301"
+  },
+  {
+    "lang": "pt",
+    "number": 7253,
+    "title": "Update minimum supported Python version to 3.9",
+    "created_at": "2025-07-03T00:08:36Z",
+    "closed_at": "2025-07-07T23:02:31Z",
+    "state": "closed",
+    "labels": [
+      "sig:python",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7253"
+  },
+  {
+    "lang": "pt",
+    "number": 7228,
+    "title": "[pt] Add Java language documentation and getting started guide",
+    "created_at": "2025-06-30T13:43:33Z",
+    "closed_at": "2025-07-03T06:44:01Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7228"
+  },
+  {
+    "lang": "pt",
+    "number": 7186,
+    "title": "[pt] Localize api.md",
+    "created_at": "2025-06-24T17:19:47Z",
+    "closed_at": "2025-06-25T10:04:28Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7186"
+  },
+  {
+    "lang": "pt",
+    "number": 7170,
+    "title": "Bump prettier from 3.5.3 to 3.6.0",
+    "created_at": "2025-06-23T13:33:42Z",
+    "closed_at": "2025-06-24T11:12:12Z",
+    "state": "closed",
+    "labels": [
+      "dependencies",
+      "sig:collector",
+      "docs:blog",
+      "sig:java",
+      "sig:python",
+      "sig:demo",
+      "docs:javascript",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7170"
+  },
+  {
+    "lang": "pt",
+    "number": 7117,
+    "title": "[pt] Localize content/en/docs/zero-code/java/spring-boot-starter/_index.md",
+    "created_at": "2025-06-15T17:47:01Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt",
+      "triage:accepted:needs-pr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7117"
+  },
+  {
+    "lang": "pt",
+    "number": 7116,
+    "title": "[pt] Localize content/en/docs/zero-code/java/spring-boot-starter/api.md",
+    "created_at": "2025-06-15T17:46:22Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt",
+      "triage:accepted:needs-pr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7116"
+  },
+  {
+    "lang": "pt",
+    "number": 7115,
+    "title": "[pt] Localize content/en/docs/zero-code/agent/performance.md",
+    "created_at": "2025-06-15T17:45:20Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt",
+      "triage:accepted:needs-pr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7115"
+  },
+  {
+    "lang": "pt",
+    "number": 7114,
+    "title": "[pt] Localize content/en/docs/zero-code/agent/configuration.md",
+    "created_at": "2025-06-15T17:44:26Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt",
+      "triage:accepted:needs-pr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7114"
+  },
+  {
+    "lang": "pt",
+    "number": 7113,
+    "title": "[pt] Localize content/en/docs/zero-code/agent/api.md",
+    "created_at": "2025-06-15T17:43:16Z",
+    "closed_at": "2025-06-25T10:04:29Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7113"
+  },
+  {
+    "lang": "pt",
+    "number": 7112,
+    "title": "[pt] Localize content/en/docs/languages/java/instrumentation.md",
+    "created_at": "2025-06-15T17:41:35Z",
+    "closed_at": "2025-11-19T12:05:40Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7112"
+  },
+  {
+    "lang": "pt",
+    "number": 7094,
+    "title": "[pt] feat: add doc br pull request content/pt/docs/contributing/pull-requests.md",
+    "created_at": "2025-06-12T11:13:22Z",
+    "closed_at": "2025-06-27T06:49:58Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7094"
+  },
+  {
+    "lang": "pt",
+    "number": 7090,
+    "title": "Alert cleanup",
+    "created_at": "2025-06-11T19:32:43Z",
+    "closed_at": "2025-06-11T20:58:05Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:cleanup/refactoring",
+      "upstream:docsy",
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:go",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:demo",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7090"
+  },
+  {
+    "lang": "pt",
+    "number": 7051,
+    "title": "[pt] Localize docs/contributing/sig-practices.md",
+    "created_at": "2025-06-04T23:44:56Z",
+    "closed_at": "2025-06-30T06:27:11Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7051"
+  },
+  {
+    "lang": "pt",
+    "number": 6984,
+    "title": "Upgrade `markdownlint*` pkgs, adjust code, and address linter issues",
+    "created_at": "2025-05-27T22:28:15Z",
+    "closed_at": "2025-05-27T22:58:57Z",
+    "state": "closed",
+    "labels": [
+      "dependencies",
+      "docs:CI/infra",
+      "docs:cleanup/refactoring",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6984"
+  },
+  {
+    "lang": "pt",
+    "number": 6977,
+    "title": "Update NPM pkgs, Hugo to 0.147.5; address deprecation msgs",
+    "created_at": "2025-05-27T08:34:10Z",
+    "closed_at": "2025-05-27T09:58:17Z",
+    "state": "closed",
+    "labels": [
+      "dependencies",
+      "docs:CI/infra",
+      "docs:cleanup/refactoring",
+      "sig:collector",
+      "sig:cpp",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:rust",
+      "sig:ruby",
+      "sig:swift",
+      "sig:enduser",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6977"
+  },
+  {
+    "lang": "pt",
+    "number": 6972,
+    "title": "[pt] Add localize content/pt/docs/contributing/style-guide.md",
+    "created_at": "2025-05-25T16:34:49Z",
+    "closed_at": "2025-06-02T10:24:13Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6972"
+  },
+  {
+    "lang": "pt",
+    "number": 6952,
+    "title": "Update opentelemetry-specification version to v1.46.0",
+    "created_at": "2025-05-21T20:58:17Z",
+    "closed_at": "2025-06-12T21:02:35Z",
+    "state": "closed",
+    "labels": [
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6952"
+  },
+  {
+    "lang": "pt",
+    "number": 6937,
+    "title": "[pt] feat: add doc br pull request content/pt/docs/contributing/pull-requests.md",
+    "created_at": "2025-05-20T22:52:52Z",
+    "closed_at": "2025-06-12T11:09:06Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:rust",
+      "sig:ruby",
+      "sig:swift",
+      "docs:registry",
+      "sig:enduser",
+      "sig:security",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6937"
+  },
+  {
+    "lang": "pt",
+    "number": 6912,
+    "title": "[blog] KubeCon Japan 2025 blog",
+    "created_at": "2025-05-16T17:47:31Z",
+    "closed_at": "2025-05-29T07:10:38Z",
+    "state": "closed",
+    "labels": [
+      "blocked",
+      "docs:blog",
+      "docs:registry",
+      "sig:demo",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6912"
+  },
+  {
+    "lang": "pt",
+    "number": 6898,
+    "title": "[pt] Fix link definition labels for pages under content/pt/docs/concepts",
+    "created_at": "2025-05-15T16:26:05Z",
+    "closed_at": "2025-05-19T09:51:28Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6898"
+  },
+  {
+    "lang": "pt",
+    "number": 6878,
+    "title": "[pt] Fix link definition labels for Portuguese localizations",
+    "created_at": "2025-05-13T18:52:42Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "lang:pt",
+      "triage:accepted"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6878"
+  },
+  {
+    "lang": "pt",
+    "number": 6876,
+    "title": "[pt] Update localized content on content/pt/docs/languages/java/instrumentation.md",
+    "created_at": "2025-05-13T11:15:34Z",
+    "closed_at": "2025-05-14T21:23:58Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6876"
+  },
+  {
+    "lang": "pt",
+    "number": 6875,
+    "title": "[pt] Update localized content on content/pt/docs/languages/python/exporters.md",
+    "created_at": "2025-05-13T10:40:44Z",
+    "closed_at": "2025-05-14T21:25:21Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6875"
+  },
+  {
+    "lang": "pt",
+    "number": 6874,
+    "title": "[pt] Update localized content on content/pt/docs/languages/go",
+    "created_at": "2025-05-13T10:32:28Z",
+    "closed_at": "2025-05-21T14:14:55Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6874"
+  },
+  {
+    "lang": "pt",
+    "number": 6861,
+    "title": "[pt] Localize docs/contributing/acknowledgements.md",
+    "created_at": "2025-05-09T22:33:20Z",
+    "closed_at": "2025-07-16T08:40:58Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6861"
+  },
+  {
+    "lang": "pt",
+    "number": 6860,
+    "title": "[pt] Localize docs/contributing/sig-practices.md",
+    "created_at": "2025-05-09T22:32:40Z",
+    "closed_at": "2025-06-30T06:27:13Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6860"
+  },
+  {
+    "lang": "pt",
+    "number": 6859,
+    "title": "[pt] Localize docs/contributing/development.md",
+    "created_at": "2025-05-09T22:32:05Z",
+    "closed_at": "2025-07-22T09:37:17Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6859"
+  },
+  {
+    "lang": "pt",
+    "number": 6858,
+    "title": "[pt] Localize docs/contributing/announcements.md",
+    "created_at": "2025-05-09T22:31:32Z",
+    "closed_at": "2025-07-31T13:30:40Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6858"
+  },
+  {
+    "lang": "pt",
+    "number": 6857,
+    "title": "[pt] Localize docs/contributing/pr-checks.md",
+    "created_at": "2025-05-09T22:31:05Z",
+    "closed_at": "2025-07-31T13:29:18Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6857"
+  },
+  {
+    "lang": "pt",
+    "number": 6856,
+    "title": "[pt] Localize docs/contributing/blog.md",
+    "created_at": "2025-05-09T22:30:40Z",
+    "closed_at": "2025-07-29T09:26:01Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6856"
+  },
+  {
+    "lang": "pt",
+    "number": 6855,
+    "title": "[pt] Localize docs/contributing/localization.md",
+    "created_at": "2025-05-09T22:30:04Z",
+    "closed_at": "2025-08-06T10:40:26Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6855"
+  },
+  {
+    "lang": "pt",
+    "number": 6854,
+    "title": "[pt] Localize docs/contributing/style-guide.md",
+    "created_at": "2025-05-09T22:28:27Z",
+    "closed_at": "2025-07-11T10:32:47Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6854"
+  },
+  {
+    "lang": "pt",
+    "number": 6853,
+    "title": "[pt] Localize docs/contributing/pull-requests.md",
+    "created_at": "2025-05-09T22:27:31Z",
+    "closed_at": "2025-06-27T06:49:59Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6853"
+  },
+  {
+    "lang": "pt",
+    "number": 6852,
+    "title": "[pt] Localize docs/contributing/issues.md",
+    "created_at": "2025-05-09T22:23:39Z",
+    "closed_at": "2025-08-04T17:45:18Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6852"
+  },
+  {
+    "lang": "pt",
+    "number": 6849,
+    "title": "[pt] Add shortcodes for pt/docs/languages/_includes/exporters",
+    "created_at": "2025-05-08T11:11:50Z",
+    "closed_at": "2025-05-09T18:35:37Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6849"
+  },
+  {
+    "lang": "pt",
+    "number": 6848,
+    "title": "[pt] Fix shortcodes as include files",
+    "created_at": "2025-05-08T10:48:19Z",
+    "closed_at": "2025-05-09T18:35:38Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6848"
+  },
+  {
+    "lang": "pt",
+    "number": 6841,
+    "title": "[pt] Fix link definition labels for content/pt/docs/what-is-opentelemetry.md",
+    "created_at": "2025-05-07T15:27:41Z",
+    "closed_at": "2025-05-14T18:10:54Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6841"
+  },
+  {
+    "lang": "pt",
+    "number": 6839,
+    "title": "[pt] Fix link def labels in what-is-opentelemetry.md",
+    "created_at": "2025-05-07T14:24:22Z",
+    "closed_at": "2025-05-14T18:10:55Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6839"
+  },
+  {
+    "lang": "pt",
+    "number": 6837,
+    "title": "[i18n] Drifted status update",
+    "created_at": "2025-05-07T13:48:40Z",
+    "closed_at": "2025-05-07T15:54:00Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:i18n",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6837"
+  },
+  {
+    "lang": "pt",
+    "number": 6836,
+    "title": "[pt] Drop obsolete pt shortcodes",
+    "created_at": "2025-05-07T13:43:16Z",
+    "closed_at": "2025-05-07T16:19:54Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:i18n",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6836"
+  },
+  {
+    "lang": "pt",
+    "number": 6829,
+    "title": "[pt] Fix shortcode path references on Portuguese pages",
+    "created_at": "2025-05-06T12:32:47Z",
+    "closed_at": "2025-05-07T13:31:54Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6829"
+  },
+  {
+    "lang": "pt",
+    "number": 6814,
+    "title": "[i18n] Make `span-status-preamble.md` shortcode an include",
+    "created_at": "2025-05-03T14:48:45Z",
+    "closed_at": "2025-05-03T21:32:07Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:i18n",
+      "sig:go",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:ruby",
+      "sig:swift",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6814"
+  },
+  {
+    "lang": "pt",
+    "number": 6813,
+    "title": "[pt] Set drifted status + mention error in translation",
+    "created_at": "2025-05-03T14:05:07Z",
+    "closed_at": "2025-05-05T15:30:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6813"
+  },
+  {
+    "lang": "pt",
+    "number": 6812,
+    "title": "[pt] Use base `docs/languages/exporters/intro`",
+    "created_at": "2025-05-03T13:57:48Z",
+    "closed_at": "2025-05-14T13:17:03Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6812"
+  },
+  {
+    "lang": "pt",
+    "number": 6783,
+    "title": "[pt] Update localized content on content/pt/docs/languages/go/exporters.md",
+    "created_at": "2025-04-29T18:27:29Z",
+    "closed_at": "2025-04-29T21:02:52Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6783"
+  },
+  {
+    "lang": "pt",
+    "number": 6754,
+    "title": "[i18n] Update drift status of non-English pages",
+    "created_at": "2025-04-25T17:12:17Z",
+    "closed_at": "2025-04-25T19:17:04Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6754"
+  },
+  {
+    "lang": "pt",
+    "number": 6751,
+    "title": "[pt] Create index-intro.md include and drop shortcodes",
+    "created_at": "2025-04-24T20:50:33Z",
+    "closed_at": "2025-04-25T13:04:47Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6751"
+  },
+  {
+    "lang": "pt",
+    "number": 6738,
+    "title": "Add devcontainer.json for local development using devcontainers",
+    "created_at": "2025-04-22T19:26:00Z",
+    "closed_at": "2025-04-30T21:55:43Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6738"
+  },
+  {
+    "lang": "pt",
+    "number": 6705,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/glossary.md",
+    "created_at": "2025-04-15T11:42:17Z",
+    "closed_at": "2025-04-24T00:30:43Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6705"
+  },
+  {
+    "lang": "pt",
+    "number": 6704,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/instrumentation/_index.md",
+    "created_at": "2025-04-15T11:20:14Z",
+    "closed_at": "2025-04-24T11:42:58Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6704"
+  },
+  {
+    "lang": "pt",
+    "number": 6703,
+    "title": "[pt] Update localized content on content/pt/docs/getting-started/dev.md",
+    "created_at": "2025-04-15T10:59:05Z",
+    "closed_at": "2025-04-24T11:58:26Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6703"
+  },
+  {
+    "lang": "pt",
+    "number": 6699,
+    "title": "fixes #6549 incorrect use of resource constructor",
+    "created_at": "2025-04-14T20:04:03Z",
+    "closed_at": "2025-04-15T19:54:16Z",
+    "state": "closed",
+    "labels": [
+      "sig:python",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6699"
+  },
+  {
+    "lang": "pt",
+    "number": 6698,
+    "title": "[pt] Updated localized content on content/pt/docs/what-is-opentelemetry.md",
+    "created_at": "2025-04-14T17:59:46Z",
+    "closed_at": "2025-05-01T22:49:17Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6698"
+  },
+  {
+    "lang": "pt",
+    "number": 6693,
+    "title": "[pt] Updated localized content on content/pt/status.md",
+    "created_at": "2025-04-14T11:49:38Z",
+    "closed_at": "2025-04-24T11:57:22Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6693"
+  },
+  {
+    "lang": "pt",
+    "number": 6692,
+    "title": "[pt] Update default_lang_commit for drifted pages",
+    "created_at": "2025-04-14T11:41:54Z",
+    "closed_at": "2025-04-24T11:56:33Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6692"
+  },
+  {
+    "lang": "pt",
+    "number": 6691,
+    "title": "[pt] Update outdated pages under /pt/ecosystem",
+    "created_at": "2025-04-14T11:26:08Z",
+    "closed_at": "2025-04-14T11:36:36Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6691"
+  },
+  {
+    "lang": "pt",
+    "number": 6662,
+    "title": "[pt] 24 pages are out-of-date",
+    "created_at": "2025-04-08T08:31:04Z",
+    "closed_at": "2025-05-21T14:14:57Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6662"
+  },
+  {
+    "lang": "pt",
+    "number": 6614,
+    "title": "devex: add blog post for results of devex survey",
+    "created_at": "2025-03-26T21:06:35Z",
+    "closed_at": "2025-04-02T15:39:10Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:java",
+      "docs:registry",
+      "sig:security",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6614"
+  },
+  {
+    "lang": "pt",
+    "number": 6593,
+    "title": "Test-and-fix results",
+    "created_at": "2025-03-21T15:37:58Z",
+    "closed_at": "2025-03-21T15:58:43Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6593"
+  },
+  {
+    "lang": "pt",
+    "number": 6590,
+    "title": "[IA] Rename `net` to `dotnet` in `/docs/{languages,zero-code}/net`, add redirects and adjust links",
+    "created_at": "2025-03-21T13:42:45Z",
+    "closed_at": "2025-03-21T20:12:34Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:blog",
+      "docs:information-architecture",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6590"
+  },
+  {
+    "lang": "pt",
+    "number": 6585,
+    "title": "fix: update ADOT links and add missing languages",
+    "created_at": "2025-03-21T05:52:48Z",
+    "closed_at": "2025-04-19T12:14:30Z",
+    "state": "closed",
+    "labels": [
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6585"
+  },
+  {
+    "lang": "pt",
+    "number": 6583,
+    "title": "[i18n] Separate prose out of Convert docs/exporter/intro.md, and other improvements",
+    "created_at": "2025-03-20T20:03:34Z",
+    "closed_at": "2025-03-21T12:07:06Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:go",
+      "sig:erlang",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:rust",
+      "sig:ruby",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6583"
+  },
+  {
+    "lang": "pt",
+    "number": 6581,
+    "title": "[i18n] Convert docs/exporter shortcodes into includes",
+    "created_at": "2025-03-20T12:46:50Z",
+    "closed_at": "2025-03-20T15:34:19Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:cleanup/refactoring",
+      "docs:i18n",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:javascript",
+      "sig:python",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6581"
+  },
+  {
+    "lang": "pt",
+    "number": 6563,
+    "title": "[pt] Add localization content/pt/docs/languages/python/exporter.md",
+    "created_at": "2025-03-18T00:35:39Z",
+    "closed_at": "2025-03-20T11:26:11Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6563"
+  },
+  {
+    "lang": "pt",
+    "number": 6562,
+    "title": "[pt] Localize content/pt/docs/languages/python/exporter",
+    "created_at": "2025-03-18T00:34:01Z",
+    "closed_at": "2025-04-14T16:48:13Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6562"
+  },
+  {
+    "lang": "pt",
+    "number": 6554,
+    "title": "[pt] Add localization content/pt/docs/languages/python/libaries.md",
+    "created_at": "2025-03-15T00:37:06Z",
+    "closed_at": "2025-03-20T11:24:39Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6554"
+  },
+  {
+    "lang": "pt",
+    "number": 6553,
+    "title": "[pt] Localize content/pt/docs/languages/python/libaries.md",
+    "created_at": "2025-03-15T00:34:08Z",
+    "closed_at": "2025-04-14T16:47:07Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6553"
+  },
+  {
+    "lang": "pt",
+    "number": 6543,
+    "title": "Add docs for @WithSpan params.",
+    "created_at": "2025-03-13T17:09:00Z",
+    "closed_at": "2025-03-14T11:20:16Z",
+    "state": "closed",
+    "labels": [
+      "sig:java",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6543"
+  },
+  {
+    "lang": "pt",
+    "number": 6515,
+    "title": "Fix Rust getting started",
+    "created_at": "2025-03-11T00:57:03Z",
+    "closed_at": "2025-03-14T16:39:47Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "sig:java",
+      "sig:rust",
+      "docs:registry",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6515"
+  },
+  {
+    "lang": "pt",
+    "number": 6514,
+    "title": "[pt] fix: collector component content/pt/docs/concepts/components.md",
+    "created_at": "2025-03-10T13:26:03Z",
+    "closed_at": "2025-05-21T16:25:08Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6514"
+  },
+  {
+    "lang": "pt",
+    "number": 6513,
+    "title": "fix collector text content/pt/docs/concepts/components.md",
+    "created_at": "2025-03-10T13:22:16Z",
+    "closed_at": "2025-05-25T16:30:59Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6513"
+  },
+  {
+    "lang": "pt",
+    "number": 6449,
+    "title": "[chore] Clean up some UTF-8 encoded characters, fix links",
+    "created_at": "2025-03-01T16:56:40Z",
+    "closed_at": "2025-03-03T17:37:09Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:cleanup/refactoring",
+      "sig:collector",
+      "docs:blog",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6449"
+  },
+  {
+    "lang": "pt",
+    "number": 6446,
+    "title": "[i18n] Add `drifted_from_default` status to drifted pages, adjust script, add \"Drift status\" section to l10n page",
+    "created_at": "2025-02-28T19:23:00Z",
+    "closed_at": "2025-02-28T20:10:57Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6446"
+  },
+  {
+    "lang": "pt",
+    "number": 6442,
+    "title": "Markdown cleanup: Replace {{< >}} with {{% %}}",
+    "created_at": "2025-02-28T12:55:18Z",
+    "closed_at": "2025-02-28T14:15:53Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:ruby",
+      "sig:demo",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6442"
+  },
+  {
+    "lang": "pt",
+    "number": 6436,
+    "title": "[pt] Localize content/pt/docs/languages/python/instrumentation.md",
+    "created_at": "2025-02-27T11:09:25Z",
+    "closed_at": "2025-03-20T11:00:02Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6436"
+  },
+  {
+    "lang": "pt",
+    "number": 6435,
+    "title": "[pt] Localize content/pt/docs/languages/python/instrumentation.md",
+    "created_at": "2025-02-27T11:07:12Z",
+    "closed_at": "2025-04-14T16:45:30Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6435"
+  },
+  {
+    "lang": "pt",
+    "number": 6415,
+    "title": "docs: add pt keep-up-to-date.md",
+    "created_at": "2025-02-25T13:27:04Z",
+    "closed_at": "2025-02-26T18:18:18Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6415"
+  },
+  {
+    "lang": "pt",
+    "number": 6414,
+    "title": "[pt] Localize ecosystem/_includes/keep-up-to-date.md",
+    "created_at": "2025-02-25T13:14:54Z",
+    "closed_at": "2025-02-26T18:40:56Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6414"
+  },
+  {
+    "lang": "pt",
+    "number": 6404,
+    "title": "[pt] Localize contributing/prerequisites.md",
+    "created_at": "2025-02-22T14:28:57Z",
+    "closed_at": "2025-02-24T17:54:46Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6404"
+  },
+  {
+    "lang": "pt",
+    "number": 6403,
+    "title": "[pt] Localize contributing/_index.md",
+    "created_at": "2025-02-22T13:37:57Z",
+    "closed_at": "2025-02-24T17:56:48Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6403"
+  },
+  {
+    "lang": "pt",
+    "number": 6402,
+    "title": "[pt] Fix anchor reference in python/_index.md",
+    "created_at": "2025-02-22T12:53:25Z",
+    "closed_at": "2025-02-24T17:56:48Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6402"
+  },
+  {
+    "lang": "pt",
+    "number": 6398,
+    "title": "[CI/i18n] Streamline includes and fix pt Aviso",
+    "created_at": "2025-02-21T20:35:04Z",
+    "closed_at": "2025-02-21T20:51:52Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "sig:javascript",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6398"
+  },
+  {
+    "lang": "pt",
+    "number": 6393,
+    "title": "[pt] Localize content languages java sdk",
+    "created_at": "2025-02-21T00:21:39Z",
+    "closed_at": "2025-07-03T13:13:34Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6393"
+  },
+  {
+    "lang": "pt",
+    "number": 6386,
+    "title": "[pt] Localize content languages java sdk",
+    "created_at": "2025-02-20T13:10:59Z",
+    "closed_at": "2025-02-21T00:15:00Z",
+    "state": "closed",
+    "labels": [
+      "sig:java",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6386"
+  },
+  {
+    "lang": "pt",
+    "number": 6383,
+    "title": "[i18n] Convert `keep-up-to-date.md` to an include",
+    "created_at": "2025-02-19T18:52:51Z",
+    "closed_at": "2025-02-20T00:03:58Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "sig:javascript",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6383"
+  },
+  {
+    "lang": "pt",
+    "number": 6364,
+    "title": "[i18n] Make `instrumentation-intro` shortcode a simple include",
+    "created_at": "2025-02-18T00:10:59Z",
+    "closed_at": "2025-02-18T04:09:41Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:i18n",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:go",
+      "sig:erlang",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:ruby",
+      "sig:swift",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6364"
+  },
+  {
+    "lang": "pt",
+    "number": 6361,
+    "title": "[pt] Update content/pt/ecosystem/registry/_index.md - Fix duplicate redirect",
+    "created_at": "2025-02-17T15:57:48Z",
+    "closed_at": "2025-02-19T14:21:44Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6361"
+  },
+  {
+    "lang": "pt",
+    "number": 6339,
+    "title": "[i18n] Support localization of page-not-translated banner",
+    "created_at": "2025-02-15T18:14:25Z",
+    "closed_at": "2025-02-17T18:43:04Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "sig:javascript",
+      "sig:demo",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6339"
+  },
+  {
+    "lang": "pt",
+    "number": 6336,
+    "title": "[i18n] Move registry search-form alert into registry page",
+    "created_at": "2025-02-15T11:50:42Z",
+    "closed_at": "2025-02-17T18:41:30Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6336"
+  },
+  {
+    "lang": "pt",
+    "number": 6330,
+    "title": "Update pt/ecosystem/registry/_index.md to avoid duplicate registry splat-rule duplication",
+    "created_at": "2025-02-14T17:38:48Z",
+    "closed_at": "2025-02-19T16:08:31Z",
+    "state": "closed",
+    "labels": [
+      "e0-minutes",
+      "p1-high",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6330"
+  },
+  {
+    "lang": "pt",
+    "number": 6309,
+    "title": "[i18n/infra] Introduce `include` feature with fallback",
+    "created_at": "2025-02-13T17:17:05Z",
+    "closed_at": "2025-02-13T19:15:28Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "sig:javascript",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6309"
+  },
+  {
+    "lang": "pt",
+    "number": 6300,
+    "title": "[pt] Localize 'page not translated' banner",
+    "created_at": "2025-02-12T16:17:31Z",
+    "closed_at": "2025-02-17T18:43:05Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6300"
+  },
+  {
+    "lang": "pt",
+    "number": 6292,
+    "title": "[pt] Localize content/pt/docs/languages/python/getting-started.md",
+    "created_at": "2025-02-11T22:44:27Z",
+    "closed_at": "2025-02-25T14:40:31Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6292"
+  },
+  {
+    "lang": "pt",
+    "number": 6291,
+    "title": "[pt] Localize content/pt/docs/languages/python/getting-started.md",
+    "created_at": "2025-02-11T22:42:42Z",
+    "closed_at": "2025-03-15T00:32:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6291"
+  },
+  {
+    "lang": "pt",
+    "number": 6273,
+    "title": "[pt] Carefully setup fallback pages for /pt/ecosystem",
+    "created_at": "2025-02-10T18:23:53Z",
+    "closed_at": "2025-02-14T16:30:50Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6273"
+  },
+  {
+    "lang": "pt",
+    "number": 6269,
+    "title": "[pt] Localize content/pt/status.md ",
+    "created_at": "2025-02-10T14:49:52Z",
+    "closed_at": "2025-02-19T16:20:58Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6269"
+  },
+  {
+    "lang": "pt",
+    "number": 6268,
+    "title": "[pt] Localize content/pt/ecosystem/vendors.md",
+    "created_at": "2025-02-10T13:24:48Z",
+    "closed_at": "2025-02-19T16:20:58Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6268"
+  },
+  {
+    "lang": "pt",
+    "number": 6267,
+    "title": "[pt] Localize content/pt/ecosystem/integrations.md",
+    "created_at": "2025-02-10T12:32:05Z",
+    "closed_at": "2025-02-14T18:57:25Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6267"
+  },
+  {
+    "lang": "pt",
+    "number": 6265,
+    "title": "[pt] Localize content/pt/ecosystem/distributions.md",
+    "created_at": "2025-02-10T12:11:23Z",
+    "closed_at": "2025-02-19T16:57:17Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6265"
+  },
+  {
+    "lang": "pt",
+    "number": 6264,
+    "title": "[pt] Localize content/pt/ecosystem/adopters.md",
+    "created_at": "2025-02-10T11:59:19Z",
+    "closed_at": "2025-02-14T16:37:14Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6264"
+  },
+  {
+    "lang": "pt",
+    "number": 6263,
+    "title": "[pt] Localize content/pt/ecosystem/registry",
+    "created_at": "2025-02-10T11:46:22Z",
+    "closed_at": "2025-02-14T16:22:22Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6263"
+  },
+  {
+    "lang": "pt",
+    "number": 6262,
+    "title": "[pt] Localize content/pt/ecosystem/demo.md",
+    "created_at": "2025-02-10T11:30:37Z",
+    "closed_at": "2025-02-14T16:43:50Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6262"
+  },
+  {
+    "lang": "pt",
+    "number": 6261,
+    "title": "[pt] Localize content/pt/ecosystem/_index.md",
+    "created_at": "2025-02-10T10:30:01Z",
+    "closed_at": "2025-02-14T17:24:17Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6261"
+  },
+  {
+    "lang": "pt",
+    "number": 6247,
+    "title": "[pt] Localize content/en/status.md",
+    "created_at": "2025-02-07T13:00:21Z",
+    "closed_at": "2025-02-25T13:14:40Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6247"
+  },
+  {
+    "lang": "pt",
+    "number": 6246,
+    "title": "[pt] Localize content/en/ecosystem/vendors.md",
+    "created_at": "2025-02-07T12:58:56Z",
+    "closed_at": "2025-02-25T13:19:24Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6246"
+  },
+  {
+    "lang": "pt",
+    "number": 6245,
+    "title": "[pt] Localize content/en/ecosystem/integrations.md",
+    "created_at": "2025-02-07T12:58:44Z",
+    "closed_at": "2025-02-17T11:17:43Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6245"
+  },
+  {
+    "lang": "pt",
+    "number": 6244,
+    "title": "[pt] Localize content/en/ecosystem/distributions.md",
+    "created_at": "2025-02-07T12:58:29Z",
+    "closed_at": "2025-02-25T13:19:31Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6244"
+  },
+  {
+    "lang": "pt",
+    "number": 6243,
+    "title": "[pt] Localize content/en/ecosystem/adopters.md",
+    "created_at": "2025-02-07T12:58:05Z",
+    "closed_at": "2025-02-17T11:17:59Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6243"
+  },
+  {
+    "lang": "pt",
+    "number": 6242,
+    "title": "[pt] Localize content/en/ecosystem/registry/",
+    "created_at": "2025-02-07T12:57:36Z",
+    "closed_at": "2025-02-25T13:19:39Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6242"
+  },
+  {
+    "lang": "pt",
+    "number": 6241,
+    "title": "[pt] Localize content/en/ecosystem/demo.md",
+    "created_at": "2025-02-07T12:56:06Z",
+    "closed_at": "2025-02-17T11:19:03Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6241"
+  },
+  {
+    "lang": "pt",
+    "number": 6240,
+    "title": "[pt] Localize content/en/ecosystem/_index.md",
+    "created_at": "2025-02-07T12:55:16Z",
+    "closed_at": "2025-02-17T11:19:07Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6240"
+  },
+  {
+    "lang": "pt",
+    "number": 6232,
+    "title": "[IA] Link normalization step for platforms",
+    "created_at": "2025-02-06T12:34:38Z",
+    "closed_at": "2025-02-06T12:56:36Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "sig:collector",
+      "docs:blog",
+      "sig:dotnet",
+      "sig:javascript",
+      "sig:python",
+      "sig:operator",
+      "sig:demo",
+      "docs:information-architecture",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6232"
+  },
+  {
+    "lang": "pt",
+    "number": 6213,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/signals/_index.md",
+    "created_at": "2025-02-04T16:58:05Z",
+    "closed_at": "2025-02-04T18:11:58Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6213"
+  },
+  {
+    "lang": "pt",
+    "number": 6212,
+    "title": "[pt] Update localized content on content/pt/docs/languages/java/instrumentation.md",
+    "created_at": "2025-02-04T16:53:41Z",
+    "closed_at": "2025-02-06T18:46:44Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6212"
+  },
+  {
+    "lang": "pt",
+    "number": 6211,
+    "title": "[pt] Update localized content on content/pt/docs/languages/go/instrumentation.md",
+    "created_at": "2025-02-04T16:48:26Z",
+    "closed_at": "2025-02-04T17:35:27Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6211"
+  },
+  {
+    "lang": "pt",
+    "number": 6210,
+    "title": "[pt] Update localized content on content/pt/announcements/_index.md",
+    "created_at": "2025-02-04T16:45:12Z",
+    "closed_at": "2025-02-04T17:29:24Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6210"
+  },
+  {
+    "lang": "pt",
+    "number": 6203,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/instrumentation/libraries.md",
+    "created_at": "2025-02-04T13:39:29Z",
+    "closed_at": "2025-02-19T14:24:49Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6203"
+  },
+  {
+    "lang": "pt",
+    "number": 6165,
+    "title": "[CI] Page-local dictionary normalization: drop unused words and duplicates (now case-insensitive compare)",
+    "created_at": "2025-02-01T03:27:39Z",
+    "closed_at": "2025-02-01T15:00:24Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "sig:collector",
+      "docs:blog",
+      "sig:dotnet",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:rust",
+      "sig:ruby",
+      "sig:operator",
+      "sig:demo",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6165"
+  },
+  {
+    "lang": "pt",
+    "number": 6161,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/sampling/index.md",
+    "created_at": "2025-01-31T22:16:21Z",
+    "closed_at": "2025-02-04T13:06:07Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6161"
+  },
+  {
+    "lang": "pt",
+    "number": 6160,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/sampling/index.md",
+    "created_at": "2025-01-31T21:41:31Z",
+    "closed_at": "2025-02-03T23:46:19Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6160"
+  },
+  {
+    "lang": "pt",
+    "number": 6159,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/resources/index.md",
+    "created_at": "2025-01-31T21:33:29Z",
+    "closed_at": "2025-02-03T14:55:46Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6159"
+  },
+  {
+    "lang": "pt",
+    "number": 6158,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/resources/index.md",
+    "created_at": "2025-01-31T21:30:10Z",
+    "closed_at": "2025-02-03T14:56:50Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6158"
+  },
+  {
+    "lang": "pt",
+    "number": 6157,
+    "title": "[pt] Update localized content under content/pt/docs/concepts/signals",
+    "created_at": "2025-01-31T21:24:05Z",
+    "closed_at": "2025-02-03T23:54:04Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6157"
+  },
+  {
+    "lang": "pt",
+    "number": 6156,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/glossary.md",
+    "created_at": "2025-01-31T20:42:43Z",
+    "closed_at": "2025-02-03T23:54:56Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6156"
+  },
+  {
+    "lang": "pt",
+    "number": 6155,
+    "title": "[pt] Update localized content on content/pt/docs/what-is-opentelemetry.md",
+    "created_at": "2025-01-31T20:08:03Z",
+    "closed_at": "2025-02-03T16:39:20Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6155"
+  },
+  {
+    "lang": "pt",
+    "number": 6154,
+    "title": "[pt] Update localized content under content/pt/docs/languages/go",
+    "created_at": "2025-01-31T19:48:24Z",
+    "closed_at": "2025-02-01T00:44:51Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6154"
+  },
+  {
+    "lang": "pt",
+    "number": 6152,
+    "title": "[pt] Update localized content on content/pt/docs/languages/js/getting-started/browser.md",
+    "created_at": "2025-01-31T19:31:44Z",
+    "closed_at": "2025-02-01T00:46:22Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6152"
+  },
+  {
+    "lang": "pt",
+    "number": 6151,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/context-propagation.md",
+    "created_at": "2025-01-31T18:31:50Z",
+    "closed_at": "2025-02-01T00:50:03Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6151"
+  },
+  {
+    "lang": "pt",
+    "number": 6150,
+    "title": "[pt] Update localized content on content/pt/blog/2024/docs-localized.md",
+    "created_at": "2025-01-31T18:26:55Z",
+    "closed_at": "2025-01-31T19:02:14Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6150"
+  },
+  {
+    "lang": "pt",
+    "number": 6149,
+    "title": "[pt] Update localized content on content/pt/docs/concepts/semantic-conventions.md",
+    "created_at": "2025-01-31T18:19:20Z",
+    "closed_at": "2025-02-01T00:48:56Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6149"
+  },
+  {
+    "lang": "pt",
+    "number": 6148,
+    "title": "[pt] Update localized content on content/pt/_index.md",
+    "created_at": "2025-01-31T17:06:27Z",
+    "closed_at": "2025-02-01T00:42:15Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6148"
+  },
+  {
+    "lang": "pt",
+    "number": 6145,
+    "title": "[CI] Enforce no-trailing-spaces",
+    "created_at": "2025-01-31T15:15:09Z",
+    "closed_at": "2025-01-31T17:46:42Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:blog",
+      "sig:operator",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6145"
+  },
+  {
+    "lang": "pt",
+    "number": 6144,
+    "title": "[pt] 20 pages are out-of-date",
+    "created_at": "2025-01-31T14:14:02Z",
+    "closed_at": "2025-04-29T17:09:48Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/6144"
+  },
+  {
+    "lang": "pt",
+    "number": 6143,
+    "title": "[CI] Fix fix:dict and run it",
+    "created_at": "2025-01-31T12:17:05Z",
+    "closed_at": "2025-01-31T13:03:08Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:blog",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6143"
+  },
+  {
+    "lang": "pt",
+    "number": 6085,
+    "title": "[pt] Localize content java instrumentation",
+    "created_at": "2025-01-26T16:14:08Z",
+    "closed_at": "2025-02-01T00:40:44Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "docs:registry",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6085"
+  },
+  {
+    "lang": "pt",
+    "number": 6078,
+    "title": "[CI/i18n/pt] Illustrate notes for pt and drop `_param` shortcode",
+    "created_at": "2025-01-24T19:25:26Z",
+    "closed_at": "2025-01-24T22:25:57Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "docs:blog",
+      "sig:javascript",
+      "sig:demo",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6078"
+  },
+  {
+    "lang": "pt",
+    "number": 6075,
+    "title": "[pt] Localize content/pt/docs/languages/sdk-configuration",
+    "created_at": "2025-01-24T16:02:26Z",
+    "closed_at": "2025-01-31T10:11:50Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6075"
+  },
+  {
+    "lang": "pt",
+    "number": 6074,
+    "title": "Glossary: add terms from style guide, and some rework",
+    "created_at": "2025-01-24T15:19:12Z",
+    "closed_at": "2025-01-24T18:41:31Z",
+    "state": "closed",
+    "labels": [
+      "docs",
+      "type:copyedit",
+      "docs:cleanup/refactoring",
+      "sig:collector",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6074"
+  },
+  {
+    "lang": "pt",
+    "number": 6071,
+    "title": "[pt] Localize content/pt/docs/languages/js/getting-started/",
+    "created_at": "2025-01-24T13:36:35Z",
+    "closed_at": "2025-01-30T18:32:20Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6071"
+  },
+  {
+    "lang": "pt",
+    "number": 6067,
+    "title": "Editorial changes to Concepts > Signals",
+    "created_at": "2025-01-24T12:20:03Z",
+    "closed_at": "2025-01-24T12:53:15Z",
+    "state": "closed",
+    "labels": [
+      "type:copyedit",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6067"
+  },
+  {
+    "lang": "pt",
+    "number": 6006,
+    "title": "[i18n] Update commit hash for blog index pages",
+    "created_at": "2025-01-21T14:30:26Z",
+    "closed_at": "2025-01-21T19:45:49Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6006"
+  },
+  {
+    "lang": "pt",
+    "number": 6002,
+    "title": "[infra] Better support for RSS and blog pages",
+    "created_at": "2025-01-21T12:59:17Z",
+    "closed_at": "2025-01-21T14:13:16Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:blog",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6002"
+  },
+  {
+    "lang": "pt",
+    "number": 5964,
+    "title": "[pt] feat: add languages python index localization",
+    "created_at": "2025-01-17T11:57:48Z",
+    "closed_at": "2025-01-23T00:07:24Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5964"
+  },
+  {
+    "lang": "pt",
+    "number": 5963,
+    "title": "[pt] Localize /content/en/docs/languages/python/_index.md",
+    "created_at": "2025-01-17T11:16:48Z",
+    "closed_at": "2025-01-23T00:07:25Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5963"
+  },
+  {
+    "lang": "pt",
+    "number": 5882,
+    "title": "[pt] Fix file path for concepts/instrumentation/zero-code/index.md",
+    "created_at": "2025-01-06T12:23:04Z",
+    "closed_at": "2025-01-07T15:13:18Z",
+    "state": "closed",
+    "labels": [
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5882"
+  },
+  {
+    "lang": "pt",
+    "number": 5862,
+    "title": "Replace \"oteps\" repo references with \"opentelemetry-specification\" repo",
+    "created_at": "2025-01-01T09:11:10Z",
+    "closed_at": "2025-01-01T15:43:41Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5862"
+  },
+  {
+    "lang": "pt",
+    "number": 5854,
+    "title": "[pt] Localize content/en/docs/languages/java/_index.md and getting-st…",
+    "created_at": "2024-12-28T00:11:48Z",
+    "closed_at": "2025-02-17T16:20:52Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5854"
+  },
+  {
+    "lang": "pt",
+    "number": 5839,
+    "title": "[pt] Localize content/en/docs/languages/java/instrumentation.md",
+    "created_at": "2024-12-21T19:40:45Z",
+    "closed_at": "2025-02-01T15:14:48Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5839"
+  },
+  {
+    "lang": "pt",
+    "number": 5838,
+    "title": "[pt] Localize content/en/docs/languages/java/sdk.md",
+    "created_at": "2024-12-21T19:39:10Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt",
+      "triage:accepted:needs-pr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5838"
+  },
+  {
+    "lang": "pt",
+    "number": 5837,
+    "title": "[pt] Localize content/en/docs/languages/java/configuration.md",
+    "created_at": "2024-12-21T19:37:32Z",
+    "closed_at": "2025-11-24T09:25:58Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "lang:pt",
+      "triage:accepted:needs-pr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5837"
+  },
+  {
+    "lang": "pt",
+    "number": 5836,
+    "title": "[pt] Localize content/en/docs/languages/java/api.md",
+    "created_at": "2024-12-21T19:35:51Z",
+    "closed_at": "2025-11-07T17:46:46Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5836"
+  },
+  {
+    "lang": "pt",
+    "number": 5825,
+    "title": "[pt] Localize content/en/docs/languages/java/_index.md and getting-started.md",
+    "created_at": "2024-12-19T15:14:19Z",
+    "closed_at": "2025-07-03T06:44:02Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5825"
+  },
+  {
+    "lang": "pt",
+    "number": 5808,
+    "title": "[CI] Add `check:expired` and `fix:expired`",
+    "created_at": "2024-12-17T11:48:53Z",
+    "closed_at": "2024-12-17T12:01:32Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5808"
+  },
+  {
+    "lang": "pt",
+    "number": 5765,
+    "title": "[CI] Merge dup cSpell entries in front matter, run word normalization in other locales",
+    "created_at": "2024-12-11T23:29:32Z",
+    "closed_at": "2024-12-12T12:53:14Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:rust",
+      "sig:ruby",
+      "sig:swift",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5765"
+  },
+  {
+    "lang": "pt",
+    "number": 5699,
+    "title": "[pt] add missing async gauge definition to pt",
+    "created_at": "2024-11-27T14:46:20Z",
+    "closed_at": "2024-12-02T14:51:13Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5699"
+  },
+  {
+    "lang": "pt",
+    "number": 5684,
+    "title": "Update prettier to 3.4.0",
+    "created_at": "2024-11-26T08:08:53Z",
+    "closed_at": "2024-11-26T13:54:07Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:dotnet",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:ruby",
+      "sig:demo",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5684"
+  },
+  {
+    "lang": "pt",
+    "number": 5676,
+    "title": "[CI] Prettify es and pt shortcodes too",
+    "created_at": "2024-11-23T11:54:53Z",
+    "closed_at": "2024-11-28T10:46:03Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5676"
+  },
+  {
+    "lang": "pt",
+    "number": 5612,
+    "title": "[CI] Ensure that htmltest-config warnings fail GH check",
+    "created_at": "2024-11-15T14:39:57Z",
+    "closed_at": "2024-11-15T16:02:02Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5612"
+  },
+  {
+    "lang": "pt",
+    "number": 5604,
+    "title": "[pt] Translate concepts/instrumentation-scope",
+    "created_at": "2024-11-13T13:02:24Z",
+    "closed_at": "2024-12-09T07:55:13Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5604"
+  },
+  {
+    "lang": "pt",
+    "number": 5603,
+    "title": "[pt] Temporarily patch page to avoid link-check failure",
+    "created_at": "2024-11-13T11:49:02Z",
+    "closed_at": "2024-11-13T14:05:20Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5603"
+  },
+  {
+    "lang": "pt",
+    "number": 5594,
+    "title": "Add missing en anchors for PT-BR translations",
+    "created_at": "2024-11-12T22:52:56Z",
+    "closed_at": "2024-11-13T10:57:14Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5594"
+  },
+  {
+    "lang": "pt",
+    "number": 5593,
+    "title": "[pt] Translate shortcode snippets /languages/exporters",
+    "created_at": "2024-11-12T13:32:47Z",
+    "closed_at": "2024-12-04T19:23:25Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5593"
+  },
+  {
+    "lang": "pt",
+    "number": 5592,
+    "title": "[pt] localization for shortcode snippets on /languages/exporters",
+    "created_at": "2024-11-12T13:27:48Z",
+    "closed_at": "2024-12-04T19:23:26Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5592"
+  },
+  {
+    "lang": "pt",
+    "number": 5555,
+    "title": "[i18n] Link-check failures due to missing heading IDs",
+    "created_at": "2024-11-07T23:10:32Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "p1-high",
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5555"
+  },
+  {
+    "lang": "pt",
+    "number": 5554,
+    "title": "[i18n] Render-link fix: prepend lang code when page exists",
+    "created_at": "2024-11-07T23:00:37Z",
+    "closed_at": "2024-11-07T23:39:42Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5554"
+  },
+  {
+    "lang": "pt",
+    "number": 5533,
+    "title": "Remove redirect from content/pt/docs/languages/_index.md",
+    "created_at": "2024-11-06T00:48:44Z",
+    "closed_at": "2024-11-06T01:00:32Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5533"
+  },
+  {
+    "lang": "pt",
+    "number": 5448,
+    "title": "[i18n, CI] How to deal with broken links in non-en pages when updating en pages",
+    "created_at": "2024-10-21T15:09:39Z",
+    "closed_at": "2024-10-21T15:35:50Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "docs:blog",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5448"
+  },
+  {
+    "lang": "pt",
+    "number": 5426,
+    "title": "[pt] Translate multiple pages on /pt/docs/languages/go",
+    "created_at": "2024-10-17T13:17:06Z",
+    "closed_at": "2024-11-12T09:57:55Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5426"
+  },
+  {
+    "lang": "pt",
+    "number": 5423,
+    "title": "[ja|pt] Drop temporary link-checking rules",
+    "created_at": "2024-10-17T00:07:09Z",
+    "closed_at": "2024-11-16T15:30:40Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5423"
+  },
+  {
+    "lang": "pt",
+    "number": 5415,
+    "title": "[pt] Localize content/pt/docs/languages/js/getting-started/",
+    "created_at": "2024-10-16T00:03:58Z",
+    "closed_at": "2025-01-12T16:55:51Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5415"
+  },
+  {
+    "lang": "pt",
+    "number": 5412,
+    "title": "Add image minifcation task ",
+    "created_at": "2024-10-15T16:01:06Z",
+    "closed_at": "2024-12-11T14:10:14Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "sig:collector",
+      "docs:blog",
+      "sig:demo",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5412"
+  },
+  {
+    "lang": "pt",
+    "number": 5396,
+    "title": "[pt-br] Localize content/pt/docs/concepts/components.md",
+    "created_at": "2024-10-12T11:22:10Z",
+    "closed_at": "2024-11-02T16:30:59Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5396"
+  },
+  {
+    "lang": "pt",
+    "number": 5393,
+    "title": "[pt-br] feat: localized apis and sdks languages for pt-br",
+    "created_at": "2024-10-11T22:27:23Z",
+    "closed_at": "2024-10-24T09:03:25Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5393"
+  },
+  {
+    "lang": "pt",
+    "number": 5380,
+    "title": "[pt] Translate /pt/docs/languages/go/instrumentation",
+    "created_at": "2024-10-10T17:15:29Z",
+    "closed_at": "2024-12-04T09:12:16Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5380"
+  },
+  {
+    "lang": "pt",
+    "number": 5368,
+    "title": "[pt] Localize content/en/docs/languages/net/instrumentation.md",
+    "created_at": "2024-10-10T01:56:00Z",
+    "closed_at": "2025-08-06T11:12:35Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5368"
+  },
+  {
+    "lang": "pt",
+    "number": 5367,
+    "title": "[pt] Localize content/en/docs/languages/net/_index.md and  getting-started.md",
+    "created_at": "2024-10-10T01:53:12Z",
+    "closed_at": "2025-08-06T11:11:54Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5367"
+  },
+  {
+    "lang": "pt",
+    "number": 5366,
+    "title": "[pt] Localize content/en/docs/languages/_index.md",
+    "created_at": "2024-10-10T01:44:26Z",
+    "closed_at": "2024-10-24T09:03:26Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5366"
+  },
+  {
+    "lang": "pt",
+    "number": 5346,
+    "title": "[pt] Initialize translations for /pt/docs/languages/go",
+    "created_at": "2024-10-08T12:36:05Z",
+    "closed_at": "2024-10-16T06:01:05Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5346"
+  },
+  {
+    "lang": "pt",
+    "number": 5344,
+    "title": "[pt] localization content/pt/docs/languages/go",
+    "created_at": "2024-10-08T11:43:22Z",
+    "closed_at": "2024-12-04T09:12:17Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5344"
+  },
+  {
+    "lang": "pt",
+    "number": 5324,
+    "title": "[pt-br] Pagina das linguagens - JS (Brazil)",
+    "created_at": "2024-10-04T21:01:17Z",
+    "closed_at": "2024-10-21T18:03:23Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5324"
+  },
+  {
+    "lang": "pt",
+    "number": 5323,
+    "title": "[pt] localization content/pt/docs/languages/js/_index.md",
+    "created_at": "2024-10-04T18:46:19Z",
+    "closed_at": "2025-01-30T18:32:21Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5323"
+  },
+  {
+    "lang": "pt",
+    "number": 5287,
+    "title": "[pt] Add translations for content/pt/docs/concepts/instrumentation/_index.md",
+    "created_at": "2024-10-01T23:38:36Z",
+    "closed_at": "2024-11-02T16:24:32Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5287"
+  },
+  {
+    "lang": "pt",
+    "number": 5276,
+    "title": "Refactor java instrumentation",
+    "created_at": "2024-09-30T16:01:09Z",
+    "closed_at": "2024-10-17T15:10:38Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:go",
+      "sig:java",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5276"
+  },
+  {
+    "lang": "pt",
+    "number": 5201,
+    "title": "[pt] add localization: content/pt/docs/concepts/instrumentation/zero-code.md",
+    "created_at": "2024-09-14T14:17:56Z",
+    "closed_at": "2024-09-17T12:30:48Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5201"
+  },
+  {
+    "lang": "pt",
+    "number": 5195,
+    "title": "Update opentelemetry-specification version to v1.37.0",
+    "created_at": "2024-09-13T17:16:13Z",
+    "closed_at": "2024-09-17T15:51:51Z",
+    "state": "closed",
+    "labels": [
+      "sig:java",
+      "lang:ja",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5195"
+  },
+  {
+    "lang": "pt",
+    "number": 5188,
+    "title": "[pt] add localization: content/pt/docs/concepts/signals/baggage.md",
+    "created_at": "2024-09-13T00:31:49Z",
+    "closed_at": "2024-09-24T09:42:52Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5188"
+  },
+  {
+    "lang": "pt",
+    "number": 5183,
+    "title": "[pt] Add translations for /pt/docs/concepts/glossary",
+    "created_at": "2024-09-11T11:47:38Z",
+    "closed_at": "2024-10-10T14:18:49Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5183"
+  },
+  {
+    "lang": "pt",
+    "number": 5166,
+    "title": "Add single writer principle note to deployment documentation",
+    "created_at": "2024-09-08T15:04:35Z",
+    "closed_at": "2025-01-07T17:15:53Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:rust",
+      "sig:ruby",
+      "sig:swift",
+      "sig:operator",
+      "docs:registry",
+      "sig:demo",
+      "sig:enduser",
+      "sig:spec",
+      "sig:security",
+      "missing:sig-approval",
+      "sig:helm",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5166"
+  },
+  {
+    "lang": "pt",
+    "number": 5146,
+    "title": "[pt] add localization: content/pt/docs/concepts/instrumentation/libraries.md ",
+    "created_at": "2024-09-03T22:57:46Z",
+    "closed_at": "2024-09-24T09:40:50Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5146"
+  },
+  {
+    "lang": "pt",
+    "number": 5144,
+    "title": "[pt-br] Tradução de metricas para Portugues Brasil",
+    "created_at": "2024-09-03T21:02:34Z",
+    "closed_at": "2024-09-04T12:51:51Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5144"
+  },
+  {
+    "lang": "pt",
+    "number": 5138,
+    "title": "[pt-br] Localize 'sampling' page to Portuguese (Brazil)",
+    "created_at": "2024-09-02T23:15:40Z",
+    "closed_at": "2024-09-08T16:30:26Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5138"
+  },
+  {
+    "lang": "pt",
+    "number": 5132,
+    "title": "[pt] Add content/pt/docs/concepts/resources and layouts/shortcodes/pt/",
+    "created_at": "2024-09-01T21:31:29Z",
+    "closed_at": "2024-09-24T09:40:50Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5132"
+  },
+  {
+    "lang": "pt",
+    "number": 5125,
+    "title": "[pt] Add translations for /pt/docs/concepts/distributions.md",
+    "created_at": "2024-08-29T16:09:07Z",
+    "closed_at": "2024-09-08T14:24:49Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5125"
+  },
+  {
+    "lang": "pt",
+    "number": 5120,
+    "title": "[pt] Add translations for /pt/docs/concepts/signals",
+    "created_at": "2024-08-29T11:15:25Z",
+    "closed_at": "2024-09-08T14:25:22Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5120"
+  },
+  {
+    "lang": "pt",
+    "number": 5098,
+    "title": "[pt] Add pt/content/docs/concepts/instrumentation",
+    "created_at": "2024-08-24T19:10:15Z",
+    "closed_at": "2024-09-14T20:46:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5098"
+  },
+  {
+    "lang": "pt",
+    "number": 5093,
+    "title": "[pt] Add content/pt/docs/concepts/instrumentation/code-based.md",
+    "created_at": "2024-08-22T23:19:36Z",
+    "closed_at": "2024-08-26T13:24:56Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5093"
+  },
+  {
+    "lang": "pt",
+    "number": 5090,
+    "title": "[infra] Can't request review from docs-pt-approvers / maintainers",
+    "created_at": "2024-08-22T19:22:59Z",
+    "closed_at": "2024-08-23T15:23:14Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5090"
+  },
+  {
+    "lang": "pt",
+    "number": 5083,
+    "title": "[pt] Add /content/pt/docs/zero-code/java/spring-boot-starter",
+    "created_at": "2024-08-22T13:06:25Z",
+    "closed_at": "2024-08-28T14:31:50Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5083"
+  },
+  {
+    "lang": "pt",
+    "number": 5062,
+    "title": "[pt] Add /pt/docs/concepts/signals/logs.md",
+    "created_at": "2024-08-19T23:13:05Z",
+    "closed_at": "2024-09-02T09:07:56Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5062"
+  },
+  {
+    "lang": "pt",
+    "number": 5047,
+    "title": "[pt] Add /content/pt/docs/concepts/semantic-conventions.md",
+    "created_at": "2024-08-15T22:38:09Z",
+    "closed_at": "2024-08-26T14:13:05Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5047"
+  },
+  {
+    "lang": "pt",
+    "number": 5035,
+    "title": "[pt] Localize otel-localized announcement page to Portuguese (Brazil)",
+    "created_at": "2024-08-13T23:43:55Z",
+    "closed_at": "2024-08-23T15:22:27Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5035"
+  },
+  {
+    "lang": "pt",
+    "number": 5019,
+    "title": "[pt] Add /pt/docs/concepts/signals/trace.md",
+    "created_at": "2024-08-11T19:12:28Z",
+    "closed_at": "2024-08-23T15:20:20Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5019"
+  },
+  {
+    "lang": "pt",
+    "number": 4997,
+    "title": "[pt] Add pt/content/docs/concepts/observability-primer.md",
+    "created_at": "2024-08-08T17:17:55Z",
+    "closed_at": "2024-08-22T19:19:28Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4997"
+  },
+  {
+    "lang": "pt",
+    "number": 4993,
+    "title": "[pt] Add signals concepts documentation",
+    "created_at": "2024-08-07T15:49:01Z",
+    "closed_at": "2024-10-08T13:23:07Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4993"
+  },
+  {
+    "lang": "pt",
+    "number": 4984,
+    "title": "[pt] Add /content/pt/docs/concepts/context-propagation.md",
+    "created_at": "2024-08-07T01:01:17Z",
+    "closed_at": "2024-08-12T12:26:48Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4984"
+  },
+  {
+    "lang": "pt",
+    "number": 4982,
+    "title": "[CI][i18n] Spell check content/pt, and enable other dicts",
+    "created_at": "2024-08-06T23:18:24Z",
+    "closed_at": "2024-08-07T11:17:52Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4982"
+  },
+  {
+    "lang": "pt",
+    "number": 4980,
+    "title": "[pt] Add pt/content/docs/getting-started",
+    "created_at": "2024-08-06T22:34:02Z",
+    "closed_at": "2024-08-12T09:06:59Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4980"
+  },
+  {
+    "lang": "pt",
+    "number": 4979,
+    "title": "[pt] Add /content/pt/docs/concepts/context-propagation.md",
+    "created_at": "2024-08-06T22:11:01Z",
+    "closed_at": "2024-08-07T00:54:58Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4979"
+  },
+  {
+    "lang": "pt",
+    "number": 4946,
+    "title": "[pt] Add pt/content/docs/concepts/observability-primer.md",
+    "created_at": "2024-08-03T23:40:34Z",
+    "closed_at": "2024-08-08T17:18:08Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4946"
+  },
+  {
+    "lang": "pt",
+    "number": 4922,
+    "title": "[pt] Portuguese page localization",
+    "created_at": "2024-07-31T13:18:19Z",
+    "closed_at": "2024-12-09T07:55:14Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "0-meta",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/4922"
+  },
+  {
+    "lang": "pt",
+    "number": 4916,
+    "title": "firstParty/native flag for elixir/erlang/go",
+    "created_at": "2024-07-30T20:01:03Z",
+    "closed_at": "2024-09-16T12:17:28Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:rust",
+      "sig:ruby",
+      "sig:swift",
+      "sig:operator",
+      "docs:registry",
+      "sig:demo",
+      "lang:zh",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4916"
+  },
+  {
+    "lang": "pt",
+    "number": 4901,
+    "title": "[pt] feat: add localization concepts index portugues",
+    "created_at": "2024-07-28T16:28:20Z",
+    "closed_at": "2024-08-02T20:34:44Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4901"
+  },
+  {
+    "lang": "pt",
+    "number": 4896,
+    "title": "[pt] feat: add what is opentelemetry localization",
+    "created_at": "2024-07-27T17:52:54Z",
+    "closed_at": "2024-08-05T22:30:12Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4896"
+  },
+  {
+    "lang": "pt",
+    "number": 4884,
+    "title": "[CI][pt] Run Prettier on all locales except ja and zh",
+    "created_at": "2024-07-25T16:28:21Z",
+    "closed_at": "2024-07-25T17:30:40Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4884"
+  },
+  {
+    "lang": "pt",
+    "number": 4868,
+    "title": "[pt-br] feat: add translation of index docs",
+    "created_at": "2024-07-23T18:03:05Z",
+    "closed_at": "2024-07-25T21:57:21Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4868"
+  },
+  {
+    "lang": "es",
+    "number": 8562,
+    "title": "feat [es] Create community/marketing-guidelines.md",
+    "created_at": "2025-12-02T14:42:41Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8562"
+  },
+  {
+    "lang": "es",
+    "number": 8535,
+    "title": "(es): 'Getting Started with .NET Zero Code' to Spanish",
+    "created_at": "2025-11-28T01:55:30Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8535"
+  },
+  {
+    "lang": "es",
+    "number": 8446,
+    "title": "(es): Translate Zero Code .NET custom guide",
+    "created_at": "2025-11-19T13:31:59Z",
+    "closed_at": "2025-11-20T08:52:36Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8446"
+  },
+  {
+    "lang": "es",
+    "number": 8436,
+    "title": "Refresh refcache",
+    "created_at": "2025-11-18T09:48:43Z",
+    "closed_at": "2025-11-19T10:10:35Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8436"
+  },
+  {
+    "lang": "es",
+    "number": 8417,
+    "title": "(es): Add Spanish translation for dotnet nuget packages",
+    "created_at": "2025-11-14T13:41:55Z",
+    "closed_at": "2025-11-18T07:54:21Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8417"
+  },
+  {
+    "lang": "es",
+    "number": 8404,
+    "title": "Refresh refcache",
+    "created_at": "2025-11-13T09:55:22Z",
+    "closed_at": "2025-11-13T18:48:15Z",
+    "state": "closed",
+    "labels": [
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8404"
+  },
+  {
+    "lang": "es",
+    "number": 8390,
+    "title": "Declarative config fixes",
+    "created_at": "2025-11-11T13:11:54Z",
+    "closed_at": "2025-11-17T18:09:21Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "sig:java",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8390"
+  },
+  {
+    "lang": "es",
+    "number": 8381,
+    "title": "es: Add Spanish translation for dotnet instrumentations",
+    "created_at": "2025-11-11T00:05:21Z",
+    "closed_at": "2025-11-12T14:07:39Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8381"
+  },
+  {
+    "lang": "es",
+    "number": 8337,
+    "title": "[es] Fix platforms/kubernetes/helm/_index.md",
+    "created_at": "2025-11-06T02:36:36Z",
+    "closed_at": "2025-11-06T08:40:13Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8337"
+  },
+  {
+    "lang": "es",
+    "number": 8336,
+    "title": "[es] Fix platforms/kubernetes/helm/_index.md  link",
+    "created_at": "2025-11-06T02:27:39Z",
+    "closed_at": "2025-11-06T02:28:12Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8336"
+  },
+  {
+    "lang": "es",
+    "number": 8333,
+    "title": "Refresh refcache",
+    "created_at": "2025-11-05T18:00:47Z",
+    "closed_at": "2025-11-06T01:37:54Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8333"
+  },
+  {
+    "lang": "es",
+    "number": 8303,
+    "title": "Update drifted status of pages",
+    "created_at": "2025-10-31T14:41:25Z",
+    "closed_at": "2025-10-31T15:11:55Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "lang:bn",
+      "lang:uk",
+      "lang:ro"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8303"
+  },
+  {
+    "lang": "es",
+    "number": 8294,
+    "title": "Updated the demo docs to include the new product reviews service",
+    "created_at": "2025-10-30T23:36:33Z",
+    "closed_at": "2025-11-07T18:20:06Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "docs:registry",
+      "sig:demo",
+      "sig:security",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "lang:bn",
+      "lang:uk",
+      "lang:ro"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8294"
+  },
+  {
+    "lang": "es",
+    "number": 8257,
+    "title": "[locales] Fix: prevent dark mode inversion for course badge image in Training page",
+    "created_at": "2025-10-28T12:18:50Z",
+    "closed_at": "2025-10-28T14:36:26Z",
+    "state": "closed",
+    "labels": [
+      "lang:zh",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8257"
+  },
+  {
+    "lang": "es",
+    "number": 8204,
+    "title": "[es] Translate post 'Declarative configuration journey'",
+    "created_at": "2025-10-23T11:16:15Z",
+    "closed_at": "2025-10-24T06:13:07Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8204"
+  },
+  {
+    "lang": "es",
+    "number": 8200,
+    "title": "[es] Translation of sampling",
+    "created_at": "2025-10-23T10:39:25Z",
+    "closed_at": "2025-10-23T11:51:31Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8200"
+  },
+  {
+    "lang": "es",
+    "number": 8195,
+    "title": "[es] new translation - docs/concepts/sampling/index",
+    "created_at": "2025-10-22T16:40:43Z",
+    "closed_at": "2025-10-23T10:39:42Z",
+    "state": "closed",
+    "labels": [
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "lang:uk"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8195"
+  },
+  {
+    "lang": "es",
+    "number": 8191,
+    "title": "[es] feature platforms/kubernetes/helm/_index.md",
+    "created_at": "2025-10-22T03:05:43Z",
+    "closed_at": "2025-11-05T13:58:07Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8191"
+  },
+  {
+    "lang": "es",
+    "number": 8158,
+    "title": "docs(es): fix translation of 'Important' to 'Importante' in Auto SDK",
+    "created_at": "2025-10-18T16:38:38Z",
+    "closed_at": "2025-10-20T10:20:01Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8158"
+  },
+  {
+    "lang": "es",
+    "number": 8113,
+    "title": "Refresh refcache",
+    "created_at": "2025-10-16T09:48:46Z",
+    "closed_at": "2025-10-16T10:28:43Z",
+    "state": "closed",
+    "labels": [
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8113"
+  },
+  {
+    "lang": "es",
+    "number": 8089,
+    "title": "feat: [es] New translation - docs/zero-code/dotnet",
+    "created_at": "2025-10-14T14:41:23Z",
+    "closed_at": "2025-10-30T08:58:36Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8089"
+  },
+  {
+    "lang": "es",
+    "number": 8078,
+    "title": "[editorial] Fix lint errors and drift status after markdownlint upgrade",
+    "created_at": "2025-10-13T16:59:05Z",
+    "closed_at": "2025-10-13T17:27:05Z",
+    "state": "closed",
+    "labels": [
+      "dependencies",
+      "docs:CI/infra",
+      "type:copyedit",
+      "docs:blog",
+      "sig:cpp",
+      "sig:java",
+      "sig:javascript",
+      "sig:python",
+      "sig:enduser",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "sig:obi"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8078"
+  },
+  {
+    "lang": "es",
+    "number": 8045,
+    "title": "[i18n] Update drifted status of non-en pages",
+    "created_at": "2025-10-09T20:59:43Z",
+    "closed_at": "2025-10-09T21:08:58Z",
+    "state": "closed",
+    "labels": [
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "lang:bn"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8045"
+  },
+  {
+    "lang": "es",
+    "number": 8013,
+    "title": "[es] UX research Prometheus Otel document translated to Spanish",
+    "created_at": "2025-10-07T20:36:26Z",
+    "closed_at": "2025-10-13T17:28:32Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8013"
+  },
+  {
+    "lang": "es",
+    "number": 8002,
+    "title": "[es] feature platforms/kubernetes/operator/_index.md",
+    "created_at": "2025-10-06T20:40:12Z",
+    "closed_at": "2025-10-08T08:56:23Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/8002"
+  },
+  {
+    "lang": "es",
+    "number": 7976,
+    "title": "[es] Translation for  opentelemetry.io/content/en/docs/zero-code/OBI",
+    "created_at": "2025-10-02T21:49:23Z",
+    "closed_at": "2025-10-08T09:13:07Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7976"
+  },
+  {
+    "lang": "es",
+    "number": 7974,
+    "title": "Translation for  opentelemetry.io/content/en/docs/zero-code/OBI",
+    "created_at": "2025-10-02T20:45:42Z",
+    "closed_at": "2025-10-02T22:10:47Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7974"
+  },
+  {
+    "lang": "es",
+    "number": 7928,
+    "title": "feat [es] Create docs/community/members.md",
+    "created_at": "2025-09-29T14:57:10Z",
+    "closed_at": "2025-10-02T08:13:29Z",
+    "state": "closed",
+    "labels": [
+      "docs",
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7928"
+  },
+  {
+    "lang": "es",
+    "number": 7919,
+    "title": "[es] fix drift: concepts/semantic-conventions",
+    "created_at": "2025-09-28T16:27:56Z",
+    "closed_at": "2025-09-28T17:17:04Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7919"
+  },
+  {
+    "lang": "es",
+    "number": 7915,
+    "title": "[es] - spanish translate of content/en/docs/zero-code/go",
+    "created_at": "2025-09-28T06:44:56Z",
+    "closed_at": "2025-10-08T09:34:16Z",
+    "state": "closed",
+    "labels": [
+      "docs:registry",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7915"
+  },
+  {
+    "lang": "es",
+    "number": 7882,
+    "title": "Opentelemetry obi es translation",
+    "created_at": "2025-09-25T23:38:53Z",
+    "closed_at": "2025-09-26T00:23:32Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7882"
+  },
+  {
+    "lang": "es",
+    "number": 7864,
+    "title": "docs(es): add first version of Spanish (MX) translation for OBI",
+    "created_at": "2025-09-24T23:33:57Z",
+    "closed_at": "2025-10-03T08:33:04Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7864"
+  },
+  {
+    "lang": "es",
+    "number": 7841,
+    "title": "[es] Spanish folder localization zero-code",
+    "created_at": "2025-09-23T16:55:01Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "docs",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7841"
+  },
+  {
+    "lang": "es",
+    "number": 7840,
+    "title": "[es] - spanish localization of content/es/docs/zero-code/_index",
+    "created_at": "2025-09-23T16:49:57Z",
+    "closed_at": "2025-10-03T08:46:08Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7840"
+  },
+  {
+    "lang": "es",
+    "number": 7816,
+    "title": "[es] feature: concepts/signals/logs - spanish translation",
+    "created_at": "2025-09-21T20:43:45Z",
+    "closed_at": "2025-09-22T14:30:29Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7816"
+  },
+  {
+    "lang": "es",
+    "number": 7804,
+    "title": "Add instrumentations to registry",
+    "created_at": "2025-09-19T06:39:24Z",
+    "closed_at": "2025-10-16T08:56:50Z",
+    "state": "closed",
+    "labels": [
+      "blocked",
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:python",
+      "sig:swift",
+      "docs:registry",
+      "sig:demo",
+      "sig:enduser",
+      "sig:security",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr",
+      "lang:bn",
+      "sig:obi",
+      "ready-to-be-merged",
+      "lang:uk",
+      "lang:ro"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7804"
+  },
+  {
+    "lang": "es",
+    "number": 7787,
+    "title": "Community events.md",
+    "created_at": "2025-09-16T13:48:30Z",
+    "closed_at": "2025-09-18T06:26:23Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7787"
+  },
+  {
+    "lang": "es",
+    "number": 7785,
+    "title": "Update acknowledgements.md",
+    "created_at": "2025-09-16T12:19:48Z",
+    "closed_at": "2025-09-17T05:41:22Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7785"
+  },
+  {
+    "lang": "es",
+    "number": 7779,
+    "title": "[es] Translate post 'How to Contribute to OpenTelemetry'",
+    "created_at": "2025-09-15T18:42:14Z",
+    "closed_at": "2025-09-16T08:38:26Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7779"
+  },
+  {
+    "lang": "es",
+    "number": 7763,
+    "title": "[es] feature: concepts/signals/metrics - spanish translation",
+    "created_at": "2025-09-13T21:23:28Z",
+    "closed_at": "2025-09-16T08:48:24Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7763"
+  },
+  {
+    "lang": "es",
+    "number": 7724,
+    "title": "[es] fix drift on content/es/docs/concepts/context-propagation.md",
+    "created_at": "2025-09-06T20:23:01Z",
+    "closed_at": "2025-09-08T07:03:54Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7724"
+  },
+  {
+    "lang": "es",
+    "number": 7693,
+    "title": "feat [es] Correct docs/contributing/sig-practices.md",
+    "created_at": "2025-09-03T06:52:47Z",
+    "closed_at": "2025-09-03T07:59:26Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7693"
+  },
+  {
+    "lang": "es",
+    "number": 7692,
+    "title": "feat [es] Correct docs/contributing/blog.md",
+    "created_at": "2025-09-03T06:38:01Z",
+    "closed_at": "2025-09-03T07:59:26Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7692"
+  },
+  {
+    "lang": "es",
+    "number": 7682,
+    "title": "[es] Translate 'How to Name Your Metrics' blog post",
+    "created_at": "2025-09-02T11:23:32Z",
+    "closed_at": "2025-09-16T08:54:08Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7682"
+  },
+  {
+    "lang": "es",
+    "number": 7660,
+    "title": "[es] Update default_lang_commit for `content/es/docs/contributing/acknowledgements.md`",
+    "created_at": "2025-08-28T10:35:06Z",
+    "closed_at": "2025-08-28T11:09:07Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7660"
+  },
+  {
+    "lang": "es",
+    "number": 7653,
+    "title": "feat [es] Create docs/contributing/announcements.md",
+    "created_at": "2025-08-27T10:53:36Z",
+    "closed_at": "2025-08-29T14:18:29Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7653"
+  },
+  {
+    "lang": "es",
+    "number": 7651,
+    "title": "feat [es] Create docs/contributing/acknowledgements.md",
+    "created_at": "2025-08-27T09:11:16Z",
+    "closed_at": "2025-08-28T10:16:49Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7651"
+  },
+  {
+    "lang": "es",
+    "number": 7645,
+    "title": "feat [es] Create docs/contributing/sig-practices.md",
+    "created_at": "2025-08-26T14:44:34Z",
+    "closed_at": "2025-08-27T07:57:27Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7645"
+  },
+  {
+    "lang": "es",
+    "number": 7643,
+    "title": "feat [es] Create docs/contributing/blog.md",
+    "created_at": "2025-08-26T08:19:56Z",
+    "closed_at": "2025-08-26T13:10:46Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7643"
+  },
+  {
+    "lang": "es",
+    "number": 7631,
+    "title": "[es] Update drifted content for page content/es/_index.md",
+    "created_at": "2025-08-25T10:38:55Z",
+    "closed_at": "2025-08-27T07:15:02Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7631"
+  },
+  {
+    "lang": "es",
+    "number": 7630,
+    "title": "[es] Translate 'How to Name Your Span Attributes' blog post",
+    "created_at": "2025-08-25T09:57:13Z",
+    "closed_at": "2025-08-27T17:49:01Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7630"
+  },
+  {
+    "lang": "es",
+    "number": 7621,
+    "title": "feat:[es] New translation - docs/content/signals/baggage",
+    "created_at": "2025-08-22T20:52:55Z",
+    "closed_at": "2025-08-26T08:32:46Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7621"
+  },
+  {
+    "lang": "es",
+    "number": 7620,
+    "title": "[es] remove drift header - and minor updates",
+    "created_at": "2025-08-22T19:48:43Z",
+    "closed_at": "2025-08-25T09:51:30Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7620"
+  },
+  {
+    "lang": "es",
+    "number": 7590,
+    "title": "[es] Localize es/docs/concepts/glossary.md",
+    "created_at": "2025-08-18T10:30:18Z",
+    "closed_at": "2025-08-18T15:49:46Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7590"
+  },
+  {
+    "lang": "es",
+    "number": 7583,
+    "title": "[es] remove drift on content/es/docs/concepts/components.md and distributions.md",
+    "created_at": "2025-08-16T20:43:44Z",
+    "closed_at": "2025-08-17T13:54:53Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7583"
+  },
+  {
+    "lang": "es",
+    "number": 7582,
+    "title": "feature: concepts/signals/traces - spanish translation",
+    "created_at": "2025-08-15T19:11:23Z",
+    "closed_at": "2025-08-17T15:31:35Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7582"
+  },
+  {
+    "lang": "es",
+    "number": 7578,
+    "title": "update: docs/platform/kubernetes/_index",
+    "created_at": "2025-08-15T01:20:22Z",
+    "closed_at": "2025-08-15T10:14:35Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7578"
+  },
+  {
+    "lang": "es",
+    "number": 7577,
+    "title": "[es] Translate 'How to Name Your Spans' blog post",
+    "created_at": "2025-08-14T22:32:19Z",
+    "closed_at": "2025-08-19T17:57:18Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7577"
+  },
+  {
+    "lang": "es",
+    "number": 7572,
+    "title": "[es][i18n] Update `es` drifted status",
+    "created_at": "2025-08-14T16:41:47Z",
+    "closed_at": "2025-08-14T17:02:26Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7572"
+  },
+  {
+    "lang": "es",
+    "number": 7571,
+    "title": "[es] 23 pages are out-of-date",
+    "created_at": "2025-08-14T16:40:54Z",
+    "closed_at": "2025-08-18T09:47:10Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7571"
+  },
+  {
+    "lang": "es",
+    "number": 7559,
+    "title": "End user section update",
+    "created_at": "2025-08-14T08:15:01Z",
+    "closed_at": "2025-10-15T17:07:14Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "sig:enduser",
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7559"
+  },
+  {
+    "lang": "es",
+    "number": 7556,
+    "title": "add: docs/_includes resource-intro to spanish",
+    "created_at": "2025-08-14T04:49:06Z",
+    "closed_at": "2025-08-14T08:48:03Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7556"
+  },
+  {
+    "lang": "es",
+    "number": 7554,
+    "title": "[es] add: concept/resource page to spanish",
+    "created_at": "2025-08-14T04:33:54Z",
+    "closed_at": "2025-08-15T10:15:45Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7554"
+  },
+  {
+    "lang": "es",
+    "number": 7553,
+    "title": "feat: [es] New translation - docs/languages/js/getting-started/nodejs",
+    "created_at": "2025-08-14T04:22:14Z",
+    "closed_at": "2025-08-15T10:47:34Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7553"
+  },
+  {
+    "lang": "es",
+    "number": 7536,
+    "title": "add: blog section to spanish",
+    "created_at": "2025-08-12T18:50:27Z",
+    "closed_at": "2025-08-12T20:37:21Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7536"
+  },
+  {
+    "lang": "es",
+    "number": 7535,
+    "title": "[es] Spanish folder localization blogs",
+    "created_at": "2025-08-12T18:49:17Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "docs",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7535"
+  },
+  {
+    "lang": "es",
+    "number": 7534,
+    "title": "add: training page to spanish",
+    "created_at": "2025-08-12T18:02:54Z",
+    "closed_at": "2025-08-15T10:23:47Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7534"
+  },
+  {
+    "lang": "es",
+    "number": 7522,
+    "title": "[es] fix drift on content/es/docs/demo/_index.md",
+    "created_at": "2025-08-10T18:47:11Z",
+    "closed_at": "2025-08-12T08:20:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7522"
+  },
+  {
+    "lang": "es",
+    "number": 7521,
+    "title": "[es] Fix Spanish localization drifted pages",
+    "created_at": "2025-08-10T18:11:55Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "docs",
+      "docs:cleanup/refactoring",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7521"
+  },
+  {
+    "lang": "es",
+    "number": 7517,
+    "title": "[es] add: community spanish translation",
+    "created_at": "2025-08-08T20:26:03Z",
+    "closed_at": "2025-08-11T19:48:55Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7517"
+  },
+  {
+    "lang": "es",
+    "number": 7516,
+    "title": "[es] Spanish folder localization community",
+    "created_at": "2025-08-08T20:24:38Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "docs",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7516"
+  },
+  {
+    "lang": "es",
+    "number": 7515,
+    "title": "add: status spanish translation",
+    "created_at": "2025-08-08T20:12:22Z",
+    "closed_at": "2025-08-09T10:21:12Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7515"
+  },
+  {
+    "lang": "es",
+    "number": 7495,
+    "title": "Adjust shortcode link label references",
+    "created_at": "2025-08-06T21:49:42Z",
+    "closed_at": "2025-08-08T14:50:57Z",
+    "state": "closed",
+    "labels": [
+      "lang:zh",
+      "lang:ja",
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7495"
+  },
+  {
+    "lang": "es",
+    "number": 7490,
+    "title": "feat: [es] New translation - ecosystem folder",
+    "created_at": "2025-08-06T17:47:29Z",
+    "closed_at": "2025-08-07T07:27:04Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7490"
+  },
+  {
+    "lang": "es",
+    "number": 7488,
+    "title": "[es] Spanish folder localization ecosystem",
+    "created_at": "2025-08-06T17:45:49Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "docs",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/7488"
+  },
+  {
+    "lang": "es",
+    "number": 7477,
+    "title": "feat: [es] platforms folder",
+    "created_at": "2025-08-05T16:24:17Z",
+    "closed_at": "2025-08-14T08:57:14Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7477"
+  },
+  {
+    "lang": "es",
+    "number": 7473,
+    "title": "Fix: update broken URL in content/en/docs/contributing/localization.md",
+    "created_at": "2025-08-05T10:25:41Z",
+    "closed_at": "2025-08-05T13:50:49Z",
+    "state": "closed",
+    "labels": [
+      "lang:zh",
+      "lang:ja",
+      "lang:es",
+      "missing:docs-approval"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7473"
+  },
+  {
+    "lang": "es",
+    "number": 7459,
+    "title": "feature: concepts/instrumentation - spanish translation",
+    "created_at": "2025-08-01T21:56:32Z",
+    "closed_at": "2025-08-04T12:35:02Z",
+    "state": "closed",
+    "labels": [
+      "missing:sig-approval",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7459"
+  },
+  {
+    "lang": "es",
+    "number": 7431,
+    "title": "feat: [es] New translation - /docs/languages/js",
+    "created_at": "2025-07-30T03:25:30Z",
+    "closed_at": "2025-08-08T13:18:05Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7431"
+  },
+  {
+    "lang": "es",
+    "number": 7323,
+    "title": "feat: Translate to spanish: content/es/docs/concepts/semantic-convent…",
+    "created_at": "2025-07-15T16:24:54Z",
+    "closed_at": "2025-08-06T22:24:10Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "ready-to-be-merged"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7323"
+  },
+  {
+    "lang": "es",
+    "number": 7243,
+    "title": "feat:[es] New translation - docs/content/signals",
+    "created_at": "2025-07-01T16:39:51Z",
+    "closed_at": "2025-07-16T08:53:39Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7243"
+  },
+  {
+    "lang": "es",
+    "number": 7170,
+    "title": "Bump prettier from 3.5.3 to 3.6.0",
+    "created_at": "2025-06-23T13:33:42Z",
+    "closed_at": "2025-06-24T11:12:12Z",
+    "state": "closed",
+    "labels": [
+      "dependencies",
+      "sig:collector",
+      "docs:blog",
+      "sig:java",
+      "sig:python",
+      "sig:demo",
+      "docs:javascript",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7170"
+  },
+  {
+    "lang": "es",
+    "number": 7090,
+    "title": "Alert cleanup",
+    "created_at": "2025-06-11T19:32:43Z",
+    "closed_at": "2025-06-11T20:58:05Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:cleanup/refactoring",
+      "upstream:docsy",
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:go",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:demo",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/7090"
+  },
+  {
+    "lang": "es",
+    "number": 6837,
+    "title": "[i18n] Drifted status update",
+    "created_at": "2025-05-07T13:48:40Z",
+    "closed_at": "2025-05-07T15:54:00Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:i18n",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6837"
+  },
+  {
+    "lang": "es",
+    "number": 6814,
+    "title": "[i18n] Make `span-status-preamble.md` shortcode an include",
+    "created_at": "2025-05-03T14:48:45Z",
+    "closed_at": "2025-05-03T21:32:07Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:i18n",
+      "sig:go",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:ruby",
+      "sig:swift",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6814"
+  },
+  {
+    "lang": "es",
+    "number": 6798,
+    "title": "Fold scenarios into Feature Flags section for Demo Docs",
+    "created_at": "2025-05-01T18:42:18Z",
+    "closed_at": "2025-05-05T18:05:56Z",
+    "state": "closed",
+    "labels": [
+      "sig:demo",
+      "lang:zh",
+      "lang:ja",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6798"
+  },
+  {
+    "lang": "es",
+    "number": 6763,
+    "title": "[es] Add Spanish translation for page not translated message",
+    "created_at": "2025-04-27T10:57:18Z",
+    "closed_at": "2025-04-29T07:09:17Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6763"
+  },
+  {
+    "lang": "es",
+    "number": 6762,
+    "title": "[es] Add Spanish translation for docs development page",
+    "created_at": "2025-04-27T10:28:41Z",
+    "closed_at": "2025-04-30T08:00:47Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6762"
+  },
+  {
+    "lang": "es",
+    "number": 6754,
+    "title": "[i18n] Update drift status of non-English pages",
+    "created_at": "2025-04-25T17:12:17Z",
+    "closed_at": "2025-04-25T19:17:04Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6754"
+  },
+  {
+    "lang": "es",
+    "number": 6738,
+    "title": "Add devcontainer.json for local development using devcontainers",
+    "created_at": "2025-04-22T19:26:00Z",
+    "closed_at": "2025-04-30T21:55:43Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6738"
+  },
+  {
+    "lang": "es",
+    "number": 6614,
+    "title": "devex: add blog post for results of devex survey",
+    "created_at": "2025-03-26T21:06:35Z",
+    "closed_at": "2025-04-02T15:39:10Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:java",
+      "docs:registry",
+      "sig:security",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6614"
+  },
+  {
+    "lang": "es",
+    "number": 6590,
+    "title": "[IA] Rename `net` to `dotnet` in `/docs/{languages,zero-code}/net`, add redirects and adjust links",
+    "created_at": "2025-03-21T13:42:45Z",
+    "closed_at": "2025-03-21T20:12:34Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:blog",
+      "docs:information-architecture",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6590"
+  },
+  {
+    "lang": "es",
+    "number": 6587,
+    "title": "Test",
+    "created_at": "2025-03-21T08:28:45Z",
+    "closed_at": "2025-03-21T08:31:02Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6587"
+  },
+  {
+    "lang": "es",
+    "number": 6485,
+    "title": "feat: [es] New translation - docs/contributing/localization",
+    "created_at": "2025-03-06T16:56:41Z",
+    "closed_at": "2025-07-02T08:00:13Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6485"
+  },
+  {
+    "lang": "es",
+    "number": 6446,
+    "title": "[i18n] Add `drifted_from_default` status to drifted pages, adjust script, add \"Drift status\" section to l10n page",
+    "created_at": "2025-02-28T19:23:00Z",
+    "closed_at": "2025-02-28T20:10:57Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6446"
+  },
+  {
+    "lang": "es",
+    "number": 6442,
+    "title": "Markdown cleanup: Replace {{< >}} with {{% %}}",
+    "created_at": "2025-02-28T12:55:18Z",
+    "closed_at": "2025-02-28T14:15:53Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:ruby",
+      "sig:demo",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6442"
+  },
+  {
+    "lang": "es",
+    "number": 6371,
+    "title": "feat: [es] Create docs/contributing/pr-checks.md",
+    "created_at": "2025-02-18T13:12:27Z",
+    "closed_at": "2025-04-08T07:15:13Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6371"
+  },
+  {
+    "lang": "es",
+    "number": 6364,
+    "title": "[i18n] Make `instrumentation-intro` shortcode a simple include",
+    "created_at": "2025-02-18T00:10:59Z",
+    "closed_at": "2025-02-18T04:09:41Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "docs:i18n",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:go",
+      "sig:erlang",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:ruby",
+      "sig:swift",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6364"
+  },
+  {
+    "lang": "es",
+    "number": 6317,
+    "title": "[CI] Enable markdownlint2 checks, and fix issues",
+    "created_at": "2025-02-14T06:43:04Z",
+    "closed_at": "2025-02-14T07:31:02Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6317"
+  },
+  {
+    "lang": "es",
+    "number": 6286,
+    "title": "Add fix cmd desc to contrib docs, and other edits",
+    "created_at": "2025-02-11T13:19:35Z",
+    "closed_at": "2025-02-11T15:28:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:ja",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6286"
+  },
+  {
+    "lang": "es",
+    "number": 6232,
+    "title": "[IA] Link normalization step for platforms",
+    "created_at": "2025-02-06T12:34:38Z",
+    "closed_at": "2025-02-06T12:56:36Z",
+    "state": "closed",
+    "labels": [
+      "docs:cleanup/refactoring",
+      "sig:collector",
+      "docs:blog",
+      "sig:dotnet",
+      "sig:javascript",
+      "sig:python",
+      "sig:operator",
+      "sig:demo",
+      "docs:information-architecture",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6232"
+  },
+  {
+    "lang": "es",
+    "number": 6145,
+    "title": "[CI] Enforce no-trailing-spaces",
+    "created_at": "2025-01-31T15:15:09Z",
+    "closed_at": "2025-01-31T17:46:42Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:blog",
+      "sig:operator",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6145"
+  },
+  {
+    "lang": "es",
+    "number": 6134,
+    "title": "feat: [es] Create docs/contributing/style-guide.md",
+    "created_at": "2025-01-31T09:09:02Z",
+    "closed_at": "2025-02-19T16:20:58Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6134"
+  },
+  {
+    "lang": "es",
+    "number": 6124,
+    "title": "Demo repo links: fix & check them all, update refcache",
+    "created_at": "2025-01-30T15:58:35Z",
+    "closed_at": "2025-01-30T18:41:22Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "sig:demo",
+      "lang:zh",
+      "lang:ja",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6124"
+  },
+  {
+    "lang": "es",
+    "number": 6088,
+    "title": "feat: [es] Create docs/contributing/issues.md",
+    "created_at": "2025-01-27T15:44:05Z",
+    "closed_at": "2025-02-13T23:26:01Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6088"
+  },
+  {
+    "lang": "es",
+    "number": 6083,
+    "title": "feat: [es] Create docs/languages/asuntos.md",
+    "created_at": "2025-01-25T11:19:51Z",
+    "closed_at": "2025-01-27T14:51:01Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6083"
+  },
+  {
+    "lang": "es",
+    "number": 6002,
+    "title": "[infra] Better support for RSS and blog pages",
+    "created_at": "2025-01-21T12:59:17Z",
+    "closed_at": "2025-01-21T14:13:16Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:blog",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/6002"
+  },
+  {
+    "lang": "es",
+    "number": 5970,
+    "title": "[CI] Fix external links into opentelemetry-collector-contrib",
+    "created_at": "2025-01-17T21:02:54Z",
+    "closed_at": "2025-01-17T21:33:08Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:blog",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5970"
+  },
+  {
+    "lang": "es",
+    "number": 5960,
+    "title": "Document usage of multiple collector config files",
+    "created_at": "2025-01-17T04:52:07Z",
+    "closed_at": "2025-01-20T09:53:41Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:java",
+      "sig:javascript",
+      "docs:registry",
+      "sig:demo",
+      "lang:zh",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5960"
+  },
+  {
+    "lang": "es",
+    "number": 5765,
+    "title": "[CI] Merge dup cSpell entries in front matter, run word normalization in other locales",
+    "created_at": "2024-12-11T23:29:32Z",
+    "closed_at": "2024-12-12T12:53:14Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:rust",
+      "sig:ruby",
+      "sig:swift",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5765"
+  },
+  {
+    "lang": "es",
+    "number": 5748,
+    "title": "feat: [es] create docs/contributing/prerequisites",
+    "created_at": "2024-12-09T19:14:46Z",
+    "closed_at": "2025-01-10T08:24:01Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5748"
+  },
+  {
+    "lang": "es",
+    "number": 5684,
+    "title": "Update prettier to 3.4.0",
+    "created_at": "2024-11-26T08:08:53Z",
+    "closed_at": "2024-11-26T13:54:07Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:dotnet",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:ruby",
+      "sig:demo",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5684"
+  },
+  {
+    "lang": "es",
+    "number": 5676,
+    "title": "[CI] Prettify es and pt shortcodes too",
+    "created_at": "2024-11-23T11:54:53Z",
+    "closed_at": "2024-11-28T10:46:03Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "docs:i18n",
+      "lang:pt",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5676"
+  },
+  {
+    "lang": "es",
+    "number": 5661,
+    "title": "feat: [es] Create docs/languages/go/_index.md",
+    "created_at": "2024-11-21T10:46:50Z",
+    "closed_at": "2025-01-10T08:32:19Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5661"
+  },
+  {
+    "lang": "es",
+    "number": 5644,
+    "title": "Translate en-es Ref [es] Spanish folder localization docs/kubernetes",
+    "created_at": "2024-11-20T14:54:34Z",
+    "closed_at": "2025-01-10T08:19:27Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5644"
+  },
+  {
+    "lang": "es",
+    "number": 5607,
+    "title": "Translate en-es Ref [es] Spanish folder localization docs/kubernetes #5227",
+    "created_at": "2024-11-14T01:11:51Z",
+    "closed_at": "2024-11-20T08:38:42Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5607"
+  },
+  {
+    "lang": "es",
+    "number": 5589,
+    "title": "[es] restore observability primer",
+    "created_at": "2024-11-11T18:15:38Z",
+    "closed_at": "2024-11-11T22:00:51Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5589"
+  },
+  {
+    "lang": "es",
+    "number": 5580,
+    "title": "Add missing en anchors for ES translations",
+    "created_at": "2024-11-11T08:54:09Z",
+    "closed_at": "2024-11-12T11:30:09Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5580"
+  },
+  {
+    "lang": "es",
+    "number": 5575,
+    "title": "Blog post for OpenTelemetry Generative AI updates",
+    "created_at": "2024-11-09T00:40:17Z",
+    "closed_at": "2024-12-05T09:51:36Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5575"
+  },
+  {
+    "lang": "es",
+    "number": 5555,
+    "title": "[i18n] Link-check failures due to missing heading IDs",
+    "created_at": "2024-11-07T23:10:32Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "p1-high",
+      "docs:i18n",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5555"
+  },
+  {
+    "lang": "es",
+    "number": 5554,
+    "title": "[i18n] Render-link fix: prepend lang code when page exists",
+    "created_at": "2024-11-07T23:00:37Z",
+    "closed_at": "2024-11-07T23:39:42Z",
+    "state": "closed",
+    "labels": [
+      "docs:CI/infra",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5554"
+  },
+  {
+    "lang": "es",
+    "number": 5502,
+    "title": "feat: [es] Create /docs/contributing/pull-requests.md",
+    "created_at": "2024-10-30T14:12:48Z",
+    "closed_at": "2024-11-02T18:47:30Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5502"
+  },
+  {
+    "lang": "es",
+    "number": 5391,
+    "title": "[es] adding docs/concepts/components",
+    "created_at": "2024-10-11T20:11:25Z",
+    "closed_at": "2024-11-04T07:17:29Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5391"
+  },
+  {
+    "lang": "es",
+    "number": 5327,
+    "title": "feat: [es] Create docs/languages/js/_index.md",
+    "created_at": "2024-10-05T06:38:05Z",
+    "closed_at": "2025-01-10T08:19:55Z",
+    "state": "closed",
+    "labels": [
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:rust",
+      "sig:ruby",
+      "sig:swift",
+      "lang:zh",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5327"
+  },
+  {
+    "lang": "es",
+    "number": 5321,
+    "title": "adding [es] docs/concepts/distributions",
+    "created_at": "2024-10-04T17:53:24Z",
+    "closed_at": "2024-10-07T15:36:52Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5321"
+  },
+  {
+    "lang": "es",
+    "number": 5315,
+    "title": "feat: [es] Create docs/languages/context-propagation",
+    "created_at": "2024-10-04T13:49:46Z",
+    "closed_at": "2024-10-07T15:46:57Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5315"
+  },
+  {
+    "lang": "es",
+    "number": 5302,
+    "title": "\"feat: [es] Create observability-primer.md \"",
+    "created_at": "2024-10-03T22:10:25Z",
+    "closed_at": "2024-10-05T16:35:15Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5302"
+  },
+  {
+    "lang": "es",
+    "number": 5301,
+    "title": "[es] Spanish folder localization docs/kubernetes #5227",
+    "created_at": "2024-10-03T21:51:47Z",
+    "closed_at": "2024-11-10T17:13:44Z",
+    "state": "closed",
+    "labels": [
+      "sig:helm",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5301"
+  },
+  {
+    "lang": "es",
+    "number": 5297,
+    "title": "[es] Translate docs/languages/python/instrumentation ",
+    "created_at": "2024-10-03T10:14:19Z",
+    "closed_at": "2024-10-04T15:59:34Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5297"
+  },
+  {
+    "lang": "es",
+    "number": 5285,
+    "title": "Improve intro text",
+    "created_at": "2024-10-01T16:43:19Z",
+    "closed_at": "2024-10-01T16:49:06Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5285"
+  },
+  {
+    "lang": "es",
+    "number": 5279,
+    "title": "Test commit to test CLA",
+    "created_at": "2024-10-01T06:22:10Z",
+    "closed_at": "2024-10-01T10:03:17Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5279"
+  },
+  {
+    "lang": "es",
+    "number": 5270,
+    "title": "feat: [es] Create /docs/contributing/new-content.md",
+    "created_at": "2024-09-30T06:40:15Z",
+    "closed_at": "2024-10-30T13:37:09Z",
+    "state": "closed",
+    "labels": [
+      "docs:blog",
+      "sig:dotnet",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5270"
+  },
+  {
+    "lang": "es",
+    "number": 5263,
+    "title": "feat: [es] Create docs/kubernetes/collector/components.md",
+    "created_at": "2024-09-27T20:45:58Z",
+    "closed_at": "2024-10-01T16:04:50Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5263"
+  },
+  {
+    "lang": "es",
+    "number": 5250,
+    "title": "feat: [es] Create docs/kubernetes/collector/_index.md",
+    "created_at": "2024-09-25T06:20:40Z",
+    "closed_at": "2024-09-27T12:12:27Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5250"
+  },
+  {
+    "lang": "es",
+    "number": 5249,
+    "title": "feat: [es] Create docs/kubernetes/collector/_index.md",
+    "created_at": "2024-09-25T05:46:09Z",
+    "closed_at": "2024-09-25T06:04:47Z",
+    "state": "closed",
+    "labels": [
+      "missing:cla",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5249"
+  },
+  {
+    "lang": "es",
+    "number": 5247,
+    "title": "feat: [es] Create docs/languages/_index.md",
+    "created_at": "2024-09-25T03:29:01Z",
+    "closed_at": "2024-09-26T06:47:23Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5247"
+  },
+  {
+    "lang": "es",
+    "number": 5246,
+    "title": "feat: [es] Create docs/_index.md",
+    "created_at": "2024-09-25T00:06:45Z",
+    "closed_at": "2024-09-26T05:41:39Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5246"
+  },
+  {
+    "lang": "es",
+    "number": 5229,
+    "title": "[es] Spanish folder localization docs/languages",
+    "created_at": "2024-09-21T03:13:34Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "docs",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5229"
+  },
+  {
+    "lang": "es",
+    "number": 5228,
+    "title": "feat: [es]  opentelemetry.io/content/en/docs/getting-started/ops.md",
+    "created_at": "2024-09-21T03:01:58Z",
+    "closed_at": "2024-09-23T08:25:45Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5228"
+  },
+  {
+    "lang": "es",
+    "number": 5227,
+    "title": "[es] Spanish folder localization docs/Platforms",
+    "created_at": "2024-09-21T02:49:28Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "docs",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5227"
+  },
+  {
+    "lang": "es",
+    "number": 5226,
+    "title": "[es] Spanish folder localization docs/demo",
+    "created_at": "2024-09-21T02:43:29Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "docs",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5226"
+  },
+  {
+    "lang": "es",
+    "number": 5225,
+    "title": "feat: [es]  opentelemetry.io/content/en/docs/getting-started/dev.md",
+    "created_at": "2024-09-21T02:35:08Z",
+    "closed_at": "2024-09-23T08:27:11Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5225"
+  },
+  {
+    "lang": "es",
+    "number": 5221,
+    "title": "Update what-is-opentelemetry.md",
+    "created_at": "2024-09-19T19:24:40Z",
+    "closed_at": "2024-09-20T13:49:39Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5221"
+  },
+  {
+    "lang": "es",
+    "number": 5206,
+    "title": "[es] Spanish folder localization docs/concepts",
+    "created_at": "2024-09-16T17:02:48Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "help wanted",
+      "docs",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5206"
+  },
+  {
+    "lang": "es",
+    "number": 5205,
+    "title": "[es] Spanish folder localization docs/contributing",
+    "created_at": "2024-09-16T16:54:32Z",
+    "closed_at": "2025-09-09T15:56:21Z",
+    "state": "closed",
+    "labels": [
+      "help wanted",
+      "good first issue",
+      "docs",
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/5205"
+  },
+  {
+    "lang": "es",
+    "number": 5166,
+    "title": "Add single writer principle note to deployment documentation",
+    "created_at": "2024-09-08T15:04:35Z",
+    "closed_at": "2025-01-07T17:15:53Z",
+    "state": "closed",
+    "labels": [
+      "sig:collector",
+      "docs:blog",
+      "sig:cpp",
+      "sig:dotnet",
+      "sig:go",
+      "sig:erlang",
+      "sig:java",
+      "sig:javascript",
+      "sig:php",
+      "sig:python",
+      "sig:rust",
+      "sig:ruby",
+      "sig:swift",
+      "sig:operator",
+      "docs:registry",
+      "sig:demo",
+      "sig:enduser",
+      "sig:spec",
+      "sig:security",
+      "missing:sig-approval",
+      "sig:helm",
+      "lang:zh",
+      "lang:ja",
+      "lang:pt",
+      "lang:es",
+      "lang:fr"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5166"
+  },
+  {
+    "lang": "es",
+    "number": 5058,
+    "title": "[es] feature: contributing - spanish translation",
+    "created_at": "2024-08-18T16:24:51Z",
+    "closed_at": "2024-08-27T07:39:20Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5058"
+  },
+  {
+    "lang": "es",
+    "number": 5057,
+    "title": "[es] feature: concepts - spanish translation",
+    "created_at": "2024-08-18T16:15:00Z",
+    "closed_at": "2024-08-23T06:15:04Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5057"
+  },
+  {
+    "lang": "es",
+    "number": 5055,
+    "title": "[es] kubernetes - spanish translation",
+    "created_at": "2024-08-17T21:55:36Z",
+    "closed_at": "2024-08-23T06:15:37Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5055"
+  },
+  {
+    "lang": "es",
+    "number": 5054,
+    "title": "[es] feature: getting started - spanish translation",
+    "created_at": "2024-08-17T21:44:04Z",
+    "closed_at": "2024-08-23T06:26:18Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5054"
+  },
+  {
+    "lang": "es",
+    "number": 5053,
+    "title": "[es] feature: demo structure - spanish translation",
+    "created_at": "2024-08-17T21:27:22Z",
+    "closed_at": "2024-08-28T08:41:39Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5053"
+  },
+  {
+    "lang": "es",
+    "number": 5021,
+    "title": "[es] Add What is OpenTelemetry to Spanish site",
+    "created_at": "2024-08-12T10:30:01Z",
+    "closed_at": "2024-08-12T15:25:39Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5021"
+  },
+  {
+    "lang": "es",
+    "number": 5009,
+    "title": "Add cSpell excepctions for ES index",
+    "created_at": "2024-08-09T12:38:23Z",
+    "closed_at": "2024-08-09T12:51:29Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5009"
+  },
+  {
+    "lang": "es",
+    "number": 5005,
+    "title": "Add mount points for es pages",
+    "created_at": "2024-08-09T09:28:29Z",
+    "closed_at": "2024-08-09T11:29:17Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/5005"
+  },
+  {
+    "lang": "es",
+    "number": 4989,
+    "title": "[es] Create homepage for Spanish localization",
+    "created_at": "2024-08-07T10:48:28Z",
+    "closed_at": "2024-08-09T09:12:57Z",
+    "state": "closed",
+    "labels": [
+      "lang:es"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/4989"
+  }
+]

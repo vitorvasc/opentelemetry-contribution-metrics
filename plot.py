@@ -1,6 +1,13 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import matplotlib.dates as mdates
+import yaml
+from pathlib import Path
+
+# Load configuration
+config_path = Path(__file__).parent / "config.yaml"
+with open(config_path, "r") as f:
+    config = yaml.safe_load(f)
 
 # Load data
 df = pd.read_csv("lang_accumulated.csv", parse_dates=["date"])
@@ -17,18 +24,16 @@ TICK_FONTSIZE = 14
 LEGEND_FONTSIZE = 14
 LINE_WIDTH = 3.5
 
+# Config options
+SHOW_ENDPOINT_VALUES = config.get("show_endpoint_values", False)
+COLORS = config.get("colors", {})
+
 # Higher DPI for sharper rendering
 fig, ax = plt.subplots(figsize=(14, 6), dpi=120)
 
 # Set background colors
 fig.patch.set_facecolor(BACKGROUND_COLOR)
 ax.set_facecolor(BACKGROUND_COLOR)
-
-# Colors - brighter purple for better projector visibility
-COLORS = {
-    "pt": "#A855F7",  # brighter purple
-    "es": "#00FF7F",  # green-ish
-}
 
 # Sort languages by max count (descending) so larger areas are drawn first
 langs_sorted = df.groupby("lang")["count"].max().sort_values(ascending=False).index
@@ -68,7 +73,20 @@ for lang in langs_sorted:
         color=color
     )
     
-    # REMOVED: endpoint annotation code block
+    # Endpoint annotation (configurable)
+    if SHOW_ENDPOINT_VALUES:
+        final_date = subset["date"].iloc[-1]
+        final_count = subset["count"].iloc[-1]
+        ax.annotate(
+            f'{int(final_count)}',
+            xy=(final_date, final_count),
+            xytext=(10, 0),
+            textcoords='offset points',
+            fontsize=LEGEND_FONTSIZE,
+            fontweight='bold',
+            color=color,
+            va='center'
+        )
 
 # Grid styling (Grafana-like)
 ax.grid(color=GRID_COLOR, linestyle="--", linewidth=0.5, alpha=0.6)

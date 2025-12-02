@@ -1,0 +1,18 @@
+# Plot Configuration
+# ------------------
+
+# Plot display options
+show_endpoint_values: true  # Show/hide numbers at end of lines
+
+# Colors per language (hex format)
+# Languages without a color will get auto-assigned colors
+colors:
+  bn: "#FF6B6B"   # coral red
+  es: "#00FF7F"   # green
+  fr: "#3B82F6"   # blue
+  ja: "#F59E0B"   # amber
+  pt: "#A855F7"   # purple
+  ro: "#EC4899"   # pink
+  uk: "#14B8A6"   # teal
+  zh: "#EF4444"   # red
+

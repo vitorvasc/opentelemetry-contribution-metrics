@@ -3,8 +3,13 @@ import fs from "fs";
 
 const OWNER = "open-telemetry";
 const REPO = "opentelemetry.io";
-const LOCALES = ["pt", "es"]; // idiomas que você quer medir
+const ALL_LOCALES = ["bn", "es", "fr", "ja", "pt", "ro", "uk", "zh"];
 const TOKEN = process.env.GITHUB_TOKEN;
+
+// Get languages from LANGS environment variable, or use all if not specified
+const LOCALES = process.env.LANGS 
+  ? process.env.LANGS.split(",").map(l => l.trim())
+  : ALL_LOCALES;
 
 async function searchLang(lang, page = 1) {
   const q = `repo:${OWNER}/${REPO} label:"lang:${lang}"`;

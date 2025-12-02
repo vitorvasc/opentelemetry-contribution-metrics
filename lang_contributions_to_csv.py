@@ -2,6 +2,9 @@ import pandas as pd
 
 df = pd.read_json("lang_contributions.json")
 
+# Filter PRs only (exclude issues)
+df = df[df["url"].str.contains("/pull/")]
+
 # usar created_at como data
 df["date"] = pd.to_datetime(df["created_at"])
 

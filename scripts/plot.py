@@ -2,15 +2,33 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import matplotlib.dates as mdates
 import yaml
+import sys
 from pathlib import Path
 
 # Load configuration
-config_path = Path(__file__).parent / "config.yaml"
-with open(config_path, "r") as f:
-    config = yaml.safe_load(f)
+config_path = Path(__file__).parent.parent / "config.yaml"
+if not config_path.exists():
+    print(f"Error: {config_path} not found.")
+    sys.exit(1)
+
+try:
+    with open(config_path, "r") as f:
+        config = yaml.safe_load(f)
+except Exception as e:
+    print(f"Error reading config: {e}")
+    sys.exit(1)
 
 # Load data
-df = pd.read_csv("lang_accumulated.csv", parse_dates=["date"])
+csv_path = Path("data/lang_accumulated.csv")
+if not csv_path.exists():
+    print(f"Error: {csv_path} not found. Run 'make csv' first.")
+    sys.exit(1)
+
+try:
+    df = pd.read_csv(csv_path, parse_dates=["date"])
+except Exception as e:
+    print(f"Error reading CSV: {e}")
+    sys.exit(1)
 
 # Grafana-style dark theme configuration
 BACKGROUND_COLOR = "#282828"
@@ -128,6 +146,10 @@ for text in legend.get_texts():
 
 # Tight layout with extra padding for cleaner look
 plt.tight_layout(pad=1.5)
+
+# Success message
+print(f"✓ Generated plot with {len(df['lang'].unique())} languages")
+print(f"  Date range: {df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}")
 
 # Show the plot
 plt.show()

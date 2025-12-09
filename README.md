@@ -76,83 +76,117 @@ configured correctly.
 
 ### Using Make (Recommended)
 
-Run the complete pipeline:
+The tool provides two automated pipelines - each command fetches data, converts to CSV, and generates visualizations automatically:
+
+#### Language Contributions Pipeline
+
+Track PR and issue contributions by language over time:
 
 ```bash
-make all
+# Fetch, process, and plot all language contributions (PRs + issues)
+make fetch-lang-contributions
+
+# Fetch only PRs
+make fetch-lang-contributions TYPE=prs
+
+# Fetch only issues
+make fetch-lang-contributions TYPE=issues
+
+# Filter by year
+make fetch-lang-contributions YEAR=2024
+
+# Filter by specific languages
+make fetch-lang-contributions LANGS=pt,es
+
+# Combine filters
+make fetch-lang-contributions TYPE=prs YEAR=2024 LANGS=pt,es
+
+# Clean generated data
+make clean-lang-contributions
 ```
 
-Individual commands:
+#### Release Metrics Pipeline
 
-| Command            | Description                                |
-| ------------------ | ------------------------------------------ |
-| `make fetch`       | Fetch PRs with `lang:*` labels from GitHub |
-| `make csv`         | Convert JSON data to accumulated CSV       |
-| `make plot`        | Generate the contribution graph            |
-| `make clean`       | Remove generated data files                |
-| `make setup-check` | Verify environment configuration           |
-| `make help`        | Show available commands                    |
-
-Fetch specific languages:
+Track translation metrics by monthly release:
 
 ```bash
-make fetch LANGS=pt,es
+# Fetch, process, and plot release metrics
+make fetch-release-metrics
+
+# Filter by year
+make fetch-release-metrics YEAR=2024
+
+# Filter by languages
+make fetch-release-metrics LANGS=pt,es YEAR=2024
+
+# Clean generated data
+make clean-release-metrics
 ```
+
+#### Other Commands
+
+```bash
+make setup-check  # Verify environment configuration
+make help         # Show all available commands
+```
+
+### Parameters
+
+All commands support the following parameters:
+
+| Parameter     | Description                                  | Default | Example          |
+| ------------- | -------------------------------------------- | ------- | ---------------- |
+| `YEAR=XXXX`   | Filter by year                               | 2025    | `YEAR=2024`      |
+| `LANGS=xx,yy` | Filter by languages (comma-separated)        | all     | `LANGS=pt,es,fr` |
+| `TYPE=xxx`    | Filter contribution type (prs/issues/both)\* | both    | `TYPE=prs`       |
+
+\* `TYPE` parameter only applies to `fetch-lang-contributions`
 
 ### Using npm Scripts
 
 ```bash
-npm run all          # Run complete pipeline
-npm run fetch        # Fetch data only
-npm run csv          # Convert to CSV only
-npm run plot         # Generate plot only
-npm run clean        # Clean generated files
-npm run setup-check  # Verify setup
+npm run fetch-lang-contributions  # Language contributions pipeline
+npm run fetch-release-metrics     # Release metrics pipeline
+npm run clean-lang-contributions  # Clean language data
+npm run clean-release-metrics     # Clean release data
+npm run setup-check               # Verify setup
 ```
 
 ### Direct Script Execution
 
 ```bash
+# Language contributions
 node scripts/fetch_lang_issues.js
 python3 scripts/lang_contributions_to_csv.py
 python3 scripts/plot.py
+
+# Release metrics
+node scripts/fetch_release_metrics.js
+python3 scripts/release_metrics_to_csv.py
+python3 scripts/plot.py --source=releases
 ```
 
-## Release-Based Metrics
+## Understanding the Two Pipelines
 
-In addition to PR-based tracking, you can measure localization progress by
-monthly releases (using the `YYYY.MM` release tags from
-https://github.com/open-telemetry/opentelemetry.io/releases).
+The tool provides two complementary ways to track OpenTelemetry localization contributions:
 
-### What's Different?
+### Language Contributions Pipeline
 
-- **PR-based metrics** (above): Tracks individual PRs over time
-- **Release-based metrics**: Groups PRs by monthly release, calculates lines
-  added, pages translated, and coverage % per month
+Tracks **individual PR and issue contributions** over time:
 
-### Usage
+- **What it tracks**: Every PR/issue with a `lang:*` label
+- **Granularity**: Day-by-day accumulation
+- **Use case**: See contribution activity and engagement over time
+- **Filters**: Can filter by type (PRs only, issues only, or both)
 
-**Using Make:**
+### Release Metrics Pipeline
 
-```bash
-make releases                    # Run complete release pipeline
-make fetch-releases              # Fetch release metrics
-make fetch-releases SINCE=2024.01  # Only process releases since Jan 2024
-make fetch-releases LANGS=pt,es # Only specific languages
-make csv-releases                # Convert to CSV
-make plot-releases               # Generate visualization
-make clean-releases              # Remove generated files
-```
+Tracks **translation progress by monthly release**:
 
-**Using npm:**
-
-```bash
-npm run releases        # Run complete release pipeline
-npm run fetch-releases  # Fetch release metrics
-npm run csv-releases    # Convert to CSV
-npm run plot-releases   # Generate visualization
-npm run clean-releases  # Remove generated files
-```
+- **What it tracks**: Lines translated, pages added, coverage % per monthly release (YYYY.MM tags)
+- **Granularity**: Month-by-month snapshots aligned with OpenTelemetry releases
+- **Use case**: Measure actual translation coverage and progress against English baseline
+- **Data source**: https://github.com/open-telemetry/opentelemetry.io/releases
 
 ### Metrics Calculated
 
@@ -206,10 +240,17 @@ colors:
 GITHUB_TOKEN=your_token_here
 ```
 
-Command-line (optional):
+Command-line parameters (optional):
 
 ```bash
-LANGS=pt,es make fetch  # Fetch specific languages only
+# Filter by languages
+make fetch-lang-contributions LANGS=pt,es
+
+# Filter by contribution type
+TYPE=prs make fetch-lang-contributions
+
+# Filter by year
+YEAR=2024 make fetch-release-metrics
 ```
 
 ## Project Structure

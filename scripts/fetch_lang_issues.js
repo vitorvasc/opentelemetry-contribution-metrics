@@ -21,8 +21,19 @@ const LOCALES = process.env.LANGS
 // Filter by year (default: current year)
 const YEAR = process.env.YEAR || new Date().getFullYear().toString();
 
+// Get contribution type filter (prs, issues, or both)
+const TYPE = process.env.TYPE || "both";
+
 async function searchLang(lang, page = 1) {
-  const q = `repo:${OWNER}/${REPO} label:"lang:${lang}" created:${YEAR}-01-01..${YEAR}-12-31`;
+  let typeFilter = "";
+  if (TYPE === "prs") {
+    typeFilter = " is:pr";
+  } else if (TYPE === "issues") {
+    typeFilter = " is:issue";
+  }
+  // TYPE === "both" means no additional filter
+
+  const q = `repo:${OWNER}/${REPO} label:"lang:${lang}" created:${YEAR}-01-01..${YEAR}-12-31${typeFilter}`;
   const url = `https://api.github.com/search/issues?q=${encodeURIComponent(q)}&per_page=100&page=${page}`;
 
   try {
@@ -86,7 +97,8 @@ async function fetchLocale(lang) {
 
 async function main() {
   console.log(`\nStarting fetch for languages: ${LOCALES.join(", ")}`);
-  console.log(`Filtering for year: ${YEAR}\n`);
+  console.log(`Filtering for year: ${YEAR}`);
+  console.log(`Type: ${TYPE === "both" ? "PRs and issues" : TYPE}\n`);
 
   let merged = [];
   for (const lang of LOCALES) {

@@ -1,6 +1,21 @@
 {
+  "name": "opentelemetry-contribution-metrics",
+  "version": "2.0.0",
+  "description": "Visualization tool for tracking OpenTelemetry contributions by language",
+  "type": "module",
+  "scripts": {
+    "fetch": "node scripts/fetch_lang_issues.js",
+    "csv": "python3 scripts/lang_contributions_to_csv.py",
+    "plot": "python3 scripts/plot.py",
+    "all": "npm run fetch && npm run csv && npm run plot",
+    "clean": "rm -f data/lang_contributions.json data/lang_accumulated.csv",
+    "setup-check": "bash scripts/check_setup.sh"
+  },
   "dependencies": {
-    "dotenv": "^17.2.3",
+    "dotenv": "^16.4.0",
     "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

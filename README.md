@@ -1,6 +1,7 @@
 # OpenTelemetry Contribution Metrics
 
-Visualization tool for tracking accumulated contributions to OpenTelemetry projects by language.
+Visualization tool for tracking accumulated contributions to OpenTelemetry
+projects by language.
 
 ## Features
 
@@ -33,7 +34,7 @@ cp .env.example .env
 
 Edit `.env` and add your GitHub token:
 
-```
+```bash
 GITHUB_TOKEN=ghp_your_token_here
 ```
 
@@ -65,7 +66,8 @@ pip install -r requirements.txt
 make setup-check
 ```
 
-This validates that all dependencies are installed and the environment is configured correctly.
+This validates that all dependencies are installed and the environment is
+configured correctly.
 
 ## Usage
 
@@ -79,14 +81,14 @@ make all
 
 Individual commands:
 
-| Command            | Description                              |
-| ------------------ | ---------------------------------------- |
+| Command            | Description                                |
+| ------------------ | ------------------------------------------ |
 | `make fetch`       | Fetch PRs with `lang:*` labels from GitHub |
-| `make csv`         | Convert JSON data to accumulated CSV     |
-| `make plot`        | Generate the contribution graph          |
-| `make clean`       | Remove generated data files              |
-| `make setup-check` | Verify environment configuration         |
-| `make help`        | Show available commands                  |
+| `make csv`         | Convert JSON data to accumulated CSV       |
+| `make plot`        | Generate the contribution graph            |
+| `make clean`       | Remove generated data files                |
+| `make setup-check` | Verify environment configuration           |
+| `make help`        | Show available commands                    |
 
 Fetch specific languages:
 
@@ -120,17 +122,17 @@ python3 scripts/plot.py
 Customize plot appearance:
 
 ```yaml
-show_endpoint_values: true  # Show/hide numbers at end of lines
+show_endpoint_values: true # Show/hide numbers at end of lines
 
 colors:
-  bn: "#FF6B6B"   # Bengali - coral red
-  es: "#00FF7F"   # Spanish - green
-  fr: "#3B82F6"   # French - blue
-  ja: "#F59E0B"   # Japanese - amber
-  pt: "#A855F7"   # Portuguese - purple
-  ro: "#EC4899"   # Romanian - pink
-  uk: "#14B8A6"   # Ukrainian - teal
-  zh: "#EF4444"   # Chinese - red
+  bn: '#FF6B6B' # Bengali - coral red
+  es: '#00FF7F' # Spanish - green
+  fr: '#3B82F6' # French - blue
+  ja: '#F59E0B' # Japanese - amber
+  pt: '#A855F7' # Portuguese - purple
+  ro: '#EC4899' # Romanian - pink
+  uk: '#14B8A6' # Ukrainian - teal
+  zh: '#EF4444' # Chinese - red
 ```
 
 ### Environment Variables
@@ -227,7 +229,8 @@ cp .env.example .env
 
 ### GitHub API Rate Limit
 
-If you see rate limit warnings, the script will display when the limit resets. You can:
+If you see rate limit warnings, the script will display when the limit resets.
+You can:
 
 1. Wait for the reset time
 2. Use a different GitHub token
@@ -251,4 +254,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 MIT License - see LICENSE file for details
-

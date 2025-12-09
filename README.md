@@ -1,12 +1,15 @@
 # OpenTelemetry Contribution Metrics
 
-Visualization tool for tracking accumulated contributions to OpenTelemetry
-projects by language.
+Visualization tool for tracking accumulated contributions — OpenTelemetry.io.
 
 ## Features
 
 - Fetches contribution data from GitHub API
 - Filters PRs by language labels (bn, es, fr, ja, pt, ro, uk, zh)
+- **Two tracking modes**:
+  - **PR-based**: Track individual PRs over time
+  - **Release-based**: Measure lines/pages translated per monthly release
+- Calculates translation coverage percentages
 - Generates accumulated contribution metrics over time
 - Creates Grafana-style dark theme visualizations
 - Configurable colors and display options
@@ -115,6 +118,66 @@ python3 scripts/lang_contributions_to_csv.py
 python3 scripts/plot.py
 ```
 
+## Release-Based Metrics
+
+In addition to PR-based tracking, you can measure localization progress by
+monthly releases (using the `YYYY.MM` release tags from
+https://github.com/open-telemetry/opentelemetry.io/releases).
+
+### What's Different?
+
+- **PR-based metrics** (above): Tracks individual PRs over time
+- **Release-based metrics**: Groups PRs by monthly release, calculates lines
+  added, pages translated, and coverage % per month
+
+### Usage
+
+**Using Make:**
+
+```bash
+make releases                    # Run complete release pipeline
+make fetch-releases              # Fetch release metrics
+make fetch-releases SINCE=2024.01  # Only process releases since Jan 2024
+make fetch-releases LANGS=pt,es # Only specific languages
+make csv-releases                # Convert to CSV
+make plot-releases               # Generate visualization
+make clean-releases              # Remove generated files
+```
+
+**Using npm:**
+
+```bash
+npm run releases        # Run complete release pipeline
+npm run fetch-releases  # Fetch release metrics
+npm run csv-releases    # Convert to CSV
+npm run plot-releases   # Generate visualization
+npm run clean-releases  # Remove generated files
+```
+
+### Metrics Calculated
+
+For each release month and language:
+
+1. **Lines Added**: Total lines of translated content added in `.md` files
+2. **Pages Added**: Count of new markdown files in `content/{lang}/`
+3. **Coverage %**: Percentage of English content that's been translated
+4. **Coverage Change**: Month-over-month improvement in coverage
+
+### Output Files
+
+- `data/release_metrics.json` - Detailed metrics per release/language
+- `data/release_metrics_accumulated.csv` - Accumulated totals for visualization
+
+### Example Output
+
+```csv
+lang,month,lines_added,pages_added,total_lines,total_pages,coverage_pct,coverage_change,pr_count
+pt,2025-01,423,3,423,3,12.5,0.0,8
+pt,2025-02,567,5,990,8,18.2,5.7,12
+es,2025-01,892,7,892,7,25.3,0.0,15
+es,2025-02,654,4,1546,11,28.9,3.6,11
+```
+
 ## Configuration
 
 ### config.yaml
@@ -154,13 +217,17 @@ LANGS=pt,es make fetch  # Fetch specific languages only
 ```
 opentelemetry-contribution-metrics/
 ├── scripts/
-│   ├── fetch_lang_issues.js           # Fetches data from GitHub API
-│   ├── lang_contributions_to_csv.py   # Converts JSON to accumulated CSV
-│   ├── plot.py                        # Generates visualization
+│   ├── fetch_lang_issues.js           # Fetches PR-based data from GitHub API
+│   ├── fetch_release_metrics.js       # Fetches release-based metrics
+│   ├── lang_contributions_to_csv.py   # Converts PR JSON to accumulated CSV
+│   ├── release_metrics_to_csv.py      # Converts release JSON to accumulated CSV
+│   ├── plot.py                        # Generates visualization (supports both modes)
 │   └── check_setup.sh                 # Validates environment setup
 ├── data/
-│   ├── lang_contributions.json        # Raw contribution data (generated)
-│   └── lang_accumulated.csv           # Accumulated data (generated)
+│   ├── lang_contributions.json        # Raw PR data (generated)
+│   ├── lang_accumulated.csv           # Accumulated PR data (generated)
+│   ├── release_metrics.json           # Raw release data (generated)
+│   └── release_metrics_accumulated.csv # Accumulated release data (generated)
 ├── config.yaml                        # Plot configuration
 ├── .env.example                       # Environment template
 ├── .env                               # Your environment variables (gitignored)

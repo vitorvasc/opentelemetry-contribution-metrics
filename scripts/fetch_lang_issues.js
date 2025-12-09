@@ -14,12 +14,15 @@ if (!TOKEN) {
 }
 
 // Get languages from LANGS environment variable, or use all if not specified
-const LOCALES = process.env.LANGS 
+const LOCALES = process.env.LANGS
   ? process.env.LANGS.split(",").map(l => l.trim())
   : ALL_LOCALES;
 
+// Filter by year (default: current year)
+const YEAR = process.env.YEAR || new Date().getFullYear().toString();
+
 async function searchLang(lang, page = 1) {
-  const q = `repo:${OWNER}/${REPO} label:"lang:${lang}"`;
+  const q = `repo:${OWNER}/${REPO} label:"lang:${lang}" created:${YEAR}-01-01..${YEAR}-12-31`;
   const url = `https://api.github.com/search/issues?q=${encodeURIComponent(q)}&per_page=100&page=${page}`;
 
   try {
@@ -82,7 +85,8 @@ async function fetchLocale(lang) {
 }
 
 async function main() {
-  console.log(`\nStarting fetch for languages: ${LOCALES.join(", ")}\n`);
+  console.log(`\nStarting fetch for languages: ${LOCALES.join(", ")}`);
+  console.log(`Filtering for year: ${YEAR}\n`);
 
   let merged = [];
   for (const lang of LOCALES) {

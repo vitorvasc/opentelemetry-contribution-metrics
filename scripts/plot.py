@@ -3,7 +3,18 @@ import pandas as pd
 import matplotlib.dates as mdates
 import yaml
 import sys
+import argparse
 from pathlib import Path
+
+# Parse arguments
+parser = argparse.ArgumentParser(description="Plot OpenTelemetry contribution metrics")
+parser.add_argument(
+    "--source",
+    choices=["prs", "releases"],
+    default="prs",
+    help="Data source: 'prs' for PR-based metrics (default), 'releases' for monthly release metrics"
+)
+args = parser.parse_args()
 
 # Load configuration
 config_path = Path(__file__).parent.parent / "config.yaml"
@@ -18,14 +29,24 @@ except Exception as e:
     print(f"Error reading config: {e}")
     sys.exit(1)
 
-# Load data
-csv_path = Path("data/lang_accumulated.csv")
+# Load data based on source
+if args.source == "releases":
+    csv_path = Path("data/release_metrics_accumulated.csv")
+    date_column = "month"
+    title_text = "Accumulated Localization by Release Month"
+    error_command = "make csv-releases"
+else:
+    csv_path = Path("data/lang_accumulated.csv")
+    date_column = "date"
+    title_text = "Accumulated Contributions by Language"
+    error_command = "make csv"
+
 if not csv_path.exists():
-    print(f"Error: {csv_path} not found. Run 'make csv' first.")
+    print(f"Error: {csv_path} not found. Run '{error_command}' first.")
     sys.exit(1)
 
 try:
-    df = pd.read_csv(csv_path, parse_dates=["date"])
+    df = pd.read_csv(csv_path, parse_dates=[date_column])
 except Exception as e:
     print(f"Error reading CSV: {e}")
     sys.exit(1)
@@ -57,16 +78,16 @@ ax.set_facecolor(BACKGROUND_COLOR)
 langs_sorted = df.groupby("lang")["count"].max().sort_values(ascending=False).index
 
 # Plot each language line with step-style and area fill
-max_date = df["date"].max()  # Get the latest date across all languages
+max_date = df[date_column].max()  # Get the latest date across all languages
 
 for lang in langs_sorted:
-    subset = df[df["lang"] == lang].sort_values("date")
+    subset = df[df["lang"] == lang].sort_values(date_column)
     color = COLORS.get(lang, None)
-    
+
     # Extend to max_date if this language ends earlier
-    if subset["date"].iloc[-1] < max_date:
+    if subset[date_column].iloc[-1] < max_date:
         extension = pd.DataFrame({
-            "date": [max_date],
+            date_column: [max_date],
             "count": [subset["count"].iloc[-1]],
             "lang": [lang]
         })
@@ -74,26 +95,26 @@ for lang in langs_sorted:
     
     # Step-style line plot
     ax.plot(
-        subset["date"],
+        subset[date_column],
         subset["count"],
         label=lang.upper(),
         linewidth=LINE_WIDTH,
         color=color,
         drawstyle='steps-post'
     )
-    
+
     # Semi-transparent area fill
     ax.fill_between(
-        subset["date"],
+        subset[date_column],
         subset["count"],
         step='post',
         alpha=0.3,
         color=color
     )
-    
+
     # Endpoint annotation (configurable)
     if SHOW_ENDPOINT_VALUES:
-        final_date = subset["date"].iloc[-1]
+        final_date = subset[date_column].iloc[-1]
         final_count = subset["count"].iloc[-1]
         ax.annotate(
             f'{int(final_count)}',
@@ -125,9 +146,9 @@ ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
 plt.xticks(rotation=30, ha="right")
 
 # Labels and title (English, larger fonts)
-ax.set_xlabel("Date", fontsize=LABEL_FONTSIZE)
+ax.set_xlabel("Date" if args.source == "prs" else "Month", fontsize=LABEL_FONTSIZE)
 ax.set_ylabel("Accumulated Contributions", fontsize=LABEL_FONTSIZE)
-ax.set_title("Accumulated Contributions by Language", fontsize=TITLE_FONTSIZE, fontweight='bold', pad=20)
+ax.set_title(title_text, fontsize=TITLE_FONTSIZE, fontweight='bold', pad=20)
 
 # Legend (outside plot area to avoid overlap)
 legend = ax.legend(
@@ -149,7 +170,7 @@ plt.tight_layout(pad=1.5)
 
 # Success message
 print(f"✓ Generated plot with {len(df['lang'].unique())} languages")
-print(f"  Date range: {df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}")
+print(f"  Date range: {df[date_column].min().strftime('%Y-%m-%d')} to {df[date_column].max().strftime('%Y-%m-%d')}")
 
 # Show the plot
 plt.show()

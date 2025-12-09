@@ -7,8 +7,12 @@
     "fetch": "node scripts/fetch_lang_issues.js",
     "csv": "python3 scripts/lang_contributions_to_csv.py",
     "plot": "python3 scripts/plot.py",
-    "all": "npm run fetch && npm run csv && npm run plot",
     "clean": "rm -f data/lang_contributions.json data/lang_accumulated.csv",
+    "fetch-releases": "node scripts/fetch_release_metrics.js",
+    "csv-releases": "python3 scripts/release_metrics_to_csv.py",
+    "plot-releases": "python3 scripts/plot.py --source=releases",
+    "releases": "npm run fetch-releases && npm run csv-releases && npm run plot-releases",
+    "clean-releases": "rm -f data/release_metrics.json data/release_metrics_accumulated.csv",
     "setup-check": "bash scripts/check_setup.sh"
   },
   "dependencies": {

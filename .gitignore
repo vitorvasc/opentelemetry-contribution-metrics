@@ -1,2 +1,19 @@
 node_modules/
 package-lock.json
+
+# Generated data files
+data/
+!data/.gitkeep
+
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+
+# OS files
+.DS_Store

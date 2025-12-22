@@ -17,7 +17,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 # Load configuration
-config_path = Path(__file__).parent.parent / "config.yaml"
+config_path = Path(__file__).parent.parent.parent / "config.yaml"
 if not config_path.exists():
     print(f"Error: {config_path} not found.")
     sys.exit(1)
@@ -33,11 +33,13 @@ except Exception as e:
 if args.source == "releases":
     csv_path = Path("data/release_metrics_accumulated.csv")
     date_column = "month"
+    value_column = "total_lines"  # Use total_lines for releases
     title_text = "Accumulated Localization by Release Month"
     error_command = "make csv-releases"
 else:
     csv_path = Path("data/lang_accumulated.csv")
     date_column = "date"
+    value_column = "count"  # Use count for PRs
     title_text = "Accumulated Contributions by Language"
     error_command = "make csv"
 
@@ -74,8 +76,8 @@ fig, ax = plt.subplots(figsize=(14, 6), dpi=120)
 fig.patch.set_facecolor(BACKGROUND_COLOR)
 ax.set_facecolor(BACKGROUND_COLOR)
 
-# Sort languages by max count (descending) so larger areas are drawn first
-langs_sorted = df.groupby("lang")["count"].max().sort_values(ascending=False).index
+# Sort languages by max value (descending) so larger areas are drawn first
+langs_sorted = df.groupby("lang")[value_column].max().sort_values(ascending=False).index
 
 # Plot each language line with step-style and area fill
 max_date = df[date_column].max()  # Get the latest date across all languages
@@ -88,15 +90,15 @@ for lang in langs_sorted:
     if subset[date_column].iloc[-1] < max_date:
         extension = pd.DataFrame({
             date_column: [max_date],
-            "count": [subset["count"].iloc[-1]],
+            value_column: [subset[value_column].iloc[-1]],
             "lang": [lang]
         })
         subset = pd.concat([subset, extension], ignore_index=True)
-    
+
     # Step-style line plot
     ax.plot(
         subset[date_column],
-        subset["count"],
+        subset[value_column],
         label=lang.upper(),
         linewidth=LINE_WIDTH,
         color=color,
@@ -106,7 +108,7 @@ for lang in langs_sorted:
     # Semi-transparent area fill
     ax.fill_between(
         subset[date_column],
-        subset["count"],
+        subset[value_column],
         step='post',
         alpha=0.3,
         color=color
@@ -115,10 +117,10 @@ for lang in langs_sorted:
     # Endpoint annotation (configurable)
     if SHOW_ENDPOINT_VALUES:
         final_date = subset[date_column].iloc[-1]
-        final_count = subset["count"].iloc[-1]
+        final_value = subset[value_column].iloc[-1]
         ax.annotate(
-            f'{int(final_count)}',
-            xy=(final_date, final_count),
+            f'{int(final_value)}',
+            xy=(final_date, final_value),
             xytext=(10, 0),
             textcoords='offset points',
             fontsize=LEGEND_FONTSIZE,
@@ -147,7 +149,8 @@ plt.xticks(rotation=30, ha="right")
 
 # Labels and title (English, larger fonts)
 ax.set_xlabel("Date" if args.source == "prs" else "Month", fontsize=LABEL_FONTSIZE)
-ax.set_ylabel("Accumulated Contributions", fontsize=LABEL_FONTSIZE)
+ylabel_text = "Accumulated Lines Translated" if args.source == "releases" else "Accumulated Contributions"
+ax.set_ylabel(ylabel_text, fontsize=LABEL_FONTSIZE)
 ax.set_title(title_text, fontsize=TITLE_FONTSIZE, fontweight='bold', pad=20)
 
 # Legend (outside plot area to avoid overlap)

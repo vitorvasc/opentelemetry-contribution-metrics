@@ -1,21 +1,23 @@
-# Caminhos dos scripts
+# Script paths
 SCRIPTS_DIR := ./scripts
+FETCH_DIR := ./scripts/fetch
+PROCESSING_DIR := ./scripts/processing
 DATA_DIR := ./data
 
-# Arquivos gerados
+# Generated files
 JSON=$(DATA_DIR)/lang_contributions.json
 CSV=$(DATA_DIR)/lang_accumulated.csv
 RELEASE_JSON=$(DATA_DIR)/release_metrics.json
 RELEASE_CSV=$(DATA_DIR)/release_metrics_accumulated.csv
 
-# Comandos principais
+# Main commands
 NODE=node
 PYTHON=python3
 
-# Variáveis externas
-# O GITHUB_TOKEN agora é carregado do arquivo .env
-# Você não precisa mais exportar manualmente
-# Apenas crie um arquivo .env com: GITHUB_TOKEN=seu_token
+# External variables
+# GITHUB_TOKEN is now loaded from .env file
+# You don't need to export it manually anymore
+# Just create a .env file with: GITHUB_TOKEN=your_token
 
 # Languages to fetch (comma-separated)
 # Available: bn, es, fr, ja, pt, ro, uk, zh
@@ -36,7 +38,7 @@ export TYPE
 
 # ---------- TARGETS ----------
 
-# Verificar se .env existe
+# Check if .env exists
 check-env:
 	@if [ ! -f .env ]; then \
 		echo "Error: .env file not found. Copy .env.example to .env and set your GITHUB_TOKEN."; \
@@ -46,17 +48,17 @@ check-env:
 # Language Contributions Pipeline
 fetch-lang-contributions: check-env
 	@echo "Starting language contributions pipeline..."
-	$(NODE) $(SCRIPTS_DIR)/fetch_lang_issues.js
-	$(PYTHON) $(SCRIPTS_DIR)/lang_contributions_to_csv.py
-	$(PYTHON) $(SCRIPTS_DIR)/plot.py
+	$(NODE) $(FETCH_DIR)/fetch_lang_issues.js
+	$(PYTHON) $(PROCESSING_DIR)/lang_contributions_to_csv.py
+	$(PYTHON) $(PROCESSING_DIR)/plot.py
 	@echo "✔ Complete!"
 
 # Release Metrics Pipeline
 fetch-release-metrics: check-env
 	@echo "Starting release metrics pipeline..."
-	$(NODE) $(SCRIPTS_DIR)/fetch_release_metrics.js
-	$(PYTHON) $(SCRIPTS_DIR)/release_metrics_to_csv.py
-	$(PYTHON) $(SCRIPTS_DIR)/plot.py --source=releases
+	$(NODE) $(FETCH_DIR)/fetch_release_metrics.js
+	$(PYTHON) $(PROCESSING_DIR)/release_metrics_to_csv.py
+	$(PYTHON) $(PROCESSING_DIR)/plot.py --source=releases
 	@echo "✔ Complete!"
 
 # Clean targets
@@ -68,7 +70,7 @@ clean-release-metrics:
 	rm -f $(RELEASE_JSON) $(RELEASE_CSV)
 	@echo "✔ Release metrics data removed"
 
-# Verificar configuração do ambiente
+# Verify environment configuration
 setup-check:
 	@bash $(SCRIPTS_DIR)/check_setup.sh
 

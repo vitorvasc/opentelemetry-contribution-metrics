@@ -156,14 +156,14 @@ npm run setup-check               # Verify setup
 
 ```bash
 # Language contributions
-node scripts/fetch_lang_issues.js
-python3 scripts/lang_contributions_to_csv.py
-python3 scripts/plot.py
+node scripts/fetch/fetch_lang_issues.js
+python3 scripts/processing/lang_contributions_to_csv.py
+python3 scripts/processing/plot.py
 
 # Release metrics
-node scripts/fetch_release_metrics.js
-python3 scripts/release_metrics_to_csv.py
-python3 scripts/plot.py --source=releases
+node scripts/fetch/fetch_release_metrics.js
+python3 scripts/processing/release_metrics_to_csv.py
+python3 scripts/processing/plot.py --source=releases
 ```
 
 ## Understanding the Two Pipelines
@@ -258,11 +258,13 @@ YEAR=2024 make fetch-release-metrics
 ```
 opentelemetry-contribution-metrics/
 ├── scripts/
-│   ├── fetch_lang_issues.js           # Fetches PR-based data from GitHub API
-│   ├── fetch_release_metrics.js       # Fetches release-based metrics
-│   ├── lang_contributions_to_csv.py   # Converts PR JSON to accumulated CSV
-│   ├── release_metrics_to_csv.py      # Converts release JSON to accumulated CSV
-│   ├── plot.py                        # Generates visualization (supports both modes)
+│   ├── fetch/                         # Data fetching scripts (Node.js)
+│   │   ├── fetch_lang_issues.js       # Fetches PR-based data from GitHub API
+│   │   └── fetch_release_metrics.js   # Fetches release-based metrics
+│   ├── processing/                    # Data processing scripts (Python)
+│   │   ├── lang_contributions_to_csv.py   # Converts PR JSON to accumulated CSV
+│   │   ├── release_metrics_to_csv.py      # Converts release JSON to accumulated CSV
+│   │   └── plot.py                        # Generates visualization (supports both modes)
 │   └── check_setup.sh                 # Validates environment setup
 ├── data/
 │   ├── lang_contributions.json        # Raw PR data (generated)
@@ -320,9 +322,9 @@ Make sure to run scripts from project root:
 
 ```bash
 # Correct
-python3 scripts/plot.py
+python3 scripts/processing/plot.py
 
-# Wrong (if in scripts/ directory)
+# Wrong (if in scripts/ or scripts/processing/ directory)
 python3 plot.py  # Will fail to find config.yaml
 ```
 

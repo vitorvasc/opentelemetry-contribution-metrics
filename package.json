@@ -4,8 +4,8 @@
   "description": "Visualization tool for tracking OpenTelemetry contributions by language",
   "type": "module",
   "scripts": {
-    "fetch-lang-contributions": "node scripts/fetch_lang_issues.js && python3 scripts/lang_contributions_to_csv.py && python3 scripts/plot.py",
-    "fetch-release-metrics": "node scripts/fetch_release_metrics.js && python3 scripts/release_metrics_to_csv.py && python3 scripts/plot.py --source=releases",
+    "fetch-lang-contributions": "node scripts/fetch/fetch_lang_issues.js && python3 scripts/processing/lang_contributions_to_csv.py && python3 scripts/processing/plot.py",
+    "fetch-release-metrics": "node scripts/fetch/fetch_release_metrics.js && python3 scripts/processing/release_metrics_to_csv.py && python3 scripts/processing/plot.py --source=releases",
     "clean-lang-contributions": "rm -f data/lang_contributions.json data/lang_accumulated.csv",
     "clean-release-metrics": "rm -f data/release_metrics.json data/release_metrics_accumulated.csv",
     "setup-check": "bash scripts/check_setup.sh"

@@ -76,7 +76,8 @@ configured correctly.
 
 ### Using Make (Recommended)
 
-The tool provides two automated pipelines - each command fetches data, converts to CSV, and generates visualizations automatically:
+The tool provides two automated pipelines - each command fetches data, converts
+to CSV, and generates visualizations automatically:
 
 #### Language Contributions Pipeline
 
@@ -168,7 +169,8 @@ python3 scripts/processing/plot.py --source=releases
 
 ## Understanding the Two Pipelines
 
-The tool provides two complementary ways to track OpenTelemetry localization contributions:
+The tool provides two complementary ways to track OpenTelemetry localization
+contributions:
 
 ### Language Contributions Pipeline
 
@@ -183,9 +185,11 @@ Tracks **individual PR and issue contributions** over time:
 
 Tracks **translation progress by monthly release**:
 
-- **What it tracks**: Lines translated, pages added, coverage % per monthly release (YYYY.MM tags)
+- **What it tracks**: Lines translated, pages added, coverage % per monthly
+  release (YYYY.MM tags)
 - **Granularity**: Month-by-month snapshots aligned with OpenTelemetry releases
-- **Use case**: Measure actual translation coverage and progress against English baseline
+- **Use case**: Measure actual translation coverage and progress against English
+  baseline
 - **Data source**: https://github.com/open-telemetry/opentelemetry.io/releases
 
 ### Metrics Calculated

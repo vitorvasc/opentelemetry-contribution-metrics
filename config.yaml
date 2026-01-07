@@ -15,4 +15,5 @@ colors:
   ro: "#EC4899"   # pink
   uk: "#14B8A6"   # teal
   zh: "#EF4444"   # red
+  total: "#CCCCCC"  # neutral gray (for total merged PRs)
 

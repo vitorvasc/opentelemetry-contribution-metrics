@@ -6,9 +6,10 @@ Visualization tool for tracking accumulated contributions — OpenTelemetry.io.
 
 - Fetches contribution data from GitHub API
 - Filters PRs by language labels (bn, es, fr, ja, pt, ro, uk, zh)
-- **Two tracking modes**:
-  - **PR-based**: Track individual PRs over time
+- **Three tracking modes**:
+  - **PR-based**: Track individual PRs over time by language
   - **Release-based**: Measure lines/pages translated per monthly release
+  - **Merged PRs**: Track total merged PRs across the entire repository
 - Calculates translation coverage percentages
 - Generates accumulated contribution metrics over time
 - Creates Grafana-style dark theme visualizations
@@ -124,6 +125,27 @@ make fetch-release-metrics LANGS=pt,es YEAR=2024
 make clean-release-metrics
 ```
 
+#### Merged PRs Pipeline
+
+Track total merged PRs across the entire repository:
+
+```bash
+# Fetch, process, and plot total merged PRs (accumulated line chart)
+make fetch-merged-prs
+
+# Filter by year
+make fetch-merged-prs YEAR=2024
+
+# Month-over-month bar chart
+make fetch-merged-prs MODE=monthly
+
+# Combined: specific year with bar chart
+make fetch-merged-prs YEAR=2024 MODE=monthly
+
+# Clean generated data
+make clean-merged-prs
+```
+
 #### Other Commands
 
 ```bash
@@ -135,21 +157,26 @@ make help         # Show all available commands
 
 All commands support the following parameters:
 
-| Parameter     | Description                                  | Default | Example          |
-| ------------- | -------------------------------------------- | ------- | ---------------- |
-| `YEAR=XXXX`   | Filter by year                               | 2025    | `YEAR=2024`      |
-| `LANGS=xx,yy` | Filter by languages (comma-separated)        | all     | `LANGS=pt,es,fr` |
-| `TYPE=xxx`    | Filter contribution type (prs/issues/both)\* | both    | `TYPE=prs`       |
+| Parameter     | Description                                  | Default     | Example          |
+| ------------- | -------------------------------------------- | ----------- | ---------------- |
+| `YEAR=XXXX`   | Filter by year                               | 2025        | `YEAR=2024`      |
+| `LANGS=xx,yy` | Filter by languages (comma-separated)        | all         | `LANGS=pt,es,fr` |
+| `TYPE=xxx`    | Filter contribution type (prs/issues/both)\* | both        | `TYPE=prs`       |
+| `MODE=xxx`    | Plot mode for merged PRs\*\*                 | accumulated | `MODE=monthly`   |
 
 \* `TYPE` parameter only applies to `fetch-lang-contributions`
+
+\*\* `MODE` parameter only applies to `fetch-merged-prs`. Options: `accumulated` (line chart) or `monthly` (bar chart)
 
 ### Using npm Scripts
 
 ```bash
 npm run fetch-lang-contributions  # Language contributions pipeline
 npm run fetch-release-metrics     # Release metrics pipeline
+npm run fetch-merged-prs          # Merged PRs pipeline
 npm run clean-lang-contributions  # Clean language data
 npm run clean-release-metrics     # Clean release data
+npm run clean-merged-prs          # Clean merged PRs data
 npm run setup-check               # Verify setup
 ```
 
@@ -165,12 +192,16 @@ python3 scripts/processing/plot.py
 node scripts/fetch/fetch_release_metrics.js
 python3 scripts/processing/release_metrics_to_csv.py
 python3 scripts/processing/plot.py --source=releases
+
+# Merged PRs
+node scripts/fetch/fetch_merged_prs.js
+python3 scripts/processing/merged_prs_to_csv.py
+python3 scripts/processing/plot.py --source=merged
 ```
 
-## Understanding the Two Pipelines
+## Understanding the Three Pipelines
 
-The tool provides two complementary ways to track OpenTelemetry localization
-contributions:
+The tool provides three complementary ways to track OpenTelemetry contributions:
 
 ### Language Contributions Pipeline
 
@@ -192,6 +223,15 @@ Tracks **translation progress by monthly release**:
   baseline
 - **Data source**: https://github.com/open-telemetry/opentelemetry.io/releases
 
+### Merged PRs Pipeline
+
+Tracks **total merged PRs** across the entire repository:
+
+- **What it tracks**: All merged PRs regardless of labels
+- **Granularity**: Month-by-month accumulation based on merge date
+- **Use case**: See overall repository activity and merged contribution volume
+- **Features**: Monthly date-chunking to handle large volumes, deduplication by PR number
+
 ### Metrics Calculated
 
 For each release month and language:
@@ -203,8 +243,13 @@ For each release month and language:
 
 ### Output Files
 
+**Release Metrics:**
 - `data/release_metrics.json` - Detailed metrics per release/language
 - `data/release_metrics_accumulated.csv` - Accumulated totals for visualization
+
+**Merged PRs:**
+- `data/merged_prs.json` - Raw merged PR data (number, merged_at)
+- `data/merged_prs_accumulated.csv` - Monthly counts with cumulative totals
 
 ### Example Output
 
@@ -234,6 +279,7 @@ colors:
   ro: '#EC4899' # Romanian - pink
   uk: '#14B8A6' # Ukrainian - teal
   zh: '#EF4444' # Chinese - red
+  total: '#CCCCCC' # Total merged PRs - neutral gray
 ```
 
 ### Environment Variables
@@ -264,17 +310,21 @@ opentelemetry-contribution-metrics/
 ├── scripts/
 │   ├── fetch/                         # Data fetching scripts (Node.js)
 │   │   ├── fetch_lang_issues.js       # Fetches PR-based data from GitHub API
-│   │   └── fetch_release_metrics.js   # Fetches release-based metrics
+│   │   ├── fetch_release_metrics.js   # Fetches release-based metrics
+│   │   └── fetch_merged_prs.js        # Fetches total merged PRs
 │   ├── processing/                    # Data processing scripts (Python)
 │   │   ├── lang_contributions_to_csv.py   # Converts PR JSON to accumulated CSV
 │   │   ├── release_metrics_to_csv.py      # Converts release JSON to accumulated CSV
-│   │   └── plot.py                        # Generates visualization (supports both modes)
+│   │   ├── merged_prs_to_csv.py           # Converts merged PRs JSON to accumulated CSV
+│   │   └── plot.py                        # Generates visualization (supports all modes)
 │   └── check_setup.sh                 # Validates environment setup
 ├── data/
 │   ├── lang_contributions.json        # Raw PR data (generated)
 │   ├── lang_accumulated.csv           # Accumulated PR data (generated)
 │   ├── release_metrics.json           # Raw release data (generated)
-│   └── release_metrics_accumulated.csv # Accumulated release data (generated)
+│   ├── release_metrics_accumulated.csv # Accumulated release data (generated)
+│   ├── merged_prs.json                # Raw merged PRs data (generated)
+│   └── merged_prs_accumulated.csv     # Accumulated merged PRs data (generated)
 ├── config.yaml                        # Plot configuration
 ├── .env.example                       # Environment template
 ├── .env                               # Your environment variables (gitignored)

@@ -11,7 +11,7 @@
     "setup-check": "bash scripts/check_setup.sh"
   },
   "dependencies": {
-    "dotenv": "^16.4.0",
+    "dotenv": "^17.0.0",
     "node-fetch": "^3.3.2"
   },
   "engines": {

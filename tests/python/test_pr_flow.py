@@ -450,10 +450,10 @@ def test_main_only_writes_just_the_requested_csv(stage, workdir, monkeypatch, fi
     assert not (workdir / "data" / "pr_flow_backlog.csv").exists()
 
 
-def test_main_writes_the_time_to_merge_when_the_backlog_has_no_months(
+def test_main_reports_both_datasets_for_a_year_that_has_not_started(
     workdir, monkeypatch, fixed_now, capsys
 ):
-    # Merged PRs exist, but a year that has not started has no month to count
+    # PRs were merged in 2026, but 2027 has no month to count and no merge
     (workdir / "data" / "pr_flow.json").write_text(
         '[{"lang": "pt", "created_at": "2026-01-01T00:00:00Z",'
         ' "closed_at": "2026-01-02T00:00:00Z", "merged_at": "2026-01-02T00:00:00Z"}]'

@@ -11,6 +11,8 @@ colors:
   es: "#00FF7F"   # green
   fr: "#3B82F6"   # blue
   ja: "#F59E0B"   # amber
+  ko: "#38BDF8"   # sky blue
+  pl: "#A3E635"   # lime
   pt: "#A855F7"   # purple
   ro: "#EC4899"   # pink
   uk: "#14B8A6"   # teal

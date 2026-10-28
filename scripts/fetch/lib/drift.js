@@ -207,7 +207,14 @@ export const runGit = createGitRunner();
  * @param {Function} [git] - Runner from createGitRunner
  */
 export async function checkGitVersion(git = runGit) {
-  const output = await git(["--version"]);
+  let output;
+  try {
+    output = await git(["--version"]);
+  } catch (error) {
+    throw new Error(
+      `git ${MIN_GIT_VERSION.join(".")} or newer is required, and git could not run: ${error.message}`,
+    );
+  }
   const match = output.match(/(\d+)\.(\d+)/);
   const [major, minor] = match ? [Number(match[1]), Number(match[2])] : [0, 0];
   const [minMajor, minMinor] = MIN_GIT_VERSION;

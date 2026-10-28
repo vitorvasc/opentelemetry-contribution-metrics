@@ -244,6 +244,17 @@ describe("checkGitVersion", () => {
     await checkGitVersion(fakeGit("3.0.1"));
   });
 
+  it("fails with the requirement when git cannot run", async () => {
+    const missing = async () => {
+      throw new Error("spawn git ENOENT");
+    };
+
+    await assert.rejects(
+      checkGitVersion(missing),
+      /git 2\.44 or newer is required, and git could not run: spawn git ENOENT/,
+    );
+  });
+
   it("rejects older git, which would lazily fetch unknown pins", async () => {
     await assert.rejects(
       checkGitVersion(fakeGit("2.43.7")),

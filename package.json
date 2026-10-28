@@ -1,13 +1,16 @@
 {
   "name": "opentelemetry-contribution-metrics",
   "version": "2.0.0",
+  "private": true,
   "description": "Visualization tool for tracking OpenTelemetry contributions by language",
   "type": "module",
   "scripts": {
     "fetch-lang-contributions": "node scripts/fetch/fetch_lang_issues.js && python3 scripts/processing/lang_contributions_to_csv.py && python3 scripts/processing/plot.py",
     "fetch-release-metrics": "node scripts/fetch/fetch_release_metrics.js && python3 scripts/processing/release_metrics_to_csv.py && python3 scripts/processing/plot.py --source=releases",
+    "fetch-merged-prs": "node scripts/fetch/fetch_merged_prs.js && python3 scripts/processing/merged_prs_to_csv.py && python3 scripts/processing/plot.py --source=merged",
     "clean-lang-contributions": "rm -f data/lang_contributions.json data/lang_accumulated.csv",
     "clean-release-metrics": "rm -f data/release_metrics.json data/release_metrics_accumulated.csv",
+    "clean-merged-prs": "rm -f data/merged_prs.json data/merged_prs_accumulated.csv",
     "setup-check": "bash scripts/check_setup.sh"
   },
   "dependencies": {
@@ -15,6 +18,6 @@
     "node-fetch": "^3.3.2"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22"
   }
 }

@@ -12,12 +12,16 @@
     "clean-release-metrics": "rm -f data/release_metrics.json data/release_metrics_accumulated.csv",
     "clean-merged-prs": "rm -f data/merged_prs.json data/merged_prs_accumulated.csv",
     "setup-check": "bash scripts/check_setup.sh",
-    "test": "node --test \"tests/js/**/*.test.js\""
+    "test": "node --test \"tests/js/**/*.test.js\"",
+    "lint": "biome ci ."
   },
   "dependencies": {
     "dotenv": "^17.0.0"
   },
   "engines": {
     "node": "^22.18.0 || >=24.2.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.3"
   }
 }

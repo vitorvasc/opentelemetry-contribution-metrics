@@ -1,0 +1,9 @@
+target-version = "py311"
+line-length = 100
+# Tests import the modules under scripts/processing as top-level modules (see pytest.ini).
+src = [".", "scripts/processing"]
+
+[lint]
+select = ["E", "F", "I", "B", "UP"]
+# The formatter owns code width; the remaining long lines are help strings and f-strings.
+ignore = ["E501"]

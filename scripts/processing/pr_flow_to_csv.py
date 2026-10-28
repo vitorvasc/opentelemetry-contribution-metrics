@@ -1,3 +1,7 @@
+import argparse
+from collections.abc import Callable
+from dataclasses import dataclass
+
 import pandas as pd
 
 from common import fail, load_json, resolve_year, to_utc_naive, utc_now, write_csv
@@ -7,6 +11,7 @@ TIME_TO_MERGE_FILE = "data/pr_flow_time_to_merge.csv"
 BACKLOG_FILE = "data/pr_flow_backlog.csv"
 FETCH_HINT = "make fetch-pr-flow"
 PLOT_HINT = "make plot-pr-flow"
+BACKLOG_PLOT_HINT = "make plot-pr-backlog"
 
 SECONDS_PER_DAY = 24 * 60 * 60
 
@@ -91,7 +96,81 @@ def open_backlog(df, year, today):
     return pd.DataFrame(rows, columns=["month", "lang", "open_prs"])
 
 
-def main():
+def check_time_to_merge(df, result, year, today):
+    """Why `result` has nothing to chart, or None when it has data."""
+    if result["count"].sum() > 0:
+        return None
+
+    years = sorted(to_utc_naive(df["merged_at"]).dt.year.dropna().astype(int).unique())
+    advice = (
+        f"Run '{PLOT_HINT} YEAR={years[-1]}' to plot the data you have."
+        if years
+        else f"Run '{FETCH_HINT}' to fetch it again."
+    )
+    return f"no merged PRs in {year} (found: {', '.join(map(str, years)) or 'no merges'}). {advice}"
+
+
+def check_backlog(df, result, year, today):
+    """Why `result` has nothing to chart, or None when it has data."""
+    first_year = int(to_utc_naive(df["created_at"]).dt.year.min())
+    if int(year) > today.year:
+        return (
+            f"{year} has not started, so it has no month to count. "
+            f"Run '{BACKLOG_PLOT_HINT} YEAR={today.year}' to plot the current year."
+        )
+    if int(year) < first_year:
+        return (
+            f"no PRs were created by the end of {year} (the data starts in {first_year}). "
+            f"Run '{BACKLOG_PLOT_HINT} YEAR={first_year}' to plot the data you have."
+        )
+    return None
+
+
+@dataclass(frozen=True)
+class Dataset:
+    compute: Callable  # (df, year, today) -> DataFrame
+    path: str
+    check: Callable  # (df, result, year, today) -> why it is empty, or None
+    label: str
+    describe: Callable  # (result, year) -> the line that sums it up
+
+
+DATASETS = {
+    "time-to-merge": Dataset(
+        time_to_merge,
+        TIME_TO_MERGE_FILE,
+        check_time_to_merge,
+        "time to merge",
+        lambda result, year: f"PRs merged in {year}: {result['count'].sum()}",
+    ),
+    "backlog": Dataset(
+        open_backlog,
+        BACKLOG_FILE,
+        check_backlog,
+        "backlog",
+        lambda result, year: (
+            f"Open PRs at the end of {result['month'].max()}: "
+            f"{result.loc[result['month'] == result['month'].max(), 'open_prs'].sum()}"
+        ),
+    ),
+}
+
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description="Turn the PR flow data into CSVs")
+    parser.add_argument(
+        "--only",
+        choices=list(DATASETS),
+        help=(
+            "Write only this CSV and fail only if it has nothing to chart "
+            "(default: both, each written when it has data)"
+        ),
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    args = parse_args(argv)
     df = load_json(INPUT_FILE, FETCH_HINT)
 
     # One UTC timestamp drives both the default year and the future-month trim
@@ -101,30 +180,24 @@ def main():
     if not (year.isdigit() and len(year) == 4):
         fail(f"YEAR must be a four-digit year, got '{year}'")
 
-    durations = time_to_merge(df, year, today)
-    if durations["count"].sum() == 0:
-        years = sorted(to_utc_naive(df["merged_at"]).dt.year.dropna().astype(int).unique())
-        plot_advice = (
-            f"Run '{PLOT_HINT} YEAR={years[-1]}' to plot the data you have."
-            if years
-            else f"Run '{FETCH_HINT}' to fetch it again."
-        )
-        fail(
-            f"no merged PRs in {year} (found: {', '.join(map(str, years)) or 'no merges'}). "
-            f"{plot_advice}"
-        )
+    # Each dataset is written on its own, so one with no data does not hold back the other
+    problems = []
+    for name in [args.only] if args.only else list(DATASETS):
+        dataset = DATASETS[name]
+        result = dataset.compute(df, year, today)
+        problem = dataset.check(df, result, year, today)
+        if problem:
+            problems.append(problem)
+            continue
 
-    backlog = open_backlog(df, year, today)
-    write_csv(durations, TIME_TO_MERGE_FILE)
-    write_csv(backlog, BACKLOG_FILE)
+        write_csv(result, dataset.path)
+        print(f"✓ Successfully converted {len(df)} PRs to the {dataset.label} CSV")
+        print(f"  Output: {dataset.path}")
+        print(f"  Year: {year}")
+        print(f"  {dataset.describe(result, year)}")
 
-    last_month = backlog["month"].max()
-    open_at_end = backlog.loc[backlog["month"] == last_month, "open_prs"].sum()
-    print(f"✓ Successfully converted {len(df)} PRs to time to merge and backlog CSVs")
-    print(f"  Output: {TIME_TO_MERGE_FILE}, {BACKLOG_FILE}")
-    print(f"  Year: {year}")
-    print(f"  PRs merged in {year}: {durations['count'].sum()}")
-    print(f"  Open PRs at the end of {last_month}: {open_at_end}")
+    if problems:
+        fail("\n       ".join(problems))
 
 
 if __name__ == "__main__":

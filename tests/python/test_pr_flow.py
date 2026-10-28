@@ -270,7 +270,7 @@ def test_main_writes_both_csvs(stage, workdir, monkeypatch, fixed_now, capsys):
     stage("pr_flow.json")
     monkeypatch.setenv("YEAR", "2026")
 
-    pr_flow.main()
+    pr_flow.main([])
 
     durations = pd.read_csv(workdir / "data" / "pr_flow_time_to_merge.csv")
     assert list(durations.columns) == ["month", "lang", "median_days", "p90_days", "count"]
@@ -289,7 +289,7 @@ def test_main_writes_a_gap_as_an_empty_cell(stage, workdir, monkeypatch, fixed_n
     stage("pr_flow.json")
     monkeypatch.setenv("YEAR", "2026")
 
-    pr_flow.main()
+    pr_flow.main([])
 
     lines = (workdir / "data" / "pr_flow_time_to_merge.csv").read_text().splitlines()
     assert "2026-01,ko,,,0" in lines
@@ -299,7 +299,7 @@ def test_main_writes_a_gap_as_an_empty_cell(stage, workdir, monkeypatch, fixed_n
 def test_main_defaults_the_year_and_the_trim_to_the_same_utc_now(stage, workdir, fixed_now):
     stage("pr_flow.json")
 
-    pr_flow.main()
+    pr_flow.main([])
 
     backlog = pd.read_csv(workdir / "data" / "pr_flow_backlog.csv")
     assert backlog["month"].unique().tolist() == ["2026-01", "2026-02", "2026-03"]
@@ -309,7 +309,7 @@ def test_main_plots_a_past_year_from_the_same_data(stage, workdir, monkeypatch, 
     stage("pr_flow.json")
     monkeypatch.setenv("YEAR", "2025")
 
-    pr_flow.main()
+    pr_flow.main([])
 
     durations = pd.read_csv(workdir / "data" / "pr_flow_time_to_merge.csv")
     assert durations["month"].nunique() == 12
@@ -321,7 +321,7 @@ def test_main_fails_when_the_year_has_no_merged_prs(stage, workdir, monkeypatch,
     monkeypatch.setenv("YEAR", "2024")
 
     with pytest.raises(SystemExit) as exc:
-        pr_flow.main()
+        pr_flow.main([])
 
     assert exc.value.code == 1
     err = capsys.readouterr().err
@@ -337,7 +337,7 @@ def test_main_fails_for_a_year_that_has_not_started(stage, monkeypatch, fixed_no
     monkeypatch.setenv("YEAR", "2027")
 
     with pytest.raises(SystemExit) as exc:
-        pr_flow.main()
+        pr_flow.main([])
 
     assert exc.value.code == 1
     assert "no merged PRs in 2027" in capsys.readouterr().err
@@ -350,7 +350,7 @@ def test_main_suggests_fetching_when_nothing_was_ever_merged(workdir, fixed_now,
     )
 
     with pytest.raises(SystemExit):
-        pr_flow.main()
+        pr_flow.main([])
 
     err = capsys.readouterr().err
     assert "found: no merges" in err
@@ -362,7 +362,7 @@ def test_main_fails_on_invalid_year(stage, monkeypatch, capsys):
     monkeypatch.setenv("YEAR", "abc")
 
     with pytest.raises(SystemExit) as exc:
-        pr_flow.main()
+        pr_flow.main([])
 
     assert exc.value.code == 1
     assert "YEAR must be a four-digit year" in capsys.readouterr().err
@@ -370,7 +370,7 @@ def test_main_fails_on_invalid_year(stage, monkeypatch, capsys):
 
 def test_main_fails_with_the_fetch_command_when_the_data_is_missing(workdir, capsys):
     with pytest.raises(SystemExit) as exc:
-        pr_flow.main()
+        pr_flow.main([])
 
     assert exc.value.code == 1
     assert "make fetch-pr-flow" in capsys.readouterr().err
@@ -380,8 +380,128 @@ def test_main_fails_on_empty_input(workdir, capsys):
     (workdir / "data" / "pr_flow.json").write_text("[]")
 
     with pytest.raises(SystemExit) as exc:
-        pr_flow.main()
+        pr_flow.main([])
 
     assert exc.value.code == 1
     assert "make fetch-pr-flow" in capsys.readouterr().err
     assert not (workdir / "data" / "pr_flow_backlog.csv").exists()
+
+
+# ---------- one dataset without data ----------
+
+OPEN_ONLY = (
+    '[{"lang": "pt", "created_at": "2026-01-10T00:00:00Z", "closed_at": null, "merged_at": null},'
+    ' {"lang": "es", "created_at": "2026-02-10T00:00:00Z", "closed_at": null, "merged_at": null}]'
+)
+
+
+def test_main_writes_the_backlog_when_no_pr_was_merged(workdir, monkeypatch, fixed_now, capsys):
+    (workdir / "data" / "pr_flow.json").write_text(OPEN_ONLY)
+    monkeypatch.setenv("YEAR", "2026")
+
+    with pytest.raises(SystemExit) as exc:
+        pr_flow.main([])
+
+    # The dataset with nothing to chart fails, the other is still written
+    assert exc.value.code == 1
+    assert "no merged PRs in 2026" in capsys.readouterr().err
+    assert not (workdir / "data" / "pr_flow_time_to_merge.csv").exists()
+    backlog = pd.read_csv(workdir / "data" / "pr_flow_backlog.csv")
+    assert len(backlog) == 6
+    assert cell(backlog, "2026-03", "pt", "open_prs") == 1
+    assert cell(backlog, "2026-03", "es", "open_prs") == 1
+
+
+def test_main_only_backlog_succeeds_without_merges(workdir, monkeypatch, fixed_now, capsys):
+    (workdir / "data" / "pr_flow.json").write_text(OPEN_ONLY)
+    monkeypatch.setenv("YEAR", "2026")
+
+    pr_flow.main(["--only", "backlog"])
+
+    out = capsys.readouterr().out
+    assert "Open PRs at the end of 2026-03: 2" in out
+    assert (workdir / "data" / "pr_flow_backlog.csv").exists()
+    assert not (workdir / "data" / "pr_flow_time_to_merge.csv").exists()
+
+
+def test_main_only_time_to_merge_fails_without_merges_and_writes_nothing(
+    workdir, monkeypatch, fixed_now, capsys
+):
+    (workdir / "data" / "pr_flow.json").write_text(OPEN_ONLY)
+    monkeypatch.setenv("YEAR", "2026")
+
+    with pytest.raises(SystemExit) as exc:
+        pr_flow.main(["--only", "time-to-merge"])
+
+    assert exc.value.code == 1
+    err = capsys.readouterr().err
+    assert "no merged PRs in 2026 (found: no merges)" in err
+    assert "make fetch-pr-flow" in err
+    assert list((workdir / "data").iterdir()) == [workdir / "data" / "pr_flow.json"]
+
+
+def test_main_only_writes_just_the_requested_csv(stage, workdir, monkeypatch, fixed_now):
+    stage("pr_flow.json")
+    monkeypatch.setenv("YEAR", "2026")
+
+    pr_flow.main(["--only", "time-to-merge"])
+
+    assert (workdir / "data" / "pr_flow_time_to_merge.csv").exists()
+    assert not (workdir / "data" / "pr_flow_backlog.csv").exists()
+
+
+def test_main_writes_the_time_to_merge_when_the_backlog_has_no_months(
+    workdir, monkeypatch, fixed_now, capsys
+):
+    # Merged PRs exist, but a year that has not started has no month to count
+    (workdir / "data" / "pr_flow.json").write_text(
+        '[{"lang": "pt", "created_at": "2026-01-01T00:00:00Z",'
+        ' "closed_at": "2026-01-02T00:00:00Z", "merged_at": "2026-01-02T00:00:00Z"}]'
+    )
+    monkeypatch.setenv("YEAR", "2027")
+
+    with pytest.raises(SystemExit):
+        pr_flow.main([])
+
+    err = capsys.readouterr().err
+    assert "2027 has not started" in err
+    assert "make plot-pr-backlog YEAR=2026" in err
+    assert "no merged PRs in 2027" in err
+
+
+def test_main_fails_for_a_backlog_year_before_the_first_pr(
+    stage, workdir, monkeypatch, fixed_now, capsys
+):
+    stage("pr_flow.json")
+    monkeypatch.setenv("YEAR", "2024")
+
+    with pytest.raises(SystemExit):
+        pr_flow.main(["--only", "backlog"])
+
+    err = capsys.readouterr().err
+    assert "no PRs were created by the end of 2024 (the data starts in 2025)" in err
+    assert "make plot-pr-backlog YEAR=2025" in err
+    assert not (workdir / "data" / "pr_flow_backlog.csv").exists()
+
+
+def test_main_reports_every_dataset_without_data_in_one_message(
+    stage, workdir, monkeypatch, fixed_now, capsys
+):
+    stage("pr_flow.json")
+    monkeypatch.setenv("YEAR", "2024")
+
+    with pytest.raises(SystemExit) as exc:
+        pr_flow.main([])
+
+    assert exc.value.code == 1
+    err = capsys.readouterr().err
+    assert err.count("Error:") == 1
+    assert "no merged PRs in 2024" in err
+    assert "no PRs were created by the end of 2024" in err
+
+
+def test_main_rejects_an_unknown_dataset(workdir):
+    with pytest.raises(SystemExit) as exc:
+        pr_flow.main(["--only", "everything"])
+
+    assert exc.value.code == 2

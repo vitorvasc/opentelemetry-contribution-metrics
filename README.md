@@ -218,6 +218,10 @@ open, and a later metric needs the full history. `YEAR` only picks the months
 drawn. The backlog has no fetch of its own, it plots the data
 `make fetch-pr-flow` fetched.
 
+The two charts are independent: each plot target converts only its own CSV, so
+a year with open PRs but no merges still draws the backlog (and `make charts`
+reports only the time to merge as missing).
+
 #### All Charts
 
 Run every pipeline and write the charts as PNG files to `out/` (needs
@@ -309,8 +313,11 @@ Not every pipeline reads every parameter:
   current year). The language contributions CSV step has no year filter and
   relies on the fetch's.
 - The PR flow fetch is all time and ignores `YEAR`; its CSV step takes any
-  `YEAR` and exits with a hint when no PR was merged that year (the fetched data
-  covers every year, so re-plot with another `YEAR` instead of fetching again).
+  `YEAR` and exits with a hint for a dataset with nothing to chart: no PR merged
+  that year (time to merge), or none created by its end or the year not started
+  (backlog). The fetched data covers every year, so re-plot with another `YEAR`
+  instead of fetching again. `pr_flow_to_csv.py` writes each CSV that has data
+  and, without `--only {time-to-merge,backlog}`, fails at the end if one has not.
 - `TYPE` must be `prs`, `issues` or `both`; any other value exits with status 1.
 - `MODE` is a `make` parameter. When calling `plot.py` directly, use `--mode`.
 
@@ -368,8 +375,9 @@ python3 scripts/processing/plot.py --source=coverage
 
 # PR flow: time to merge, then the backlog from the same data
 node scripts/fetch/fetch_pr_flow.js
-python3 scripts/processing/pr_flow_to_csv.py
+python3 scripts/processing/pr_flow_to_csv.py --only=time-to-merge
 python3 scripts/processing/plot.py --source=time-to-merge
+python3 scripts/processing/pr_flow_to_csv.py --only=backlog
 python3 scripts/processing/plot.py --source=backlog
 ```
 

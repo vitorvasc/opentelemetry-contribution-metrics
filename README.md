@@ -215,7 +215,8 @@ make clean-pr-flow
 
 The fetch always covers every PR since the repository was created, whatever
 `YEAR` is: the backlog needs the PRs created before the year that were still
-open, and a later metric needs the full history. `YEAR` only picks the months
+open, and the [contributors charts](#contributors-pipeline) need every earlier
+PR to tell a new contributor from a returning one. `YEAR` only picks the months
 drawn. The backlog has no fetch of its own, it plots the data
 `make fetch-pr-flow` fetched.
 

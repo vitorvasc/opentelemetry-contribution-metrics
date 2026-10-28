@@ -76,6 +76,7 @@ Fetch errors (failed requests, exhausted retries or rate limits, incomplete sear
 - `tests/js/` - `node --test`, the fetch library and scripts (fetch is stubbed, no network)
 - `tests/python/` - pytest, fixtures in `tests/python/fixtures/`; `pytest.ini` puts `scripts/processing` on `pythonpath`
 - CI (`.github/workflows/ci.yml`): lint, test-js, test-python, renovate-config, dependency-review; the `ci` aggregator job is the required check
+- Charts workflow (`.github/workflows/charts.yml`): monthly (day 2, 06:00 UTC), manual (`year`, `langs` inputs) and on pull requests that edit the workflow (`LANGS=pt`); runs `make charts` and uploads `out/*.png` + `data/*.csv` as an artifact (90 days), no write-back. Inputs go through `env:` and are validated before `make`. Token is `secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN`: a full run costs about 1400 core + 160 search requests, over the Actions token's ~1000/hour, so without `METRICS_TOKEN` the fetch waits out one hourly reset (90-minute timeout)
 
 ### Three Pipelines
 

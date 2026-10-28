@@ -432,6 +432,7 @@ opentelemetry-contribution-metrics/
 │   ├── js/                            # Node.js tests (node --test)
 │   └── python/                        # pytest tests and fixtures
 ├── .github/workflows/ci.yml           # CI: lint, tests, Renovate config, dependency review
+├── .github/workflows/charts.yml       # Scheduled chart regeneration, uploaded as a build artifact
 ├── data/
 │   ├── lang_contributions.json        # Raw PR data (generated)
 │   ├── lang_accumulated.csv           # Accumulated PR data (generated)
@@ -476,6 +477,27 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request:
 - **renovate-config**: validates `renovate.json` in strict mode
 - **dependency-review**: flags vulnerable dependency changes (pull requests only)
 - **ci**: aggregates all of the above and is the single required check
+
+### Charts workflow
+
+`.github/workflows/charts.yml` runs `make charts` and uploads `out/*.png` and
+`data/*.csv` as the `charts-<year>-<run id>-<attempt>` artifact, kept for 90
+days. It never commits to the repository. The job summary lists the files and
+the GitHub API requests left.
+
+- **Schedule**: monthly, on day 2 at 06:00 UTC, after the upstream `YYYY.MM`
+  release tags. It uses the current year and all languages.
+- **Manual run** (Actions → Charts → Run workflow): optional `year` (four
+  digits) and `langs` (comma-separated codes such as `pt,es`). Empty means the
+  default. Invalid values fail before any request.
+- **Pull requests** that change the workflow file run it with `LANGS=pt`.
+- **Token**: `METRICS_TOKEN` if the secret exists, otherwise the Actions
+  `GITHUB_TOKEN`. The Actions token reads public repositories but is limited to
+  about 1000 core requests per hour. A full run needs about 1400 core and 160
+  search requests, so with that token it waits for the hourly reset (up to an
+  hour) and the job's 90-minute timeout allows one wait. Create a
+  `METRICS_TOKEN` secret (a personal access token with `public_repo` scope,
+  5000 requests per hour) to finish in about 17 minutes.
 
 ## Output
 

@@ -17,6 +17,8 @@ PYTHON ?= python3
 #          there YEAR only picks the months drawn)
 #   LANGS  comma-separated language codes (bn,es,fr,ja,ko,pl,pt,ro,uk,zh)
 #   TYPE   prs, issues or both (lang contributions only)
+#   CLONE_DIR  where fetch-drift keeps its opentelemetry.io clone
+#          (default data/.cache/opentelemetry.io)
 
 # Plot mode for merged PRs (accumulated or monthly)
 # Usage: make fetch-merged-prs MODE=monthly
@@ -48,7 +50,10 @@ check-env:
 #   csv    Python script (with its flags) that turns the JSON into the accumulated CSV
 #   plot   extra plot.py flags
 #   files  generated files removed by clean-NAME
-PIPELINES := lang-contributions release-metrics merged-prs coverage pr-flow
+PIPELINES := lang-contributions release-metrics merged-prs coverage pr-flow drift
+# Pipelines that clone the public repository instead of calling the GitHub
+# API, so their fetch needs no token
+TOKENLESS_PIPELINES := drift
 
 lang-contributions.title := language contributions
 lang-contributions.fetch := fetch_lang_issues.js
@@ -80,6 +85,12 @@ pr-flow.csv := pr_flow_to_csv.py --only=time-to-merge
 pr-flow.plot := --source=time-to-merge
 pr-flow.files := $(DATA_DIR)/pr_flow.json $(DATA_DIR)/pr_flow_time_to_merge.csv $(DATA_DIR)/pr_flow_backlog.csv $(DATA_DIR)/pr_flow_contributors.csv $(DATA_DIR)/pr_flow_contributors_year.csv
 
+drift.title := translation drift
+drift.fetch := fetch_drift.js
+drift.csv := drift_to_csv.py
+drift.plot := --source=drift
+drift.files := $(DATA_DIR)/drift.json $(DATA_DIR)/drift.csv
+
 FETCH_TARGETS := $(addprefix fetch-,$(PIPELINES))
 PLOT_TARGETS := $(addprefix plot-,$(PIPELINES))
 CLEAN_TARGETS := $(addprefix clean-,$(PIPELINES))
@@ -90,11 +101,13 @@ $(PYTHON) $(PROCESSING_DIR)/$($(1).csv)
 $(PYTHON) $(PROCESSING_DIR)/plot.py $(strip $($(1).plot) $(PLOT_OUTPUT))
 endef
 
-$(FETCH_TARGETS): fetch-%: check-env
+$(FETCH_TARGETS): fetch-%:
 	@echo "Starting $($*.title) pipeline..."
 	$(NODE) $(FETCH_DIR)/$($*.fetch)
 	$(call process_and_plot,$*)
 	@echo "✔ Complete!"
+
+$(addprefix fetch-,$(filter-out $(TOKENLESS_PIPELINES),$(PIPELINES))): check-env
 
 # Plot-only targets (skip fetching, use existing data)
 $(PLOT_TARGETS): plot-%:
@@ -105,6 +118,24 @@ $(PLOT_TARGETS): plot-%:
 $(CLEAN_TARGETS): clean-%:
 	rm -f $($*.files)
 	@echo "✔ Removed $($*.title) data"
+
+# clean-drift keeps the clone, so the next fetch-drift only updates it. This
+# removes it, and only when fetch-drift made it: fetch_drift.js marks its
+# clones with this git config key
+DRIFT_CLONE_DIR = $(or $(CLONE_DIR),$(DATA_DIR)/.cache/opentelemetry.io)
+DRIFT_CLONE_MARKER := contribution-metrics.cache
+
+clean-drift-cache: ## Remove the opentelemetry.io clone kept by fetch-drift
+	@dir='$(DRIFT_CLONE_DIR)'; \
+	if [ ! -e "$$dir" ]; then \
+		echo "✔ No drift clone at $$dir"; \
+	elif [ "$$(git -C "$$dir" rev-parse --show-toplevel 2>/dev/null)" = "$$(cd "$$dir" && pwd -P)" ] && \
+		[ "$$(git -C "$$dir" config --local --get $(DRIFT_CLONE_MARKER))" = true ]; then \
+		rm -rf "$$dir" && echo "✔ Removed the drift clone at $$dir"; \
+	else \
+		echo "Error: $$dir is not a clone made by fetch-drift, so it was not removed" >&2; \
+		exit 1; \
+	fi
 
 # The coverage history is drawn from the release metrics data, so it has no
 # fetch or clean of its own: fetch-release-metrics provides the data
@@ -161,7 +192,7 @@ plot-new-contributors: ## Plot the new contributors of each month from the fetch
 OUT_DIR := out
 HEADLESS := MPLBACKEND=Agg
 
-CHARTS := lang-contributions release-metrics merged-prs-accumulated merged-prs-monthly coverage-history coverage-snapshot time-to-merge backlog contributors new-contributors
+CHARTS := lang-contributions release-metrics merged-prs-accumulated merged-prs-monthly coverage-history coverage-snapshot time-to-merge backlog contributors new-contributors drift
 chart.lang-contributions := fetch-lang-contributions
 chart.release-metrics := fetch-release-metrics
 chart.merged-prs-accumulated := fetch-merged-prs MODE=accumulated
@@ -172,6 +203,7 @@ chart.time-to-merge := plot-pr-flow
 chart.backlog := plot-pr-backlog
 chart.contributors := plot-contributors
 chart.new-contributors := plot-new-contributors
+chart.drift := fetch-drift
 CHART_TARGETS := $(addprefix chart-,$(CHARTS))
 
 chart-merged-prs-monthly: chart-merged-prs-accumulated
@@ -222,7 +254,7 @@ help: ## Show this help
 	@echo "Usage: make <target> [VAR=value ...]"
 	@echo ""
 	@echo "Pipelines (NAME: $(PIPELINES))"
-	@echo "  fetch-NAME   Fetch from GitHub, convert to CSV and plot (needs GITHUB_TOKEN)"
+	@echo "  fetch-NAME   Fetch from GitHub, convert to CSV and plot (needs GITHUB_TOKEN, except drift)"
 	@echo "  plot-NAME    Convert and plot the data already fetched (no API calls)"
 	@echo "  clean-NAME   Remove the generated data files"
 	@echo ""
@@ -236,6 +268,7 @@ help: ## Show this help
 	@echo "  TYPE=xxx      prs, issues or both (default: both, lang contributions only)"
 	@echo "  MODE=xxx      Merged PRs chart: accumulated or monthly (default: accumulated)"
 	@echo "  OUTPUT=PATH   Save the chart to PATH instead of opening a window"
+	@echo "  CLONE_DIR=PATH  Clone kept by fetch-drift (default: data/.cache/opentelemetry.io)"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make fetch-lang-contributions YEAR=2024 LANGS=pt,es TYPE=prs"
@@ -243,5 +276,5 @@ help: ## Show this help
 	@echo "  make plot-merged-prs OUTPUT=out/merged-prs.png"
 
 .PHONY: $(FETCH_TARGETS) $(PLOT_TARGETS) $(CLEAN_TARGETS) plot-coverage-history plot-pr-backlog pr-flow-data
-.PHONY: plot-contributors plot-new-contributors
+.PHONY: plot-contributors plot-new-contributors clean-drift-cache
 .PHONY: $(CHART_TARGETS) charts list-charts test lint help check-env setup-check

@@ -30,6 +30,23 @@ if ! python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)';
 fi
 echo "✓ $(python3 --version 2>&1)"
 
+# Check git. The drift pipeline reads its clone with GIT_NO_LAZY_FETCH, which
+# older git ignores, so a pin missing from the clone would be downloaded
+# instead of reported as invalid
+GIT_MIN='2.44'
+if ! command -v git &> /dev/null; then
+    echo "❌ git not found. Please install git $GIT_MIN+"
+    exit 1
+fi
+if ! git --version | awk -v min="$GIT_MIN" '{
+    split($3, have, "."); split(min, need, ".")
+    exit !(have[1] > need[1] || (have[1] == need[1] && have[2] >= need[2]))
+}'; then
+    echo "❌ $(git --version) is too old for the drift pipeline. Please install git $GIT_MIN+"
+    exit 1
+fi
+echo "✓ $(git --version)"
+
 # Check GITHUB_TOKEN, from the environment or from .env
 if [ -n "${GITHUB_TOKEN:-}" ]; then
     echo "✓ GITHUB_TOKEN set in the environment"

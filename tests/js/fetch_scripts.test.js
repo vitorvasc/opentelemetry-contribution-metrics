@@ -263,6 +263,17 @@ describe("script entry points", () => {
     "fetch_pr_flow.js",
     "fetch_release_metrics.js",
   ];
+  // fetch_drift.js clones the public repository and never calls the API, so
+  // it runs without GITHUB_TOKEN; drift_fetch.test.js covers its entry point
+  const tokenless = ["fetch_drift.js"];
+
+  it("covers every fetch script that needs GITHUB_TOKEN", () => {
+    const all = fs
+      .readdirSync(scriptsDir)
+      .filter((name) => /^fetch_.*\.js$/.test(name));
+
+    assert.deepEqual(all.sort(), [...scripts, ...tokenless].sort());
+  });
   // Run from an empty directory so no .env file is picked up
   const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "fetch-entry-"));
   const env = { PATH: process.env.PATH };

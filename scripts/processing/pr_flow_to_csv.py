@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from common import fail, load_json, resolve_year, to_utc_naive, utc_now, write_csv
+from common import fail, load_json, resolve_year, to_utc_naive, utc_now, window_months, write_csv
 
 INPUT_FILE = "data/pr_flow.json"
 TIME_TO_MERGE_FILE = "data/pr_flow_time_to_merge.csv"
@@ -14,18 +14,6 @@ PLOT_HINT = "make plot-pr-flow"
 BACKLOG_PLOT_HINT = "make plot-pr-backlog"
 
 SECONDS_PER_DAY = 24 * 60 * 60
-
-
-def window_months(year, today):
-    """The months of `year`, up to the month of `today` when `year` is the current one.
-
-    A year after `today` has no months, so its charts are empty rather than flat.
-    """
-    year = int(year)
-    if year > today.year:
-        return []
-    last_month = today.month if year == today.year else 12
-    return [pd.Period(year=year, month=month, freq="M") for month in range(1, last_month + 1)]
 
 
 def to_naive_utc(timestamp):

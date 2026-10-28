@@ -11,8 +11,10 @@ from plotting import (
     draw_by_language,
     draw_ranked_bars,
     draw_series,
+    draw_stacked_bars,
     set_symlog_axis,
     spread_labels,
+    style_legend,
 )
 
 PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
@@ -31,6 +33,8 @@ SMOKE_CASES = [
     ("coverage-snapshot", ["--source", "coverage-snapshot"], "coverage_snapshot.csv"),
     ("time-to-merge", ["--source", "time-to-merge"], "pr_flow_time_to_merge.csv"),
     ("backlog", ["--source", "backlog"], "pr_flow_backlog.csv"),
+    ("contributors", ["--source", "contributors"], "pr_flow_contributors.csv"),
+    ("new-contributors", ["--source", "new-contributors"], "pr_flow_contributors.csv"),
 ]
 
 
@@ -360,6 +364,112 @@ def test_pr_flow_titles_name_the_year():
     assert plot.SOURCES["backlog"].title == "Open Localization PRs"
 
 
+def test_contributor_titles_name_the_year():
+    assert plot.resolve_source("contributors", "accumulated", "2026").title == (
+        "Unique Contributors - 2026"
+    )
+    assert plot.resolve_source("new-contributors", "accumulated", "2025").title == (
+        "New Contributors - 2025"
+    )
+    assert plot.SOURCES["contributors"].title == "Unique Contributors"
+
+
+def test_contributors_draws_every_language_including_zero_months(stage, workdir):
+    stage("pr_flow_contributors.csv")
+    source = plot.resolve_source("contributors", "accumulated", "2026")
+
+    fig = plot.render(plot.load_csv(source), source, plot.load_config())
+
+    ax = fig.axes[0]
+    lines = {line.get_label(): line for line in ax.lines}
+    # Largest first; ko and pt are drawn through months without contributors
+    assert sorted(lines) == ["ES", "KO", "PT"]
+    assert list(lines["ES"].get_ydata()) == [1, 0, 2]
+    assert list(lines["PT"].get_ydata()) == [3, 0, 0]
+    assert ax.get_ylim()[0] == 0
+    assert ax.get_title() == "Unique Contributors - 2026"
+    assert ax.get_legend() is not None
+    # March 2026: es 2, ko 0 and pt 0, the last two nudged apart
+    assert sorted(label.get_text() for label in ax.texts) == ["0", "0", "2"]
+
+
+def test_new_contributors_stacks_the_languages_with_a_legend_and_the_totals(stage, workdir):
+    stage("pr_flow_contributors.csv")
+    source = plot.resolve_source("new-contributors", "accumulated", "2026")
+
+    fig = plot.render(plot.load_csv(source), source, plot.load_config())
+
+    ax = fig.axes[0]
+    assert len(ax.lines) == 0
+    # pt has no new contributor, so it has no segment and no legend entry
+    assert ax.get_legend_handles_labels()[1] == ["ES", "KO"]
+    # es has the most new contributors, so it is the bottom segment and comes
+    # last in the legend, which lists the stack from the top
+    assert [text.get_text() for text in ax.get_legend().get_texts()] == ["KO", "ES"]
+    assert [(bar.get_height(), bar.get_y()) for bar in ax.patches] == [(1, 0), (1, 0), (1, 0)]
+    assert [text.get_text() for text in ax.texts] == ["1", "1", "1"]
+    assert ax.get_legend() is not None
+    assert ax.get_ylim()[0] == 0
+    assert ax.get_title() == "New Contributors - 2026"
+
+
+def test_draw_stacked_bars_stacks_the_largest_language_at_the_bottom_in_its_color():
+    fig, ax = plt.subplots()
+    df = pd.DataFrame(
+        {
+            "month": pd.to_datetime(["2025-01-01", "2025-02-01"] * 3),
+            "lang": ["pt", "pt", "es", "es", "xx", "xx"],
+            "new": [3, 1, 1, 0, 0, 0],
+        }
+    )
+
+    draw_stacked_bars(
+        ax, df, "month", "new", colors={"pt": "#A855F7", "es": "#00FF7F"}, annotate=True
+    )
+
+    # pt (4 in all) first, then es on top of it in January; es has nothing in
+    # February and xx never has anything
+    assert [(bar.get_height(), bar.get_y()) for bar in ax.patches] == [(3, 0), (1, 0), (1, 3)]
+    assert ax.get_legend_handles_labels()[1] == ["PT", "ES"]
+    assert tuple(ax.patches[2].get_facecolor()[:3]) == pytest.approx(to_rgb("#00FF7F"))
+    assert [text.get_text() for text in ax.texts] == ["4", "1"]
+    assert [text.xy[1] for text in ax.texts] == [4, 1]
+
+
+def test_draw_stacked_bars_labels_nothing_without_annotate():
+    fig, ax = plt.subplots()
+    df = pd.DataFrame({"month": pd.to_datetime(["2025-01-01"]), "lang": ["pt"], "new": [2]})
+
+    draw_stacked_bars(ax, df, "month", "new", colors={})
+
+    assert len(ax.texts) == 0
+    assert len(ax.patches) == 1
+
+
+def test_draw_stacked_bars_ticks_whole_counts_and_keeps_the_grid_behind_the_bars():
+    fig, ax = plt.subplots()
+    df = pd.DataFrame({"month": pd.to_datetime(["2025-01-01"]), "lang": ["pt"], "new": [1]})
+
+    draw_stacked_bars(ax, df, "month", "new", colors={})
+    fig.canvas.draw()
+
+    assert all(tick == int(tick) for tick in ax.get_yticks())
+    assert ax.get_axisbelow() is True
+
+
+def test_style_legend_lists_the_entries_in_drawing_order_unless_reversed():
+    fig, ax = plt.subplots()
+    ax.plot([0, 1], [0, 1], label="A")
+    ax.plot([0, 1], [1, 2], label="B")
+
+    style_legend(ax)
+    assert [text.get_text() for text in ax.get_legend().get_texts()] == ["A", "B"]
+
+    style_legend(ax, reverse=True)
+    assert [text.get_text() for text in ax.get_legend().get_texts()] == ["B", "A"]
+    assert ax.get_legend().get_lines()[0].get_color() == ax.lines[1].get_color()
+
+
 def test_time_to_merge_draws_a_line_per_language_with_a_median_and_breaks_at_gaps(stage, workdir):
     stage("pr_flow_time_to_merge.csv")
     source = plot.resolve_source("time-to-merge", "accumulated", "2026")
@@ -548,6 +658,7 @@ LINE_CHARTS = [
     ("coverage", "release_metrics_accumulated.csv"),
     ("time-to-merge", "pr_flow_time_to_merge.csv"),
     ("backlog", "pr_flow_backlog.csv"),
+    ("contributors", "pr_flow_contributors.csv"),
 ]
 
 

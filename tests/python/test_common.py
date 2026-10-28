@@ -1,9 +1,20 @@
 import pandas as pd
 import pytest
 
-from common import fail, load_json, resolve_year, to_utc_naive, utc_now, write_csv
+from common import (
+    fail,
+    load_json,
+    resolve_year,
+    to_utc_naive,
+    utc_now,
+    window_months,
+    write_csv,
+)
 
 HINT = "make fetch-something"
+
+# 2026-03-15 12:00 UTC: the current month is March
+TODAY = pd.Timestamp("2026-03-15 12:00", tz="UTC")
 
 
 def test_fail_exits_non_zero_with_message(capsys):
@@ -102,3 +113,20 @@ def test_resolve_year_defaults_to_the_year_of_today(value, monkeypatch):
         monkeypatch.setenv("YEAR", value)
 
     assert resolve_year(pd.Timestamp("2025-06-15", tz="UTC")) == "2025"
+
+
+def test_window_months_stops_at_the_current_month_of_the_current_year():
+    months = window_months("2026", TODAY)
+
+    assert [str(m) for m in months] == ["2026-01", "2026-02", "2026-03"]
+
+
+def test_window_months_keeps_a_past_year_whole_and_drops_a_future_one():
+    assert len(window_months("2025", TODAY)) == 12
+    assert window_months("2027", TODAY) == []
+
+
+def test_window_months_includes_the_current_month_on_its_first_day():
+    months = window_months("2026", pd.Timestamp("2026-02-01"))
+
+    assert [str(m) for m in months] == ["2026-01", "2026-02"]

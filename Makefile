@@ -78,7 +78,7 @@ pr-flow.title := PR flow
 pr-flow.fetch := fetch_pr_flow.js
 pr-flow.csv := pr_flow_to_csv.py --only=time-to-merge
 pr-flow.plot := --source=time-to-merge
-pr-flow.files := $(DATA_DIR)/pr_flow.json $(DATA_DIR)/pr_flow_time_to_merge.csv $(DATA_DIR)/pr_flow_backlog.csv
+pr-flow.files := $(DATA_DIR)/pr_flow.json $(DATA_DIR)/pr_flow_time_to_merge.csv $(DATA_DIR)/pr_flow_backlog.csv $(DATA_DIR)/pr_flow_contributors.csv $(DATA_DIR)/pr_flow_contributors_year.csv
 
 FETCH_TARGETS := $(addprefix fetch-,$(PIPELINES))
 PLOT_TARGETS := $(addprefix plot-,$(PIPELINES))
@@ -129,18 +129,39 @@ plot-pr-backlog: ## Plot the PRs open at each month end from the fetched PR flow
 	$(call process_and_plot,pr-backlog)
 	@echo "✔ Complete!"
 
+# The contributor charts are drawn from the PR flow data too, with no fetch or
+# clean of their own (clean-pr-flow removes their CSVs). One conversion writes
+# the monthly CSV both charts read and the yearly summary, so each plot runs it
+contributors.title := unique contributors
+contributors.csv := contributors_to_csv.py
+contributors.plot := --source=contributors
+
+new-contributors.title := new contributors
+new-contributors.csv := contributors_to_csv.py
+new-contributors.plot := --source=new-contributors
+
+plot-contributors: ## Plot the unique contributors of each month from the fetched PR flow data
+	@echo "Plotting existing $(contributors.title) data..."
+	$(call process_and_plot,contributors)
+	@echo "✔ Complete!"
+
+plot-new-contributors: ## Plot the new contributors of each month from the fetched PR flow data
+	@echo "Plotting existing $(new-contributors.title) data..."
+	$(call process_and_plot,new-contributors)
+	@echo "✔ Complete!"
+
 # Every chart the project draws, written headless as a PNG under $(OUT_DIR).
 # Per chart:
 #   chart.NAME  the pipeline target (and variables) that draws $(OUT_DIR)/NAME.png
 # Add a chart: append its name to CHARTS and set chart.NAME. Fetch a dataset
 # once with fetch-NAME, then re-plot it with plot-NAME for any further chart of
 # the same data (and make that chart depend on the one that fetched it, unless
-# the charts can fail independently: then both depend on a fetch-only target, as
+# the charts can fail independently: then all depend on a fetch-only target, as
 # the PR flow charts do on pr-flow-data).
 OUT_DIR := out
 HEADLESS := MPLBACKEND=Agg
 
-CHARTS := lang-contributions release-metrics merged-prs-accumulated merged-prs-monthly coverage-history coverage-snapshot time-to-merge backlog
+CHARTS := lang-contributions release-metrics merged-prs-accumulated merged-prs-monthly coverage-history coverage-snapshot time-to-merge backlog contributors new-contributors
 chart.lang-contributions := fetch-lang-contributions
 chart.release-metrics := fetch-release-metrics
 chart.merged-prs-accumulated := fetch-merged-prs MODE=accumulated
@@ -149,13 +170,15 @@ chart.coverage-history := plot-coverage-history
 chart.coverage-snapshot := fetch-coverage
 chart.time-to-merge := plot-pr-flow
 chart.backlog := plot-pr-backlog
+chart.contributors := plot-contributors
+chart.new-contributors := plot-new-contributors
 CHART_TARGETS := $(addprefix chart-,$(CHARTS))
 
 chart-merged-prs-monthly: chart-merged-prs-accumulated
 chart-coverage-history: chart-release-metrics
-chart-time-to-merge chart-backlog: pr-flow-data
+chart-time-to-merge chart-backlog chart-contributors chart-new-contributors: pr-flow-data
 
-# One fetch feeds both PR flow charts. It is its own step so that a year with
+# One fetch feeds every PR flow chart. It is its own step so that a year with
 # no merges still charts the backlog, and the other way around
 pr-flow-data: check-env
 	$(NODE) $(FETCH_DIR)/$(pr-flow.fetch)
@@ -220,4 +243,5 @@ help: ## Show this help
 	@echo "  make plot-merged-prs OUTPUT=out/merged-prs.png"
 
 .PHONY: $(FETCH_TARGETS) $(PLOT_TARGETS) $(CLEAN_TARGETS) plot-coverage-history plot-pr-backlog pr-flow-data
+.PHONY: plot-contributors plot-new-contributors
 .PHONY: $(CHART_TARGETS) charts list-charts test lint help check-env setup-check

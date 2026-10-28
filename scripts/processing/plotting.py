@@ -1,7 +1,7 @@
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib.ticker import NullLocator
+from matplotlib.ticker import MaxNLocator, NullLocator
 
 # Grafana-style dark theme configuration
 BACKGROUND_COLOR = "#282828"
@@ -66,6 +66,58 @@ def draw_bars(ax, x, y, color, annotate=False):
             ax.annotate(
                 f"{int(bar_y)}",
                 xy=(bar_x, bar_y),
+                xytext=(0, 5),
+                textcoords="offset points",
+                fontsize=TICK_FONTSIZE,
+                fontweight="bold",
+                color=TEXT_COLOR,
+                ha="center",
+                va="bottom",
+            )
+
+
+def draw_stacked_bars(
+    ax, df, date_column, value_column, colors, annotate=False, value_format="{:.0f}"
+):
+    """One bar per date, with a segment per language stacked in the language's color.
+
+    The language with the most overall is at the bottom. A language without a
+    positive value is left out, and a date without one for a language has no
+    segment of it. With `annotate`, each bar is labeled with its total. The y axis
+    ticks whole counts and the grid stays behind the bars.
+    """
+    ax.set_axisbelow(True)
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    values = df.pivot_table(
+        index=date_column, columns="lang", values=value_column, aggfunc="sum", fill_value=0
+    )
+    langs = values.sum().sort_values(ascending=False, kind="stable").index
+    bottom = pd.Series(0, index=values.index)
+
+    for lang in langs:
+        present = values[lang] > 0
+        if not present.any():
+            continue
+
+        color = colors.get(lang)
+        ax.bar(
+            values.index[present],
+            values.loc[present, lang],
+            bottom=bottom[present],
+            width=20,
+            label=lang.upper(),
+            color=color,
+            alpha=0.8,
+            edgecolor=color,
+            linewidth=1,
+        )
+        bottom = bottom + values[lang]
+
+    if annotate:
+        for x, total in bottom[bottom > 0].items():
+            ax.annotate(
+                value_format.format(total),
+                xy=(x, total),
                 xytext=(0, 5),
                 textcoords="offset points",
                 fontsize=TICK_FONTSIZE,
@@ -209,9 +261,18 @@ def spread_labels(ax, labels, min_gap=1.2 * LEGEND_FONTSIZE):
                 label.xyann = (dx, dy + shift / scale)
 
 
-def style_legend(ax, title=None):
-    """Legend outside the plot area to avoid overlap."""
+def style_legend(ax, title=None, reverse=False):
+    """Legend outside the plot area to avoid overlap.
+
+    With `reverse` the entries are listed last drawn first, which is top to
+    bottom for a stack drawn from the bottom up.
+    """
+    handles, labels = ax.get_legend_handles_labels()
+    if reverse:
+        handles, labels = handles[::-1], labels[::-1]
     legend = ax.legend(
+        handles,
+        labels,
         title=title,
         fontsize=LEGEND_FONTSIZE,
         title_fontsize=LEGEND_FONTSIZE,

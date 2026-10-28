@@ -6,12 +6,13 @@ Visualization tool for tracking accumulated contributions — OpenTelemetry.io.
 
 - Fetches contribution data from GitHub API
 - Filters PRs by language labels (bn, es, fr, ja, ko, pl, pt, ro, uk, zh)
-- **Five tracking modes**:
+- **Six tracking modes**:
   - **PR-based**: Track individual PRs over time by language
   - **Release-based**: Measure lines/pages translated per monthly release
   - **Merged PRs**: Track total merged PRs across the entire repository
   - **Translation coverage**: Show how complete each locale is, now and at each monthly release
   - **PR flow**: Show how fast each locale's PRs are merged and how many stay open
+  - **Contributors**: Show how many people contribute to each locale and how many are new
 - Calculates translation coverage percentages
 - Generates accumulated contribution metrics over time
 - Creates Grafana-style dark theme visualizations
@@ -214,13 +215,41 @@ make clean-pr-flow
 
 The fetch always covers every PR since the repository was created, whatever
 `YEAR` is: the backlog needs the PRs created before the year that were still
-open, and a later metric needs the full history. `YEAR` only picks the months
+open, and the [contributors charts](#contributors-pipeline) need every earlier
+PR to tell a new contributor from a returning one. `YEAR` only picks the months
 drawn. The backlog has no fetch of its own, it plots the data
 `make fetch-pr-flow` fetched.
 
 The two charts are independent: each plot target converts only its own CSV, so
 a year with open PRs but no merges still draws the backlog (and `make charts`
 reports only the time to merge as missing).
+
+#### Contributors Pipeline
+
+Show how big and how healthy each locale's community is: the people who opened
+a `lang:*` PR in each month, and how many of them were on their first PR in that
+language. It needs no fetch of its own, it uses the PR flow data.
+
+```bash
+# Fetch the PR flow data once (all time)
+make fetch-pr-flow
+
+# Draw the unique contributors of each month, a line per language
+make plot-contributors
+
+# Draw the new contributors of each month, bars stacked by language
+make plot-new-contributors
+
+# Another year, from the data already fetched (no API calls)
+make plot-contributors YEAR=2025
+make plot-new-contributors YEAR=2025
+```
+
+Both plot targets convert the data to `data/pr_flow_contributors.csv` (a row per
+month and language, read by both charts) and `data/pr_flow_contributors_year.csv`
+(a row per language, summing up `YEAR`). The CSVs hold counts only, never the
+logins of the contributors. `make clean-pr-flow` removes them with the rest of
+the PR flow data.
 
 #### All Charts
 
@@ -236,8 +265,8 @@ make charts YEAR=2024 LANGS=pt,es
 
 This writes `out/lang-contributions.png`, `out/release-metrics.png`,
 `out/merged-prs-accumulated.png`, `out/merged-prs-monthly.png`,
-`out/coverage-history.png`, `out/coverage-snapshot.png`, `out/time-to-merge.png`
-and `out/backlog.png`.
+`out/coverage-history.png`, `out/coverage-snapshot.png`, `out/time-to-merge.png`,
+`out/backlog.png`, `out/contributors.png` and `out/new-contributors.png`.
 
 Every chart is attempted even when one fails, for example the release metrics
 of a year with no published release. `make charts` then names the charts it
@@ -265,10 +294,12 @@ make plot-coverage
 make plot-coverage-history
 make plot-pr-flow
 make plot-pr-backlog
+make plot-contributors
+make plot-new-contributors
 ```
 
-Use the same `YEAR` as the fetch, see [Parameters](#parameters). The PR flow
-charts can show any year from one fetch.
+Use the same `YEAR` as the fetch, see [Parameters](#parameters). The PR flow and
+contributor charts can show any year from one fetch.
 
 #### Other Commands
 
@@ -305,6 +336,8 @@ Not every pipeline reads every parameter:
 | Coverage history       | (release metrics)       | `YEAR`            |
 | PR flow                | `LANGS`                 | `YEAR`            |
 | PR backlog             | (PR flow)               | `YEAR`            |
+| Contributors           | (PR flow)               | `YEAR`            |
+| New contributors       | (PR flow)               | `YEAR`            |
 
 - `OUTPUT` applies to every plot step.
 - Use the same `YEAR` for `plot-*` as for the fetch. The release metrics and
@@ -318,6 +351,9 @@ Not every pipeline reads every parameter:
   (backlog). The fetched data covers every year, so re-plot with another `YEAR`
   instead of fetching again. `pr_flow_to_csv.py` writes each CSV that has data
   and, without `--only {time-to-merge,backlog}`, fails at the end if one has not.
+- The contributors CSV step reads the PR flow data too and takes any `YEAR`. It
+  exits with a hint when nobody contributed that year, or the year has not
+  started, and writes nothing then.
 - `TYPE` must be `prs`, `issues` or `both`; any other value exits with status 1.
 - `MODE` is a `make` parameter. When calling `plot.py` directly, use `--mode`.
 
@@ -379,19 +415,24 @@ python3 scripts/processing/pr_flow_to_csv.py --only=time-to-merge
 python3 scripts/processing/plot.py --source=time-to-merge
 python3 scripts/processing/pr_flow_to_csv.py --only=backlog
 python3 scripts/processing/plot.py --source=backlog
+
+# Contributors: one conversion for both charts, from the same PR flow data
+python3 scripts/processing/contributors_to_csv.py
+python3 scripts/processing/plot.py --source=contributors
+python3 scripts/processing/plot.py --source=new-contributors
 ```
 
 `plot.py` options:
 
 ```bash
-python3 scripts/processing/plot.py --source {prs,releases,merged,coverage,coverage-snapshot,time-to-merge,backlog}  # default: prs
+python3 scripts/processing/plot.py --source {prs,releases,merged,coverage,coverage-snapshot,time-to-merge,backlog,contributors,new-contributors}  # default: prs
 python3 scripts/processing/plot.py --mode {accumulated,monthly}    # merged PRs only
 python3 scripts/processing/plot.py --output out/chart.png          # save instead of opening a window
 ```
 
 ## Understanding the Pipelines
 
-The tool provides five complementary ways to track OpenTelemetry contributions:
+The tool provides six complementary ways to track OpenTelemetry contributions:
 
 ### Language Contributions Pipeline
 
@@ -458,6 +499,36 @@ Tracks **how responsive the review of each locale is**:
 - **Cost**: One repository request and about 40 Search requests for all
   languages (the search of a language over 1000 PRs is split by date range)
 
+### Contributors Pipeline
+
+Tracks **how big and how healthy each locale's community is**, from the PR flow
+data (no fetch of its own):
+
+- **Contributor**: An author who opened at least one `lang:<code>` PR in the
+  month, by `created_at` (UTC), in any state. Bots (`author_type` of `Bot`, or a
+  login ending in `[bot]`) and PRs without an author (deleted accounts) are left
+  out
+- **New contributor**: The author's first PR in that language, over all the data
+  and not only `YEAR`, was opened that month. Someone who contributes to two
+  languages is new in each. **Returning** is the unique contributors minus the
+  new ones
+- **Months**: The months of `YEAR`, up to the current month. A month nobody
+  contributed in is a zero, not a gap
+- **Yearly summary**: Per language over the months drawn: `unique` counts each
+  person once however many months they contributed in (so it is not the sum of
+  the monthly values), `new` is the sum of the monthly new, and `returning` is
+  `unique` minus `new`: the people who had contributed to the language before
+  the months drawn
+- **Aggregates only**: The CSVs hold counts per language, no logins and no
+  leaderboard
+- **Charts**: The unique contributors (`--source=contributors`), one marked line
+  per language, and the new contributors (`--source=new-contributors`), bars
+  stacked by language with the total on top, which shows the inflow of
+  newcomers across the whole localization effort
+- **Use case**: See which locales have a growing community, which depend on a
+  few people, and how many newcomers keep arriving
+- **Cost**: None, it plots the data `make fetch-pr-flow` fetched
+
 ### Metrics Calculated
 
 For each release month and language:
@@ -497,7 +568,13 @@ release metrics files.
   and language (empty median and p90 where nothing was merged)
 - `data/pr_flow_backlog.csv` - PRs open at each month end per language
 
-The PR backlog chart has no fetch of its own: it plots the PR flow files.
+- `data/pr_flow_contributors.csv` - Unique, new and returning contributors per
+  month and language
+- `data/pr_flow_contributors_year.csv` - The same per language, summed up over
+  the months of `YEAR`
+
+The PR backlog and contributor charts have no fetch of their own: they plot the
+PR flow files.
 
 **Charts:** `make charts` writes PNG files to `out/`.
 
@@ -588,6 +665,7 @@ opentelemetry-contribution-metrics/
 │   │   ├── merged_prs_to_csv.py           # Converts merged PRs JSON to accumulated CSV
 │   │   ├── coverage_to_csv.py             # Ranks the coverage snapshot JSON into a CSV
 │   │   ├── pr_flow_to_csv.py              # Computes time to merge and open backlog CSVs
+│   │   ├── contributors_to_csv.py         # Computes unique and new contributors per language
 │   │   └── plot.py                        # Generates visualization (supports all modes)
 │   └── check_setup.sh                 # Validates environment setup
 ├── tests/
@@ -606,7 +684,9 @@ opentelemetry-contribution-metrics/
 │   ├── coverage_snapshot.csv          # Ranked coverage snapshot (generated)
 │   ├── pr_flow.json                   # Raw localization PRs, all time (generated)
 │   ├── pr_flow_time_to_merge.csv      # Time to merge per month and language (generated)
-│   └── pr_flow_backlog.csv            # Open PRs per month end and language (generated)
+│   ├── pr_flow_backlog.csv            # Open PRs per month end and language (generated)
+│   ├── pr_flow_contributors.csv       # Contributors per month and language (generated)
+│   └── pr_flow_contributors_year.csv  # Contributors per language for the year (generated)
 ├── out/                               # Charts written by make charts (generated, gitignored)
 ├── config.yaml                        # Plot configuration
 ├── .env.example                       # Environment template
@@ -689,6 +769,8 @@ The `plot.py` script generates a presentation-ready graph:
   release months, or one bar per language ranked from most to least covered
 - PR flow: a marked line per language across the months, breaking where a
   language has no value (no PR merged that month)
+- Contributors: a marked line per language for the unique contributors of each
+  month, and bars stacked by language, with the total on top, for the new ones
 - End-of-line values on line charts: labels that would overlap are nudged apart
   vertically (the lines and points do not move), labels that do not overlap
   stay put

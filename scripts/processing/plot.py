@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import yaml
 
+import contributors_to_csv as contributors_csv
 import coverage_to_csv as coverage_csv
 import lang_contributions_to_csv as lang_csv
 import merged_prs_to_csv as merged_csv
@@ -18,6 +19,7 @@ from plotting import (
     draw_by_language,
     draw_ranked_bars,
     draw_series,
+    draw_stacked_bars,
     set_symlog_axis,
     spread_labels,
     style_axes,
@@ -37,7 +39,7 @@ class Source:
     ylabel: str
     hint: str  # make command that produces the CSV
     by_language: bool = True  # one series per `lang`, otherwise a single total
-    bars: bool = False
+    bars: bool = False  # with `by_language` and a date axis, stacked by language
     value_format: str = "{:.0f}"  # how values are written on the chart
     area: bool = True  # fill under a line, for running totals
     symlog_ticks: tuple[float, ...] = ()  # symlog y axis labeled at these values, if any
@@ -117,10 +119,30 @@ SOURCES = {
         hint=pr_flow_csv.FETCH_HINT,
         area=False,
     ),
+    "contributors": Source(
+        csv_path=Path(contributors_csv.MONTHLY_FILE),
+        date_column="month",
+        value_column="unique",
+        title="Unique Contributors",
+        xlabel="Month",
+        ylabel="Unique contributors in the month",
+        hint=contributors_csv.FETCH_HINT,
+        area=False,
+    ),
+    "new-contributors": Source(
+        csv_path=Path(contributors_csv.MONTHLY_FILE),
+        date_column="month",
+        value_column="new",
+        title="New Contributors",
+        xlabel="Month",
+        ylabel="New contributors in the month",
+        hint=contributors_csv.FETCH_HINT,
+        bars=True,
+    ),
 }
 
 # Sources whose data depends on the year, so the title names it
-YEAR_TITLED = ("time-to-merge", "backlog")
+YEAR_TITLED = ("time-to-merge", "backlog", "contributors", "new-contributors")
 
 
 def resolve_source(name, mode, year):
@@ -153,7 +175,8 @@ def parse_args(argv=None):
             "metrics, 'merged' for total merged PRs, 'coverage' for the translation coverage "
             "of each release, 'coverage-snapshot' for the current coverage of each language, "
             "'time-to-merge' for the median days to merge a PR, 'backlog' for the PRs open at "
-            "the end of each month"
+            "the end of each month, 'contributors' for the people who opened a PR in each "
+            "month, 'new-contributors' for those on their first PR in the language"
         ),
     )
     parser.add_argument(
@@ -205,6 +228,7 @@ def render(df, source, config):
     date_column = source.date_column
     value_column = source.value_column
     title = source.title
+    stacked = source.bars and source.by_language and date_column is not None
 
     fig, ax = create_figure()
 
@@ -212,6 +236,10 @@ def render(df, source, config):
         draw_ranked_bars(ax, df, value_column, colors, show_endpoint_values, source.value_format)
         if "as_of" in df:
             title = f"{title} - {df['as_of'].iloc[0]}"
+    elif stacked:
+        draw_stacked_bars(
+            ax, df, date_column, value_column, colors, show_endpoint_values, source.value_format
+        )
     elif source.by_language:
         draw_by_language(
             ax,
@@ -244,9 +272,10 @@ def render(df, source, config):
     if source.symlog_ticks:
         set_symlog_axis(ax, source.symlog_ticks)
 
-    # No legend for bar chart
-    if not source.bars:
-        style_legend(ax, "Language" if source.by_language else None)
+    # Bars of a single color need no legend, stacked ones name their languages in it,
+    # top segment first
+    if stacked or not source.bars:
+        style_legend(ax, "Language" if source.by_language else None, reverse=stacked)
 
     # Tight layout with extra padding for cleaner look
     fig.tight_layout(pad=1.5)
@@ -259,6 +288,8 @@ def render(df, source, config):
 def describe(df, source):
     if source.date_column is None:
         return f"Generated coverage bar chart for {len(df)} languages"
+    if source.by_language and source.bars:
+        return f"Generated stacked bar chart with {df['lang'].nunique()} languages"
     if source.by_language:
         return f"Generated plot with {df['lang'].nunique()} languages"
     if source.bars:

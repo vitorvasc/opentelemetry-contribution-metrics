@@ -655,6 +655,7 @@ release metrics files.
   and language (empty median and p90 where nothing was merged)
 - `data/pr_flow_backlog.csv` - PRs open at each month end per language
 
+**Contributors:**
 - `data/pr_flow_contributors.csv` - Unique, new and returning contributors per
   month and language
 - `data/pr_flow_contributors_year.csv` - The same per language, summed up over

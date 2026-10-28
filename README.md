@@ -450,8 +450,10 @@ Tracks **how responsive the review of each locale is**:
   by then and not yet closed or merged. A PR closed without a merge leaves the
   backlog when it is closed. The current month is counted as of now
 - **Charts**: The median time to merge (`--source=time-to-merge`) and the open
-  backlog (`--source=backlog`), one marked line per language. The p90 is in the
-  CSV only
+  backlog (`--source=backlog`), one marked line per language. The time to merge
+  axis is symmetric log (linear up to 1 day, logarithmic above) labeled in days,
+  so sub-day medians stay readable next to the weeks-long medians of small
+  languages. The p90 is in the CSV only
 - **Use case**: See which locales are waiting for review and which merge quickly
 - **Cost**: One repository request and about 40 Search requests for all
   languages (the search of a language over 1000 PRs is split by date range)

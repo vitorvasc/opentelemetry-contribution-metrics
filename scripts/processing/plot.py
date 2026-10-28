@@ -18,6 +18,7 @@ from plotting import (
     draw_by_language,
     draw_ranked_bars,
     draw_series,
+    set_symlog_axis,
     style_axes,
     style_legend,
 )
@@ -38,6 +39,7 @@ class Source:
     bars: bool = False
     value_format: str = "{:.0f}"  # how values are written on the chart
     area: bool = True  # fill under a line, for running totals
+    symlog_ticks: tuple[float, ...] = ()  # symlog y axis labeled at these values, if any
 
 
 SOURCES = {
@@ -101,6 +103,8 @@ SOURCES = {
         hint=pr_flow_csv.FETCH_HINT,
         value_format="{:.1f}",
         area=False,
+        # Sub-day medians stay linear, the weeks-long outliers of small languages log
+        symlog_ticks=(0, 1, 2, 5, 10, 30, 90, 180, 365),
     ),
     "backlog": Source(
         csv_path=Path(pr_flow_csv.BACKLOG_FILE),
@@ -236,6 +240,8 @@ def render(df, source, config):
         # would run under the legend
         left, right = ax.get_xlim()
         ax.set_xlim(left, right + 0.1 * (right - left))
+    if source.symlog_ticks:
+        set_symlog_axis(ax, source.symlog_ticks)
 
     # No legend for bar chart
     if not source.bars:

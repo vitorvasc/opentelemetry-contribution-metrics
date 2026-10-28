@@ -5,7 +5,7 @@ import pytest
 from matplotlib.colors import to_rgb
 
 import plot
-from plotting import draw_by_language, draw_ranked_bars, draw_series
+from plotting import draw_by_language, draw_ranked_bars, draw_series, set_symlog_axis
 
 PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
 
@@ -382,3 +382,59 @@ def test_backlog_draws_every_language_including_zero_counts(stage, workdir):
     assert list(lines["ES"].get_ydata()) == [0, 0, 1]
     assert ax.get_ylim()[0] == 0
     assert ax.get_ylabel() == "Open PRs at month end"
+
+
+def test_time_to_merge_uses_a_symlog_axis_labeled_in_days(stage, workdir):
+    stage("pr_flow_time_to_merge.csv")
+    source = plot.resolve_source("time-to-merge", "accumulated", "2026")
+
+    ax = plot.render(plot.load_csv(source), source, plot.load_config()).axes[0]
+
+    assert ax.get_yscale() == "symlog"
+    # The largest median is 6 days, so the axis ends on the next tick, 10
+    assert ax.get_ylim() == (0, 10)
+    assert [tick.get_text() for tick in ax.get_yticklabels()] == ["0", "1", "2", "5", "10"]
+
+
+def test_backlog_and_the_other_charts_keep_a_linear_axis(stage, workdir):
+    stage("pr_flow_backlog.csv")
+    source = plot.resolve_source("backlog", "accumulated", "2026")
+
+    ax = plot.render(plot.load_csv(source), source, plot.load_config()).axes[0]
+
+    assert ax.get_yscale() == "linear"
+    assert all(not s.symlog_ticks for name, s in plot.SOURCES.items() if name != "time-to-merge")
+
+
+def test_set_symlog_axis_is_linear_below_the_first_tick_and_log_above():
+    fig, ax = plt.subplots()
+    ax.plot([0, 1, 2], [0.1, 3, 81])
+
+    set_symlog_axis(ax, (0, 1, 2, 5, 10, 30, 90, 180))
+
+    assert ax.get_yscale() == "symlog"
+    assert ax.get_ylim() == (0, 90)
+    assert [tick.get_text() for tick in ax.get_yticklabels()] == [
+        "0",
+        "1",
+        "2",
+        "5",
+        "10",
+        "30",
+        "90",
+    ]
+    # 0 to 1 is linear, so 0.5 sits halfway; above 1 each factor of 10 is one decade
+    to_axes = ax.transData.transform
+    zero, half, one, ten, hundred = (to_axes((0, y))[1] for y in (0, 0.5, 1, 10, 100))
+    assert half - zero == pytest.approx((one - zero) / 2)
+    assert ten - one == pytest.approx(hundred - ten)
+
+
+def test_set_symlog_axis_keeps_the_top_of_data_beyond_the_last_tick():
+    fig, ax = plt.subplots()
+    ax.plot([0, 1], [0, 500])
+
+    set_symlog_axis(ax, (0, 1, 10, 100))
+
+    assert ax.get_ylim()[1] > 500
+    assert [tick.get_text() for tick in ax.get_yticklabels()] == ["0", "1", "10", "100"]

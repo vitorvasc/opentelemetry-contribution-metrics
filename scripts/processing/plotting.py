@@ -1,6 +1,7 @@
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
+from matplotlib.ticker import NullLocator
 
 # Grafana-style dark theme configuration
 BACKGROUND_COLOR = "#282828"
@@ -152,6 +153,23 @@ def style_axes(ax, title, xlabel, ylabel, dates=True):
     ax.set_xlabel(xlabel, fontsize=LABEL_FONTSIZE, color=TEXT_COLOR)
     ax.set_ylabel(ylabel, fontsize=LABEL_FONTSIZE, color=TEXT_COLOR)
     ax.set_title(title, fontsize=TITLE_FONTSIZE, fontweight="bold", pad=20, color=TEXT_COLOR)
+
+
+def set_symlog_axis(ax, ticks):
+    """Symmetric log y axis from zero, labeled at `ticks`.
+
+    It is linear up to the first positive tick and logarithmic above it, so small
+    values stay readable next to large ones. The axis ends on the first tick that
+    covers the data.
+    """
+    top = ax.get_ylim()[1]
+    top = next((tick for tick in ticks if tick >= top), top)
+
+    ax.set_yscale("symlog", linthresh=min(tick for tick in ticks if tick > 0))
+    ax.set_ylim(0, top)
+    shown = [tick for tick in ticks if tick <= top]
+    ax.set_yticks(shown, labels=[f"{tick:g}" for tick in shown])
+    ax.yaxis.set_minor_locator(NullLocator())
 
 
 def style_legend(ax, title=None):

@@ -21,7 +21,9 @@ Visualization tool for tracking accumulated contributions — OpenTelemetry.io.
 - **Node.js `^22.18.0 || >=24.2.0`** (24 is pinned in `.node-version`). The fetch
   scripts use `import.meta.main`, which older 22.x releases lack
 - **Python 3.11+** (3.12 is pinned in `.python-version`)
-- **GitHub Personal Access Token** with `public_repo` scope
+- **GitHub Personal Access Token** that can read public repositories: a
+  fine-grained token with "Public repositories (read-only)" access and no
+  permissions, or a classic token with no scopes
 
 ## Installation
 
@@ -171,6 +173,10 @@ make charts YEAR=2024 LANGS=pt,es
 
 This writes `out/lang-contributions.png`, `out/release-metrics.png`,
 `out/merged-prs-accumulated.png` and `out/merged-prs-monthly.png`.
+
+Every chart is attempted even when one fails, for example the release metrics
+of a year with no published release. `make charts` then names the charts it
+could not write and fails.
 
 To save a single chart, set `OUTPUT` on any `fetch-*` or `plot-*` target:
 
@@ -485,21 +491,30 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request:
 days. It never commits to the repository. The job summary lists the files and
 the GitHub API requests left.
 
-- **Schedule**: monthly, on day 2 at 06:00 UTC, after the upstream `YYYY.MM`
-  release tags. It charts the year of the month that just ended (the previous
-  year on January 2) for all languages.
+- **Schedule**: monthly, on day 2 at 06:00 UTC. It charts the year of the
+  month that just ended (the previous year on January 2) for all languages.
+  Upstream `YYYY.MM` releases can be published weeks after their month, so
+  it charts the releases published so far.
 - **Manual run** (Actions → Charts → Run workflow): optional `year` (four
   digits) and `langs` (comma-separated codes such as `pt,es`, lowercased and
   stripped of spaces). Empty means the current year and all languages. Invalid
   values fail before any request.
-- **Pull requests** that change the workflow file run it with `LANGS=pt`.
+- **Pull requests** that change the workflow file run it with `LANGS=pt` and
+  the previous year, whose releases are all published.
+- **Missing data**: a chart without data (for example no release published
+  yet for the year) is skipped. The other charts are still written and
+  uploaded, the run ends red, and the job summary lists the charts that were
+  not written.
 - **Token**: `METRICS_TOKEN` if the secret exists, otherwise the Actions
   `GITHUB_TOKEN`. The Actions token reads public repositories but is limited to
   about 1000 core requests per hour. A full run needs about 1400 core and 160
   search requests, so with that token it waits for the hourly reset (up to an
-  hour) and the job's 90-minute timeout allows one wait. Create a
-  `METRICS_TOKEN` secret (a personal access token with `public_repo` scope,
-  5000 requests per hour) to finish in about 17 minutes.
+  hour each) and the job's 180-minute timeout leaves room for two. Create a
+  `METRICS_TOKEN` secret (5000 requests per hour) to finish in about 17
+  minutes. Use a fine-grained personal access token with "Public
+  repositories (read-only)" access and no permissions, or a classic token with
+  no scopes. Do not use the `public_repo` scope, it grants write access to
+  every public repository.
 
 ## Output
 
@@ -532,7 +547,8 @@ Make sure:
 
 1. `GITHUB_TOKEN` is exported in your shell, or a `.env` file in the project
    root contains `GITHUB_TOKEN=your_token_here`
-2. Token has correct permissions (public_repo scope)
+2. Token can read public repositories (a fine-grained token with "Public
+   repositories (read-only)" access, or a classic token with no scopes)
 
 ### "ModuleNotFoundError: No module named 'pandas'"
 

@@ -116,15 +116,9 @@ def test_resolve_source_applies_mode_and_year_to_merged_prs():
     assert monthly.ylabel == "Merged PRs"
 
 
-def test_resolve_source_omits_year_from_title_when_unset():
-    assert plot.resolve_source("merged", "accumulated").title == "Merged PRs (accumulated)"
-
-
 def test_resolve_source_ignores_mode_for_language_sources():
-    assert plot.resolve_source("prs", "monthly") is plot.SOURCES["prs"]
-    assert plot.resolve_source("releases", "monthly") is plot.SOURCES["releases"]
-    assert plot.resolve_source("coverage", "monthly") is plot.SOURCES["coverage"]
-    assert plot.resolve_source("coverage-snapshot", "monthly") is plot.SOURCES["coverage-snapshot"]
+    for name in ("prs", "releases", "coverage", "coverage-snapshot"):
+        assert plot.resolve_source(name, "monthly", "2024") is plot.SOURCES[name]
 
 
 @pytest.fixture

@@ -93,7 +93,7 @@ SOURCES = {
 }
 
 
-def resolve_source(name, mode, year=""):
+def resolve_source(name, mode, year):
     """Look up a source, applying the plot mode to the merged PRs one."""
     source = SOURCES[name]
     if name != "merged":
@@ -104,7 +104,7 @@ def resolve_source(name, mode, year=""):
     return replace(
         source,
         value_column="count" if monthly else "total",
-        title=f"Merged PRs - {year}, {mode_label}" if year else f"Merged PRs ({mode_label})",
+        title=f"Merged PRs - {year}, {mode_label}",
         ylabel="Merged PRs" if monthly else "Accumulated Merged PRs",
         bars=monthly,
     )

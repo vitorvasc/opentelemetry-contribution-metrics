@@ -1,0 +1,118 @@
+name: Charts
+
+on:
+  schedule:
+    # Day 2 follows the monthly YYYY.MM release tags upstream
+    - cron: "0 6 2 * *"
+  workflow_dispatch:
+    inputs:
+      year:
+        description: Year to fetch and plot, four digits (empty for the current year)
+        required: false
+        type: string
+      langs:
+        description: Comma-separated language codes such as pt,es (empty for all)
+        required: false
+        type: string
+  pull_request:
+    paths:
+      - .github/workflows/charts.yml
+
+permissions:
+  contents: read
+
+# Scheduled and manual runs share one group and are never cancelled, so a pull
+# request run cannot stop a full regeneration that is waiting out a rate limit.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  charts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      YEAR: ${{ inputs.year }}
+      # Pull requests only validate the workflow, so they fetch one language
+      LANGS: ${{ github.event_name == 'pull_request' && 'pt' || inputs.langs }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Validate YEAR and LANGS
+        run: |
+          if [[ -n "$YEAR" && ! "$YEAR" =~ ^[0-9]{4}$ ]]; then
+            echo "::error::year must be empty or four digits, got '$YEAR'"
+            exit 1
+          fi
+          if [[ -n "$LANGS" && ! "$LANGS" =~ ^[a-z]{2,5}(,[a-z]{2,5})*$ ]]; then
+            echo "::error::langs must be empty or comma-separated lowercase codes of 2-5 letters such as pt,es, got '$LANGS'"
+            exit 1
+          fi
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - run: npm ci
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: .python-version
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - run: pip install -r requirements.txt
+
+      # The Actions token reads public repositories but is limited to about
+      # 1000 core requests per hour; a METRICS_TOKEN secret raises it to 5000.
+      - name: Generate the charts
+        run: make charts
+        env:
+          GITHUB_TOKEN: ${{ secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN }}
+          MPLBACKEND: Agg
+
+      - name: Upload the charts and their data
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: charts-${{ env.YEAR || 'current' }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            out/*.png
+            data/*.csv
+          retention-days: 90
+          if-no-files-found: warn
+
+      - name: Write the job summary
+        if: always()
+        run: |
+          shopt -s nullglob
+          files=(out/*.png data/*.csv)
+          {
+            echo "## Charts"
+            echo
+            echo "Year: \`${YEAR:-current}\`, languages: \`${LANGS:-all}\`"
+            echo
+            if [ "${#files[@]}" -eq 0 ]; then
+              echo "No files were written."
+            else
+              for file in "${files[@]}"; do
+                echo "- \`$file\`"
+              done
+            fi
+            echo
+            echo "### GitHub API requests left"
+            echo
+            if limits="$(curl -fsS \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/rate_limit)"; then
+              jq -r '.resources | "- core: \(.core.remaining) of \(.core.limit)", "- search: \(.search.remaining) of \(.search.limit)"' <<<"$limits"
+            else
+              echo "- unavailable"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+        env:
+          GITHUB_TOKEN: ${{ secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN }}

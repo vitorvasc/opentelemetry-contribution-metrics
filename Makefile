@@ -4,46 +4,37 @@ FETCH_DIR := ./scripts/fetch
 PROCESSING_DIR := ./scripts/processing
 DATA_DIR := ./data
 
-# Main commands
-NODE=node
-PYTHON=python3
+# Main commands (override to use a virtualenv, e.g. PYTHON=.venv/bin/python)
+NODE ?= node
+PYTHON ?= python3
 
-# External variables
-# GITHUB_TOKEN is now loaded from .env file
-# You don't need to export it manually anymore
-# Just create a .env file with: GITHUB_TOKEN=your_token
-
-# Languages to fetch (comma-separated)
-# Available: bn, es, fr, ja, pt, ro, uk, zh
-# Default: all languages
-# Usage: make fetch LANGS=pt,es
-LANGS ?=
-export LANGS
-
-# Year to filter data (default: current year)
-# Usage: make fetch-lang-contributions YEAR=2024
-YEAR ?= 2025
-export YEAR
-
-# Contribution type filter (prs, issues, or both)
-# Usage: make fetch-lang-contributions TYPE=prs
-TYPE ?=
-export TYPE
+# Variables read by the scripts, never defaulted here
+# GITHUB_TOKEN comes from the environment or from .env (loaded by dotenv).
+# YEAR, LANGS and TYPE reach the scripts straight from the command line
+# (make fetch-lang-contributions YEAR=2024) or the environment. Unset or empty
+# means the script default: current UTC year, all languages, PRs and issues.
+#   YEAR   four-digit year to fetch and plot
+#   LANGS  comma-separated language codes (bn,es,fr,ja,ko,pl,pt,ro,uk,zh)
+#   TYPE   prs, issues or both (lang contributions only)
 
 # Plot mode for merged PRs (accumulated or monthly)
 # Usage: make fetch-merged-prs MODE=monthly
 MODE ?= accumulated
-export MODE
+
+# Save the chart to this file instead of opening a window
+# Usage: make plot-merged-prs OUTPUT=out/merged.png
+OUTPUT ?=
+PLOT_OUTPUT = $(if $(OUTPUT),--output $(OUTPUT))
 
 # ---------- TARGETS ----------
 
 # Default target: show help
 .DEFAULT_GOAL := help
 
-# Check if .env exists
+# The token may come from the environment or from a .env file
 check-env:
-	@if [ ! -f .env ]; then \
-		echo "Error: .env file not found. Copy .env.example to .env and set your GITHUB_TOKEN."; \
+	@if [ -z "$$GITHUB_TOKEN" ] && ! grep -qs '^GITHUB_TOKEN=.' .env; then \
+		echo "Error: GITHUB_TOKEN is not set. Export it, or copy .env.example to .env and set it there."; \
 		exit 1; \
 	fi
 
@@ -83,7 +74,7 @@ CLEAN_TARGETS := $(addprefix clean-,$(PIPELINES))
 # Convert the fetched JSON to CSV, then draw it ($(1) is the pipeline name)
 define process_and_plot
 $(PYTHON) $(PROCESSING_DIR)/$($(1).csv)
-$(PYTHON) $(PROCESSING_DIR)/plot.py $($(1).plot)
+$(PYTHON) $(PROCESSING_DIR)/plot.py $($(1).plot) $(PLOT_OUTPUT)
 endef
 
 $(FETCH_TARGETS): fetch-%: check-env
@@ -144,7 +135,7 @@ help:
 	@echo "  make help                                  - Show this help"
 	@echo ""
 	@echo "Parameters:"
-	@echo "  YEAR=XXXX    - Filter by year (default: $(YEAR))"
+	@echo "  YEAR=XXXX    - Filter by year (default: current year, UTC)"
 	@echo "  LANGS=xx,yy  - Filter by languages (default: all - bn,es,fr,ja,pt,ro,uk,zh)"
 	@echo "  TYPE=xxx     - Filter contribution type: prs, issues, or both (default: both)"
 	@echo "  MODE=xxx     - Plot mode for merged PRs: accumulated or monthly (default: accumulated)"

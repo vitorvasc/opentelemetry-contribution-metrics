@@ -1,0 +1,236 @@
+[
+  {
+    "lang": "pt",
+    "number": 101,
+    "title": "[pt] Translate page 101",
+    "created_at": "2025-01-14T09:21:05Z",
+    "closed_at": "2025-01-16T10:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/101"
+  },
+  {
+    "lang": "pt",
+    "number": 102,
+    "title": "[pt] Translate page 102",
+    "created_at": "2025-02-03T14:05:41Z",
+    "closed_at": "2025-02-04T08:30:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/102"
+  },
+  {
+    "lang": "pt",
+    "number": 103,
+    "title": "[pt] Translate page 103",
+    "created_at": "2025-02-03T14:05:41Z",
+    "closed_at": "2025-02-05T11:15:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/103"
+  },
+  {
+    "lang": "pt",
+    "number": 104,
+    "title": "[pt] Translate page 104",
+    "created_at": "2025-03-21T23:59:59Z",
+    "closed_at": "2025-03-25T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/104"
+  },
+  {
+    "lang": "pt",
+    "number": 105,
+    "title": "[pt] Translate page 105",
+    "created_at": "2025-04-08T07:10:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/105"
+  },
+  {
+    "lang": "pt",
+    "number": 106,
+    "title": "Glossary for pt",
+    "created_at": "2025-04-09T12:00:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/106"
+  },
+  {
+    "lang": "es",
+    "number": 201,
+    "title": "[es] Translate page 201",
+    "created_at": "2025-01-30T16:45:12Z",
+    "closed_at": "2025-02-01T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/201"
+  },
+  {
+    "lang": "es",
+    "number": 202,
+    "title": "[es] Translate page 202",
+    "created_at": "2025-03-02T10:20:30Z",
+    "closed_at": "2025-03-03T10:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/202"
+  },
+  {
+    "lang": "es",
+    "number": 203,
+    "title": "[es] Translate page 203",
+    "created_at": "2025-03-18T18:00:00Z",
+    "closed_at": "2025-03-19T08:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/203"
+  },
+  {
+    "lang": "es",
+    "number": 204,
+    "title": "[es] Translate page 204",
+    "created_at": "2025-04-12T09:00:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:es",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/204"
+  },
+  {
+    "lang": "ko",
+    "number": 301,
+    "title": "[ko] Translate page 301",
+    "created_at": "2025-02-11T05:30:00Z",
+    "closed_at": "2025-02-12T05:30:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:ko",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/301"
+  },
+  {
+    "lang": "ko",
+    "number": 302,
+    "title": "[ko] Translate page 302",
+    "created_at": "2025-03-10T06:00:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:ko",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/302"
+  },
+  {
+    "lang": "ko",
+    "number": 303,
+    "title": "[ko] Translate page 303",
+    "created_at": "2025-04-02T03:15:00Z",
+    "closed_at": "2025-04-03T03:15:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:ko",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/303"
+  },
+  {
+    "lang": "ko",
+    "number": 304,
+    "title": "[ko] Translate page 304",
+    "created_at": "2025-04-05T03:15:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:ko",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/304"
+  },
+  {
+    "lang": "de",
+    "number": 401,
+    "title": "[de] Translate page 401",
+    "created_at": "2025-01-20T11:11:11Z",
+    "closed_at": "2025-01-22T11:11:11Z",
+    "state": "closed",
+    "labels": [
+      "lang:de",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/401"
+  },
+  {
+    "lang": "de",
+    "number": 402,
+    "title": "[de] Translate page 402",
+    "created_at": "2025-02-17T13:13:13Z",
+    "closed_at": "2025-02-18T13:13:13Z",
+    "state": "closed",
+    "labels": [
+      "lang:de",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/402"
+  },
+  {
+    "lang": "uk",
+    "number": 501,
+    "title": "[uk] Translate page 501",
+    "created_at": "2025-03-05T08:00:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:uk",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/501"
+  },
+  {
+    "lang": "uk",
+    "number": 502,
+    "title": "[uk] Translate page 502",
+    "created_at": "2025-04-01T08:00:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:uk",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/issues/502"
+  }
+]

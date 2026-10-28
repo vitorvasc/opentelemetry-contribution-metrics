@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import yaml
 
+import lang_contributions_to_csv as lang_csv
+import merged_prs_to_csv as merged_csv
+import release_metrics_to_csv as releases_csv
 from common import fail
 from plotting import (
     create_figure,
@@ -35,31 +38,31 @@ class Source:
 
 SOURCES = {
     "prs": Source(
-        csv_path=Path("data/lang_accumulated.csv"),
+        csv_path=Path(lang_csv.OUTPUT_FILE),
         date_column="date",
         value_column="count",
         title="Accumulated Contributions by Language",
         xlabel="Date",
         ylabel="Accumulated Contributions",
-        hint="make fetch-lang-contributions",
+        hint=lang_csv.FETCH_HINT,
     ),
     "releases": Source(
-        csv_path=Path("data/release_metrics_accumulated.csv"),
+        csv_path=Path(releases_csv.OUTPUT_FILE),
         date_column="month",
         value_column="total_lines",
         title="Accumulated Localization by Release Month",
         xlabel="Month",
         ylabel="Accumulated Lines Translated",
-        hint="make fetch-release-metrics",
+        hint=releases_csv.FETCH_HINT,
     ),
     "merged": Source(
-        csv_path=Path("data/merged_prs_accumulated.csv"),
+        csv_path=Path(merged_csv.OUTPUT_FILE),
         date_column="month",
         value_column="total",
         title="Merged PRs",
         xlabel="Month",
         ylabel="Accumulated Merged PRs",
-        hint="make fetch-merged-prs",
+        hint=merged_csv.FETCH_HINT,
         by_language=False,
     ),
 }

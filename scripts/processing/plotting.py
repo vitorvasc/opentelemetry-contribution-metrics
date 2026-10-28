@@ -1,12 +1,16 @@
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib.ticker import MaxNLocator, NullLocator
+from matplotlib.colors import to_rgb
+from matplotlib.ticker import MaxNLocator, NullLocator, PercentFormatter
 
 # Grafana-style dark theme configuration
 BACKGROUND_COLOR = "#282828"
 GRID_COLOR = "#3a3a3a"
 TEXT_COLOR = "#cccccc"
+# Text drawn on a colored bar segment, whichever contrasts more with it
+DARK_TEXT_COLOR = "#0b0b0b"
+LIGHT_TEXT_COLOR = "#ffffff"
 
 # Presentation-ready settings
 TITLE_FONTSIZE = 22
@@ -157,6 +161,87 @@ def draw_ranked_bars(ax, df, value_column, colors, annotate=False, value_format=
                 ha="center",
                 va="bottom",
             )
+
+
+def relative_luminance(color):
+    """WCAG relative luminance of a matplotlib color."""
+    channels = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in to_rgb(color)]
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
+
+
+def contrasting_text(color):
+    """The dark or light text color, whichever has the higher contrast ratio on `color`."""
+    fill = relative_luminance(color)
+    dark = (fill + 0.05) / (relative_luminance(DARK_TEXT_COLOR) + 0.05)
+    light = (relative_luminance(LIGHT_TEXT_COLOR) + 0.05) / (fill + 0.05)
+    return DARK_TEXT_COLOR if dark >= light else LIGHT_TEXT_COLOR
+
+
+# Narrower segments are left unlabeled, their share would not fit
+MIN_LABELED_SHARE = 3
+
+
+def draw_share_bars(ax, df, columns, colors, annotate=False, value_format="{:.0f}%"):
+    """One horizontal bar per language spanning 100%, split into the share of each of `columns`.
+
+    Bars follow the row order of `df` from the top, and each tick names the
+    language and its total. A language whose columns sum to zero has no bar. A
+    column that is zero for every language is left out, so the legend lists only
+    the segments drawn, in the order of `columns`. Segments are drawn in the
+    column's color and separated by a gap of background. With `annotate`, each
+    segment of at least MIN_LABELED_SHARE percent is labeled with its share.
+    """
+    totals = df[columns].sum(axis=1)
+    rows = df[totals > 0].reset_index(drop=True)
+    totals = totals[totals > 0].reset_index(drop=True)
+    shares = rows[columns].div(totals, axis=0) * 100
+    positions = pd.Series(range(len(rows) - 1, -1, -1), dtype=float)
+    left = pd.Series(0.0, index=rows.index)
+
+    ax.set_axisbelow(True)
+    for column in columns:
+        present = shares[column] > 0
+        if not present.any():
+            continue
+
+        color = colors.get(column)
+        bars = ax.barh(
+            positions[present],
+            shares.loc[present, column],
+            left=left[present],
+            height=0.7,
+            label=column.replace("_", " ").capitalize(),
+            color=color,
+            edgecolor=BACKGROUND_COLOR,
+            linewidth=1.5,
+        )
+
+        if annotate:
+            text_color = contrasting_text(bars.patches[0].get_facecolor())
+            for y, start, share in zip(
+                positions[present], left[present], shares.loc[present, column], strict=True
+            ):
+                if share >= MIN_LABELED_SHARE:
+                    ax.text(
+                        start + share / 2,
+                        y,
+                        value_format.format(share),
+                        fontsize=TICK_FONTSIZE - 2,
+                        fontweight="bold",
+                        color=text_color,
+                        ha="center",
+                        va="center",
+                    )
+        left = left + shares[column]
+
+    ax.set_yticks(
+        positions,
+        labels=[
+            f"{lang.upper()} ({total})" for lang, total in zip(rows["lang"], totals, strict=True)
+        ],
+    )
+    ax.set_xlim(0, 100)
+    ax.xaxis.set_major_formatter(PercentFormatter(decimals=0))
 
 
 def draw_by_language(

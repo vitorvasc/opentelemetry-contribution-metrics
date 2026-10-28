@@ -8,6 +8,7 @@ import yaml
 
 import contributors_to_csv as contributors_csv
 import coverage_to_csv as coverage_csv
+import drift_to_csv as drift_csv
 import lang_contributions_to_csv as lang_csv
 import merged_prs_to_csv as merged_csv
 import pr_flow_to_csv as pr_flow_csv
@@ -19,6 +20,7 @@ from plotting import (
     draw_by_language,
     draw_ranked_bars,
     draw_series,
+    draw_share_bars,
     draw_stacked_bars,
     set_symlog_axis,
     spread_labels,
@@ -43,6 +45,8 @@ class Source:
     value_format: str = "{:.0f}"  # how values are written on the chart
     area: bool = True  # fill under a line, for running totals
     symlog_ticks: tuple[float, ...] = ()  # symlog y axis labeled at these values, if any
+    # Columns stacked to 100% in one horizontal bar per language, colored by status
+    shares: tuple[str, ...] = ()
 
 
 SOURCES = {
@@ -139,6 +143,18 @@ SOURCES = {
         hint=contributors_csv.FETCH_HINT,
         bars=True,
     ),
+    "drift": Source(
+        csv_path=Path(drift_csv.OUTPUT_FILE),
+        date_column=None,
+        value_column="drifted_pct",
+        title="Translation Drift by Language",
+        xlabel="Share of translated pages",
+        ylabel="Language (translated pages)",
+        hint=drift_csv.FETCH_HINT,
+        bars=True,
+        value_format="{:.0f}%",
+        shares=tuple(drift_csv.STATUSES),
+    ),
 }
 
 # Sources whose data depends on the year, so the title names it
@@ -176,7 +192,8 @@ def parse_args(argv=None):
             "of each release, 'coverage-snapshot' for the current coverage of each language, "
             "'time-to-merge' for the median days to merge a PR, 'backlog' for the PRs open at "
             "the end of each month, 'contributors' for the people who opened a PR in each "
-            "month, 'new-contributors' for those on their first PR in the language"
+            "month, 'new-contributors' for those on their first PR in the language, 'drift' "
+            "for the share of translated pages out of date with the English source"
         ),
     )
     parser.add_argument(
@@ -232,10 +249,17 @@ def render(df, source, config):
 
     fig, ax = create_figure()
 
-    if date_column is None:
+    if source.shares:
+        draw_share_bars(
+            ax,
+            df,
+            list(source.shares),
+            config.get("status_colors", {}),
+            show_endpoint_values,
+            source.value_format,
+        )
+    elif date_column is None:
         draw_ranked_bars(ax, df, value_column, colors, show_endpoint_values, source.value_format)
-        if "as_of" in df:
-            title = f"{title} - {df['as_of'].iloc[0]}"
     elif stacked:
         draw_stacked_bars(
             ax, df, date_column, value_column, colors, show_endpoint_values, source.value_format
@@ -261,6 +285,9 @@ def render(df, source, config):
                 ax, subset[date_column], subset[value_column], "Total", color, show_endpoint_values
             )
 
+    if date_column is None and "as_of" in df:
+        title = f"{title} - {df['as_of'].iloc[0]}"
+
     style_axes(ax, title, source.xlabel, source.ylabel, dates=date_column is not None)
     if not source.area:
         # Without a fill to anchor it, a line chart would not start at zero
@@ -273,8 +300,12 @@ def render(df, source, config):
         set_symlog_axis(ax, source.symlog_ticks)
 
     # Bars of a single color need no legend, stacked ones name their languages in it,
-    # top segment first
-    if stacked or not source.bars:
+    # top segment first, and share bars their statuses, left to right
+    if source.shares:
+        style_legend(ax, "Status")
+        # Lines across the bars would cut through the segment labels
+        ax.yaxis.grid(False)
+    elif stacked or not source.bars:
         style_legend(ax, "Language" if source.by_language else None, reverse=stacked)
 
     # Tight layout with extra padding for cleaner look
@@ -286,6 +317,8 @@ def render(df, source, config):
 
 
 def describe(df, source):
+    if source.shares:
+        return f"Generated drift chart for {len(df)} languages"
     if source.date_column is None:
         return f"Generated coverage bar chart for {len(df)} languages"
     if source.by_language and source.bars:

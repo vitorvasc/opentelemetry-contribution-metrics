@@ -8,9 +8,15 @@ from matplotlib.colors import to_rgb
 
 import plot
 from plotting import (
+    BACKGROUND_COLOR,
+    DARK_TEXT_COLOR,
+    LIGHT_TEXT_COLOR,
+    MIN_LABELED_SHARE,
+    contrasting_text,
     draw_by_language,
     draw_ranked_bars,
     draw_series,
+    draw_share_bars,
     draw_stacked_bars,
     set_symlog_axis,
     spread_labels,
@@ -35,6 +41,7 @@ SMOKE_CASES = [
     ("backlog", ["--source", "backlog"], "pr_flow_backlog.csv"),
     ("contributors", ["--source", "contributors"], "pr_flow_contributors.csv"),
     ("new-contributors", ["--source", "new-contributors"], "pr_flow_contributors.csv"),
+    ("drift", ["--source", "drift"], "drift.csv"),
 ]
 
 
@@ -690,3 +697,105 @@ def test_backlog_end_labels_stay_on_their_points_with_the_right_values(stage, wo
     # March 2026: es 1, ko 1, pt 2 overlap and are nudged, never moved off their value
     assert sorted(label.get_text() for label in ax.texts) == ["1", "1", "2"]
     assert sorted(label.xy[1] for label in ax.texts) == [1, 1, 2]
+
+
+def bar_rows(ax):
+    """Segments of horizontal bars as (y, left, width, label), bottom row first."""
+    rows = []
+    for container in ax.containers:
+        for bar in container:
+            rows.append(
+                (
+                    bar.get_y() + bar.get_height() / 2,
+                    bar.get_x(),
+                    bar.get_width(),
+                    container.get_label(),
+                )
+            )
+    return sorted(rows)
+
+
+def test_drift_draws_a_full_bar_per_language_in_csv_order_with_status_colors(stage, workdir):
+    fig = render_source("drift", "drift.csv", stage)
+    ax = fig.axes[0]
+    config = plot.load_config()
+
+    # ko has no translated pages, so it has no bar; the first CSV row is on top
+    ticks = sorted(
+        zip(ax.get_yticks(), (label.get_text() for label in ax.get_yticklabels()), strict=True),
+        reverse=True,
+    )
+    assert [label for _, label in ticks] == ["ES (6)", "PT (4)", "ZH (5)", "JA (8)"]
+    widths = {}
+    for y, _, width, _ in bar_rows(ax):
+        widths[y] = widths.get(y, 0) + width
+    assert list(widths.values()) == pytest.approx([100] * 4)
+    assert ax.get_xlim() == (0, 100)
+
+    legend = ax.get_legend()
+    assert legend.get_title().get_text() == "Status"
+    assert [text.get_text() for text in legend.get_texts()] == [
+        "Current",
+        "Drifted",
+        "Unpinned",
+        "Orphan",
+        "Invalid pin",
+    ]
+    for container, status in zip(ax.containers, plot.SOURCES["drift"].shares, strict=True):
+        expected = to_rgb(config["status_colors"][status])
+        assert tuple(container.patches[0].get_facecolor()[:3]) == pytest.approx(expected)
+
+    assert ax.get_title() == "Translation Drift by Language - 2026-10-28"
+    assert ax.get_xlabel() == "Share of translated pages"
+    assert not any(line.get_visible() for line in ax.get_ygridlines())
+
+
+def test_drift_labels_each_segment_with_its_share(stage, workdir):
+    fig = render_source("drift", "drift.csv", stage)
+
+    # es, the top bar: 2 current, 3 drifted and 1 orphan of 6 pages
+    texts = sorted(
+        (text.get_position()[0], text.get_text())
+        for text in fig.axes[0].texts
+        if text.get_position()[1] == 3
+    )
+    assert [label for _, label in texts] == ["33%", "50%", "17%"]
+
+
+def test_draw_share_bars_leaves_out_statuses_that_never_occur():
+    fig, ax = plt.subplots()
+    df = pd.DataFrame({"lang": ["pt"], "current": [3], "drifted": [1], "orphan": [0]})
+
+    draw_share_bars(ax, df, ["current", "drifted", "orphan"], colors={})
+
+    assert ax.get_legend_handles_labels()[1] == ["Current", "Drifted"]
+    assert [(left, width) for _, left, width, _ in bar_rows(ax)] == [(0, 75), (75, 25)]
+    assert all(
+        bar.get_edgecolor()[:3] == pytest.approx(to_rgb(BACKGROUND_COLOR)) for bar in ax.patches
+    )
+    assert len(ax.texts) == 0
+
+
+def test_draw_share_bars_labels_only_segments_wide_enough_for_their_share():
+    fig, ax = plt.subplots()
+    shares = [100 - MIN_LABELED_SHARE + 1, MIN_LABELED_SHARE - 1]
+    df = pd.DataFrame({"lang": ["ja"], "current": [shares[0]], "drifted": [shares[1]]})
+
+    draw_share_bars(ax, df, ["current", "drifted"], colors={}, annotate=True)
+
+    assert [text.get_text() for text in ax.texts] == [f"{shares[0]}%"]
+
+
+def test_draw_share_bars_skips_a_language_without_pages():
+    fig, ax = plt.subplots()
+    df = pd.DataFrame({"lang": ["pt", "ko"], "current": [1, 0], "drifted": [1, 0]})
+
+    draw_share_bars(ax, df, ["current", "drifted"], colors={})
+
+    assert [tick.get_text() for tick in ax.get_yticklabels()] == ["PT (2)"]
+
+
+def test_contrasting_text_picks_the_more_readable_ink():
+    assert contrasting_text("#FAB219") == DARK_TEXT_COLOR  # amber
+    assert contrasting_text("#D03B3B") == LIGHT_TEXT_COLOR  # dark red
+    assert contrasting_text(BACKGROUND_COLOR) == LIGHT_TEXT_COLOR

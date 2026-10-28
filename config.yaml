@@ -19,3 +19,12 @@ colors:
   zh: "#EF4444"   # red
   total: "#CCCCCC"  # neutral gray (for total merged PRs)
 
+
+# Colors per translation drift status (hex format). They mean good to bad, so
+# they come from a fixed status scale and never reuse a language color
+status_colors:
+  current: "#0CA30C"      # good
+  drifted: "#FAB219"      # warning
+  unpinned: "#8A8A85"     # neutral gray, no pin to compare with
+  orphan: "#EC835A"       # serious, the English page is gone
+  invalid_pin: "#D03B3B"  # critical, the pin is not a known commit

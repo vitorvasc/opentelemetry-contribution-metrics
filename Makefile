@@ -74,7 +74,7 @@ CLEAN_TARGETS := $(addprefix clean-,$(PIPELINES))
 # Convert the fetched JSON to CSV, then draw it ($(1) is the pipeline name)
 define process_and_plot
 $(PYTHON) $(PROCESSING_DIR)/$($(1).csv)
-$(PYTHON) $(PROCESSING_DIR)/plot.py $($(1).plot) $(PLOT_OUTPUT)
+$(PYTHON) $(PROCESSING_DIR)/plot.py $(strip $($(1).plot) $(PLOT_OUTPUT))
 endef
 
 $(FETCH_TARGETS): fetch-%: check-env
@@ -93,57 +93,57 @@ $(CLEAN_TARGETS): clean-%:
 	rm -f $($*.files)
 	@echo "✔ Removed $($*.title) data"
 
-# Verify environment configuration
-setup-check:
+# Every chart the project draws, written headless as a PNG under $(OUT_DIR).
+# Add a chart as one more line: fetch a dataset once, then re-plot it with
+# plot-NAME for any further chart of the same data.
+OUT_DIR := out
+HEADLESS := MPLBACKEND=Agg
+
+charts: check-env ## Fetch every dataset and write all charts to out/
+	$(HEADLESS) $(MAKE) fetch-lang-contributions OUTPUT=$(OUT_DIR)/lang-contributions.png
+	$(HEADLESS) $(MAKE) fetch-release-metrics OUTPUT=$(OUT_DIR)/release-metrics.png
+	$(HEADLESS) $(MAKE) fetch-merged-prs MODE=accumulated OUTPUT=$(OUT_DIR)/merged-prs-accumulated.png
+	$(HEADLESS) $(MAKE) plot-merged-prs MODE=monthly OUTPUT=$(OUT_DIR)/merged-prs-monthly.png
+	@echo "✔ Charts written to $(OUT_DIR)/"
+
+test: ## Run the JavaScript and Python tests
+	npm test
+	MPLBACKEND=Agg $(PYTHON) -m pytest
+
+lint: ## Run Biome, Ruff and ShellCheck
+	npm run lint
+	ruff check .
+	ruff format --check .
+	shellcheck scripts/check_setup.sh
+
+setup-check: ## Verify Node.js, Python, token and dependencies
 	@bash $(SCRIPTS_DIR)/check_setup.sh
 
-# Help
-help:
+help: ## Show this help
+	@echo "OpenTelemetry Contribution Metrics"
 	@echo ""
-	@echo "═══════════════════════════════════════════════════════════"
-	@echo "  OpenTelemetry Contribution Metrics - Available Commands"
-	@echo "═══════════════════════════════════════════════════════════"
+	@echo "Usage: make <target> [VAR=value ...]"
 	@echo ""
-	@echo "Language Contributions Pipeline:"
-	@echo "  make fetch-lang-contributions              - Fetch, process, and plot (PRs + issues)"
-	@echo "  make fetch-lang-contributions TYPE=prs     - Same, but only PRs"
-	@echo "  make fetch-lang-contributions TYPE=issues  - Same, but only issues"
-	@echo "  make fetch-lang-contributions YEAR=2024    - Filter by year"
-	@echo "  make fetch-lang-contributions LANGS=pt,es  - Filter by languages"
-	@echo "  make clean-lang-contributions              - Remove data files"
+	@echo "Pipelines (NAME: $(PIPELINES))"
+	@echo "  fetch-NAME   Fetch from GitHub, convert to CSV and plot (needs GITHUB_TOKEN)"
+	@echo "  plot-NAME    Convert and plot the data already fetched (no API calls)"
+	@echo "  clean-NAME   Remove the generated data files"
 	@echo ""
-	@echo "Release Metrics Pipeline:"
-	@echo "  make fetch-release-metrics                 - Fetch, process, and plot release metrics"
-	@echo "  make fetch-release-metrics YEAR=2024       - Filter by year"
-	@echo "  make clean-release-metrics                 - Remove data files"
+	@echo "Targets:"
+	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  %-12s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo ""
-	@echo "Merged PRs Pipeline:"
-	@echo "  make fetch-merged-prs                      - Fetch, process, and plot total merged PRs (accumulated)"
-	@echo "  make fetch-merged-prs YEAR=2024            - Filter by year"
-	@echo "  make fetch-merged-prs MODE=monthly         - Month-over-month bar chart"
-	@echo "  make fetch-merged-prs YEAR=2024 MODE=monthly - Combined filters"
-	@echo "  make clean-merged-prs                      - Remove data files"
+	@echo "Variables:"
+	@echo "  GITHUB_TOKEN  Token for the GitHub API, from the environment or .env"
+	@echo "  YEAR=XXXX     Year to fetch and plot (default: current year, UTC)"
+	@echo "  LANGS=xx,yy   Languages to fetch (default: all of bn,es,fr,ja,ko,pl,pt,ro,uk,zh)"
+	@echo "  TYPE=xxx      prs, issues or both (default: both, lang contributions only)"
+	@echo "  MODE=xxx      Merged PRs chart: accumulated or monthly (default: accumulated)"
+	@echo "  OUTPUT=PATH   Save the chart to PATH instead of opening a window"
 	@echo ""
-	@echo "Plot Only (use existing data, no API calls):"
-	@echo "  make plot-lang-contributions               - Re-plot language contributions"
-	@echo "  make plot-release-metrics                  - Re-plot release metrics"
-	@echo "  make plot-merged-prs                       - Re-plot merged PRs"
-	@echo "  make plot-merged-prs MODE=monthly          - Re-plot as bar chart"
-	@echo ""
-	@echo "Other:"
-	@echo "  make setup-check                           - Verify environment setup"
-	@echo "  make help                                  - Show this help"
-	@echo ""
-	@echo "Parameters:"
-	@echo "  YEAR=XXXX    - Filter by year (default: current year, UTC)"
-	@echo "  LANGS=xx,yy  - Filter by languages (default: all - bn,es,fr,ja,pt,ro,uk,zh)"
-	@echo "  TYPE=xxx     - Filter contribution type: prs, issues, or both (default: both)"
-	@echo "  MODE=xxx     - Plot mode for merged PRs: accumulated or monthly (default: accumulated)"
-	@echo ""
-	@echo "Setup:"
-	@echo "  1. Copy .env.example to .env"
-	@echo "  2. Add your GITHUB_TOKEN to the .env file"
-	@echo ""
+	@echo "Examples:"
+	@echo "  make fetch-lang-contributions YEAR=2024 LANGS=pt,es TYPE=prs"
+	@echo "  make fetch-merged-prs MODE=monthly"
+	@echo "  make plot-merged-prs OUTPUT=out/merged-prs.png"
 
 .PHONY: $(FETCH_TARGETS) $(PLOT_TARGETS) $(CLEAN_TARGETS)
-.PHONY: help check-env setup-check
+.PHONY: charts test lint help check-env setup-check

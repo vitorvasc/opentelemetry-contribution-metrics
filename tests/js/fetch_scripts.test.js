@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import * as coverage from "../../scripts/fetch/fetch_coverage.js";
 import * as langIssues from "../../scripts/fetch/fetch_lang_issues.js";
 import * as mergedPrs from "../../scripts/fetch/fetch_merged_prs.js";
+import * as prFlow from "../../scripts/fetch/fetch_pr_flow.js";
 import * as releaseMetrics from "../../scripts/fetch/fetch_release_metrics.js";
 
 const scriptsDir = path.resolve(
@@ -225,11 +226,41 @@ describe("fetch_coverage", () => {
   });
 });
 
+describe("fetch_pr_flow", () => {
+  it("covers the days from the repository creation to today", () => {
+    assert.deepEqual(
+      prFlow.allTimeRange(
+        "2019-05-01T10:00:00Z",
+        new Date("2026-03-15T23:59:59Z"),
+      ),
+      { from: "2019-05-01", to: "2026-03-15" },
+    );
+  });
+
+  it("uses UTC days for both ends", () => {
+    assert.deepEqual(
+      prFlow.allTimeRange(
+        "2019-05-01T23:30:00-05:00",
+        new Date("2026-03-15T00:00:00Z"),
+      ),
+      { from: "2019-05-02", to: "2026-03-15" },
+    );
+  });
+
+  it("rejects a creation date it cannot read", () => {
+    assert.throws(
+      () => prFlow.allTimeRange(undefined, new Date()),
+      /Invalid repository creation date/,
+    );
+  });
+});
+
 describe("script entry points", () => {
   const scripts = [
     "fetch_coverage.js",
     "fetch_lang_issues.js",
     "fetch_merged_prs.js",
+    "fetch_pr_flow.js",
     "fetch_release_metrics.js",
   ];
   // Run from an empty directory so no .env file is picked up

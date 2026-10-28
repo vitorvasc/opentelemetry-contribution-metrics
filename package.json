@@ -20,7 +20,7 @@
     "lint": "biome ci ."
   },
   "dependencies": {
-    "dotenv": "^17.0.0"
+    "dotenv": "^18.0.0"
   },
   "engines": {
     "node": "^22.18.0 || >=24.2.0"

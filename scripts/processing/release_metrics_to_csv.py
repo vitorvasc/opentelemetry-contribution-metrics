@@ -1,8 +1,15 @@
-from common import load_json, write_csv
+import os
+
+from common import fail, load_json, write_csv
 
 INPUT_FILE = "data/release_metrics.json"
 OUTPUT_FILE = "data/release_metrics_accumulated.csv"
 FETCH_HINT = "make fetch-release-metrics"
+
+
+def filter_by_year(df, year):
+    """Keep the release months (YYYY-MM) that belong to `year`."""
+    return df[df["month"].astype(str).str.startswith(f"{year}-")]
 
 
 def accumulate_releases(df):
@@ -19,7 +26,17 @@ def accumulate_releases(df):
 
 
 def main():
+    year = os.environ.get("YEAR", "").strip()
+
     df = load_json(INPUT_FILE, FETCH_HINT)
+    if year:
+        filtered = filter_by_year(df, year)
+        if filtered.empty:
+            fail(
+                f"no release records for {year} (found: {df['month'].min()} to {df['month'].max()}). "
+                f"Run '{FETCH_HINT} YEAR={year}' to fetch that year."
+            )
+        df = filtered
 
     df = accumulate_releases(df)
     write_csv(df, OUTPUT_FILE)

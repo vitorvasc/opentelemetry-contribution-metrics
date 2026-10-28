@@ -261,9 +261,18 @@ def spread_labels(ax, labels, min_gap=1.2 * LEGEND_FONTSIZE):
                 label.xyann = (dx, dy + shift / scale)
 
 
-def style_legend(ax, title=None):
-    """Legend outside the plot area to avoid overlap."""
+def style_legend(ax, title=None, reverse=False):
+    """Legend outside the plot area to avoid overlap.
+
+    With `reverse` the entries are listed last drawn first, which is top to
+    bottom for a stack drawn from the bottom up.
+    """
+    handles, labels = ax.get_legend_handles_labels()
+    if reverse:
+        handles, labels = handles[::-1], labels[::-1]
     legend = ax.legend(
+        handles,
+        labels,
         title=title,
         fontsize=LEGEND_FONTSIZE,
         title_fontsize=LEGEND_FONTSIZE,

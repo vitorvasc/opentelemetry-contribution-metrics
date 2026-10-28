@@ -272,9 +272,10 @@ def render(df, source, config):
     if source.symlog_ticks:
         set_symlog_axis(ax, source.symlog_ticks)
 
-    # Bars of a single color need no legend, stacked ones name their languages in it
+    # Bars of a single color need no legend, stacked ones name their languages in it,
+    # top segment first
     if stacked or not source.bars:
-        style_legend(ax, "Language" if source.by_language else None)
+        style_legend(ax, "Language" if source.by_language else None, reverse=stacked)
 
     # Tight layout with extra padding for cleaner look
     fig.tight_layout(pad=1.5)

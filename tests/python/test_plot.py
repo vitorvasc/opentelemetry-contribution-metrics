@@ -14,6 +14,7 @@ from plotting import (
     draw_stacked_bars,
     set_symlog_axis,
     spread_labels,
+    style_legend,
 )
 
 PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
@@ -402,6 +403,9 @@ def test_new_contributors_stacks_the_languages_with_a_legend_and_the_totals(stag
     assert len(ax.lines) == 0
     # pt has no new contributor, so it has no segment and no legend entry
     assert ax.get_legend_handles_labels()[1] == ["ES", "KO"]
+    # es has the most new contributors, so it is the bottom segment and comes
+    # last in the legend, which lists the stack from the top
+    assert [text.get_text() for text in ax.get_legend().get_texts()] == ["KO", "ES"]
     assert [(bar.get_height(), bar.get_y()) for bar in ax.patches] == [(1, 0), (1, 0), (1, 0)]
     assert [text.get_text() for text in ax.texts] == ["1", "1", "1"]
     assert ax.get_legend() is not None
@@ -451,6 +455,19 @@ def test_draw_stacked_bars_ticks_whole_counts_and_keeps_the_grid_behind_the_bars
 
     assert all(tick == int(tick) for tick in ax.get_yticks())
     assert ax.get_axisbelow() is True
+
+
+def test_style_legend_lists_the_entries_in_drawing_order_unless_reversed():
+    fig, ax = plt.subplots()
+    ax.plot([0, 1], [0, 1], label="A")
+    ax.plot([0, 1], [1, 2], label="B")
+
+    style_legend(ax)
+    assert [text.get_text() for text in ax.get_legend().get_texts()] == ["A", "B"]
+
+    style_legend(ax, reverse=True)
+    assert [text.get_text() for text in ax.get_legend().get_texts()] == ["B", "A"]
+    assert ax.get_legend().get_lines()[0].get_color() == ax.lines[1].get_color()
 
 
 def test_time_to_merge_draws_a_line_per_language_with_a_median_and_breaks_at_gaps(stage, workdir):

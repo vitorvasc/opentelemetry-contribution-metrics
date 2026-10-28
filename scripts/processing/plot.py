@@ -9,6 +9,7 @@ import yaml
 import coverage_to_csv as coverage_csv
 import lang_contributions_to_csv as lang_csv
 import merged_prs_to_csv as merged_csv
+import pr_flow_to_csv as pr_flow_csv
 import release_metrics_to_csv as releases_csv
 from common import fail, resolve_year, utc_now
 from plotting import (
@@ -90,12 +91,38 @@ SOURCES = {
         bars=True,
         value_format="{:.1f}%",
     ),
+    "time-to-merge": Source(
+        csv_path=Path(pr_flow_csv.TIME_TO_MERGE_FILE),
+        date_column="month",
+        value_column="median_days",
+        title="Median Time to Merge",
+        xlabel="Month of merge",
+        ylabel="Median days from open to merge",
+        hint=pr_flow_csv.FETCH_HINT,
+        value_format="{:.1f}",
+        area=False,
+    ),
+    "backlog": Source(
+        csv_path=Path(pr_flow_csv.BACKLOG_FILE),
+        date_column="month",
+        value_column="open_prs",
+        title="Open Localization PRs",
+        xlabel="Month end",
+        ylabel="Open PRs",
+        hint=pr_flow_csv.FETCH_HINT,
+        area=False,
+    ),
 }
+
+# Sources whose data depends on the year, so the title names it
+YEAR_TITLED = ("time-to-merge", "backlog")
 
 
 def resolve_source(name, mode, year):
-    """Look up a source, applying the plot mode to the merged PRs one."""
+    """Look up a source, naming the year in the titles that depend on it and applying the plot mode to the merged PRs one."""
     source = SOURCES[name]
+    if name in YEAR_TITLED:
+        return replace(source, title=f"{source.title} - {year}")
     if name != "merged":
         return source
 
@@ -119,7 +146,9 @@ def parse_args(argv=None):
         help=(
             "Data source: 'prs' for PR-based metrics (default), 'releases' for monthly release "
             "metrics, 'merged' for total merged PRs, 'coverage' for the translation coverage "
-            "of each release, 'coverage-snapshot' for the current coverage of each language"
+            "of each release, 'coverage-snapshot' for the current coverage of each language, "
+            "'time-to-merge' for the median days to merge a PR, 'backlog' for the PRs open at "
+            "the end of each month"
         ),
     )
     parser.add_argument(

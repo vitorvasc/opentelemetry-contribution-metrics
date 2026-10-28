@@ -27,6 +27,8 @@ def create_figure():
 def draw_series(ax, x, y, label, color=None, annotate=False, value_format="{:.0f}", area=True):
     """Line with an optional endpoint value.
 
+    A missing value in `y` leaves a gap in the line.
+
     With `area` (the default) it is a step line over a semi-transparent fill,
     for running totals. Without it, a plain line with a marker at each date,
     for values measured at each date.
@@ -39,10 +41,12 @@ def draw_series(ax, x, y, label, color=None, annotate=False, value_format="{:.0f
     if area:
         ax.fill_between(x, y, step="post", alpha=0.3, color=color)
 
-    if annotate:
+    # A gap at the end leaves the label on the last point that has a value
+    last = y.last_valid_index()
+    if annotate and last is not None:
         ax.annotate(
-            value_format.format(y.iloc[-1]),
-            xy=(x.iloc[-1], y.iloc[-1]),
+            value_format.format(y.loc[last]),
+            xy=(x.loc[last], y.loc[last]),
             xytext=(10, 0),
             textcoords="offset points",
             fontsize=LEGEND_FONTSIZE,
@@ -105,7 +109,10 @@ def draw_ranked_bars(ax, df, value_column, colors, annotate=False, value_format=
 def draw_by_language(
     ax, df, date_column, value_column, colors, annotate=False, value_format="{:.0f}", area=True
 ):
-    """One series per language, from the `lang` column of `df`."""
+    """One series per language, from the `lang` column of `df`.
+
+    A language without a single value is left out.
+    """
     # Sort languages by max value (descending) so larger areas are drawn first
     langs_sorted = df.groupby("lang")[value_column].max().sort_values(ascending=False).index
 
@@ -116,6 +123,8 @@ def draw_by_language(
         subset = df[df["lang"] == lang].sort_values(date_column)
         x = subset[date_column]
         y = subset[value_column]
+        if y.isna().all():
+            continue
 
         # Extend to max_date if this language ends earlier
         if x.iloc[-1] < max_date:

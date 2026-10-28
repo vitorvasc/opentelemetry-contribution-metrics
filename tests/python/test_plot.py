@@ -21,6 +21,8 @@ SMOKE_CASES = [
     ),
     ("coverage", ["--source", "coverage"], "release_metrics_accumulated.csv"),
     ("coverage-snapshot", ["--source", "coverage-snapshot"], "coverage_snapshot.csv"),
+    ("time-to-merge", ["--source", "time-to-merge"], "pr_flow_time_to_merge.csv"),
+    ("backlog", ["--source", "backlog"], "pr_flow_backlog.csv"),
 ]
 
 
@@ -292,3 +294,91 @@ def test_draw_by_language_extends_shorter_series_to_the_latest_date():
     assert list(lines) == ["PT", "DE"]  # larger series is drawn first
     assert pd.Timestamp(lines["DE"].get_xdata()[-1]) == pd.Timestamp("2025-03-01")
     assert lines["DE"].get_ydata()[-1] == 1
+
+
+def test_draw_series_leaves_a_gap_where_a_value_is_missing():
+    fig, ax = plt.subplots()
+    x = pd.Series(pd.to_datetime(["2025-01-01", "2025-02-01", "2025-03-01"]))
+
+    draw_series(ax, x, pd.Series([1.0, None, 3.0]), "XX", area=False)
+
+    assert pd.isna(ax.lines[0].get_ydata()[1])
+
+
+def test_draw_series_labels_the_last_value_when_the_series_ends_in_a_gap():
+    fig, ax = plt.subplots()
+    x = pd.Series(pd.to_datetime(["2025-01-01", "2025-02-01", "2025-03-01"]))
+
+    draw_series(
+        ax, x, pd.Series([1.0, 2.5, None]), "XX", annotate=True, value_format="{:.1f}", area=False
+    )
+
+    assert [text.get_text() for text in ax.texts] == ["2.5"]
+    assert ax.texts[0].xy[0] == pd.Timestamp("2025-02-01")
+
+
+def test_draw_series_without_any_value_has_nothing_to_label():
+    fig, ax = plt.subplots()
+    x = pd.Series(pd.to_datetime(["2025-01-01", "2025-02-01"]))
+
+    draw_series(ax, x, pd.Series([None, None], dtype=float), "XX", annotate=True, area=False)
+
+    assert len(ax.texts) == 0
+
+
+def test_draw_by_language_skips_a_language_without_any_value():
+    fig, ax = plt.subplots()
+    months = pd.to_datetime(["2025-01-01", "2025-02-01"])
+    df = pd.DataFrame(
+        {
+            "lang": ["pt", "pt", "ko", "ko"],
+            "month": list(months) * 2,
+            "days": [1.0, 2.0, None, None],
+        }
+    )
+
+    draw_by_language(ax, df, "month", "days", colors={}, area=False)
+
+    assert [line.get_label() for line in ax.lines] == ["PT"]
+
+
+def test_pr_flow_titles_name_the_year():
+    assert plot.resolve_source("time-to-merge", "accumulated", "2026").title == (
+        "Median Time to Merge - 2026"
+    )
+    assert plot.resolve_source("backlog", "accumulated", "2025").title == (
+        "Open Localization PRs - 2025"
+    )
+    assert plot.SOURCES["backlog"].title == "Open Localization PRs"
+
+
+def test_time_to_merge_draws_a_line_per_language_with_a_median_and_breaks_at_gaps(stage, workdir):
+    stage("pr_flow_time_to_merge.csv")
+    source = plot.resolve_source("time-to-merge", "accumulated", "2026")
+
+    fig = plot.render(plot.load_csv(source), source, plot.load_config())
+
+    ax = fig.axes[0]
+    lines = {line.get_label(): line for line in ax.lines}
+    # ko never merged a PR, so it has nothing to draw
+    assert list(lines) == ["PT", "ES"]
+    assert pd.isna(lines["ES"].get_ydata()[1])
+    assert lines["PT"].get_ydata()[0] == 6.0
+    assert ax.get_ylim()[0] == 0
+    assert ax.get_title() == "Median Time to Merge - 2026"
+    # Each label sits on the last month with a value: February for PT, March for ES
+    assert [text.get_text() for text in ax.texts] == ["2.2", "2.0"]
+
+
+def test_backlog_draws_every_language_including_zero_counts(stage, workdir):
+    stage("pr_flow_backlog.csv")
+    source = plot.resolve_source("backlog", "accumulated", "2026")
+
+    fig = plot.render(plot.load_csv(source), source, plot.load_config())
+
+    ax = fig.axes[0]
+    lines = {line.get_label(): line for line in ax.lines}
+    assert sorted(lines) == ["ES", "KO", "PT"]
+    assert list(lines["ES"].get_ydata()) == [0, 0, 1]
+    assert ax.get_ylim()[0] == 0
+    assert ax.get_ylabel() == "Open PRs"

@@ -98,8 +98,25 @@ def test_main_fails_when_year_matches_no_month(stage, workdir, monkeypatch, caps
     err = capsys.readouterr().err
     assert "no release records for 2024" in err
     assert "2025-01 to 2025-04" in err
-    assert "make fetch-release-metrics YEAR=2024" in err
+    # Leads with replotting the data on disk; fetching is the alternative
+    assert err.index("make plot-release-metrics YEAR=2025") < err.index(
+        "make fetch-release-metrics YEAR=2024"
+    )
     assert not (workdir / "data" / "release_metrics_accumulated.csv").exists()
+
+
+def test_main_suggests_plotting_the_latest_year_found(workdir, monkeypatch, capsys):
+    record = '{"lang": "pt", "month": "%s", "lines_added": 1, "pages_added": 0, "coverage_pct": 1.0}'
+    months = ["2025-12", "2026-01", "2026-02"]
+    (workdir / "data" / "release_metrics.json").write_text(
+        "[" + ",".join(record % month for month in months) + "]"
+    )
+    monkeypatch.setenv("YEAR", "2024")
+
+    with pytest.raises(SystemExit):
+        releases_csv.main()
+
+    assert "make plot-release-metrics YEAR=2026" in capsys.readouterr().err
 
 
 def test_main_fails_on_empty_input(workdir, capsys):

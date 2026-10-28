@@ -112,8 +112,24 @@ def test_main_fails_when_year_has_no_prs(stage, workdir, monkeypatch, capsys):
     err = capsys.readouterr().err
     assert "no merged PRs in 2023" in err
     assert "found: 2024" in err
-    assert "make fetch-merged-prs YEAR=2023" in err
+    # Leads with replotting the data on disk; fetching is the alternative
+    assert err.index("make plot-merged-prs YEAR=2024") < err.index("make fetch-merged-prs YEAR=2023")
     assert not (workdir / "data" / "merged_prs_accumulated.csv").exists()
+
+
+def test_main_suggests_plotting_the_latest_year_found(workdir, monkeypatch, capsys):
+    (workdir / "data" / "merged_prs.json").write_text(
+        '[{"number": 1, "merged_at": "2023-05-01T10:00:00Z"},'
+        ' {"number": 2, "merged_at": "2024-05-01T10:00:00Z"}]'
+    )
+    monkeypatch.setenv("YEAR", "2022")
+
+    with pytest.raises(SystemExit):
+        merged_csv.main()
+
+    err = capsys.readouterr().err
+    assert "found: 2023, 2024" in err
+    assert "make plot-merged-prs YEAR=2024" in err
 
 
 def test_main_fails_on_invalid_year(stage, monkeypatch, capsys):

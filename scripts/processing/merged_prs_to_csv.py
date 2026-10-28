@@ -7,6 +7,7 @@ from common import fail, load_json, to_utc_naive, write_csv
 INPUT_FILE = "data/merged_prs.json"
 OUTPUT_FILE = "data/merged_prs_accumulated.csv"
 FETCH_HINT = "make fetch-merged-prs"
+PLOT_HINT = "make plot-merged-prs"
 
 
 def monthly_counts(df, year, today=None):
@@ -41,9 +42,10 @@ def main():
     result = monthly_counts(df, year)
     if result["count"].sum() == 0:
         years = sorted(to_utc_naive(df["merged_at"]).dt.year.dropna().astype(int).unique())
+        plot_advice = f"'{PLOT_HINT} YEAR={years[-1]}' to plot the data you have, or " if years else ""
         fail(
             f"no merged PRs in {year} (found: {', '.join(map(str, years)) or 'no dates'}). "
-            f"Run '{FETCH_HINT} YEAR={year}' to fetch that year."
+            f"Run {plot_advice}'{FETCH_HINT} YEAR={year}' to fetch {year}."
         )
 
     write_csv(result, OUTPUT_FILE)

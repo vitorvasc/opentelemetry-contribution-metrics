@@ -5,6 +5,7 @@ from common import fail, load_json, write_csv
 INPUT_FILE = "data/release_metrics.json"
 OUTPUT_FILE = "data/release_metrics_accumulated.csv"
 FETCH_HINT = "make fetch-release-metrics"
+PLOT_HINT = "make plot-release-metrics"
 
 
 def filter_by_year(df, year):
@@ -32,9 +33,11 @@ def main():
     if year:
         filtered = filter_by_year(df, year)
         if filtered.empty:
+            found_year = df["month"].astype(str).str[:4].max()
             fail(
                 f"no release records for {year} (found: {df['month'].min()} to {df['month'].max()}). "
-                f"Run '{FETCH_HINT} YEAR={year}' to fetch that year."
+                f"Run '{PLOT_HINT} YEAR={found_year}' to plot the data you have, "
+                f"or '{FETCH_HINT} YEAR={year}' to fetch {year}."
             )
         df = filtered
 

@@ -5,17 +5,25 @@ echo ""
 
 # Check Node.js
 if ! command -v node &> /dev/null; then
-    echo "❌ Node.js not found. Please install Node.js 18+"
+    echo "❌ Node.js not found. Please install Node.js 22+"
+    exit 1
+fi
+if ! node -e 'process.exit(Number(process.versions.node.split(".")[0]) >= 22 ? 0 : 1)'; then
+    echo "❌ Node.js $(node --version) is too old. Please install Node.js 22+"
     exit 1
 fi
 echo "✓ Node.js $(node --version)"
 
 # Check Python
 if ! command -v python3 &> /dev/null; then
-    echo "❌ Python not found. Please install Python 3.8+"
+    echo "❌ Python not found. Please install Python 3.11+"
     exit 1
 fi
-echo "✓ Python $(python3 --version 2>&1)"
+if ! python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)'; then
+    echo "❌ $(python3 --version 2>&1) is too old. Please install Python 3.11+"
+    exit 1
+fi
+echo "✓ $(python3 --version 2>&1)"
 
 # Check .env
 if [ ! -f .env ]; then
@@ -54,4 +62,4 @@ fi
 echo "✓ data/ directory exists"
 
 echo ""
-echo "✅ All checks passed! Ready to run 'make all'"
+echo "✅ All checks passed! Run 'make help' to see available commands"

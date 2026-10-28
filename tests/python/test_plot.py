@@ -381,4 +381,4 @@ def test_backlog_draws_every_language_including_zero_counts(stage, workdir):
     assert sorted(lines) == ["ES", "KO", "PT"]
     assert list(lines["ES"].get_ydata()) == [0, 0, 1]
     assert ax.get_ylim()[0] == 0
-    assert ax.get_ylabel() == "Open PRs"
+    assert ax.get_ylabel() == "Open PRs at month end"

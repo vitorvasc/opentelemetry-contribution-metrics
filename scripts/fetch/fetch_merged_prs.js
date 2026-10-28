@@ -1,8 +1,6 @@
 import {
   config,
   createClient,
-  dedupeBy,
-  isEntryPoint,
   monthRange,
   run,
   writeJson,
@@ -39,7 +37,6 @@ async function main() {
   console.log(`Using monthly date-chunking to keep searches under the API cap\n`);
 
   const allPRs = [];
-  const seenPRs = new Set();
 
   // Process each month
   for (let month = 1; month <= 12; month++) {
@@ -53,7 +50,7 @@ async function main() {
       from: dateRange.start,
       to: dateRange.end,
     });
-    const prs = dedupeBy(items.map(toMergedPR), (pr) => pr.number, seenPRs);
+    const prs = items.map(toMergedPR);
     allPRs.push(...prs);
 
     console.log(`  ✓ Found ${prs.length} merged PRs (total: ${allPRs.length})`);
@@ -65,6 +62,6 @@ async function main() {
   console.log(`Year: ${year}`);
 }
 
-if (isEntryPoint(import.meta.url)) {
+if (import.meta.main) {
   run(main);
 }

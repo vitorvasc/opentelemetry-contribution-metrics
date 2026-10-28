@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 
 export const OWNER = "open-telemetry";
 export const REPO = "opentelemetry.io";
@@ -34,15 +33,6 @@ const MAX_BACKOFF_MS = 30 * 1000;
 const RESET_BUFFER_MS = 1000;
 // Wait recommended by GitHub when a secondary rate limit has no retry-after
 const SECONDARY_LIMIT_WAIT_MS = 60 * 1000;
-
-export class GitHubApiError extends Error {
-  constructor(message, { status, url, cause } = {}) {
-    super(message, { cause });
-    this.name = "GitHubApiError";
-    this.status = status;
-    this.url = url;
-  }
-}
 
 /**
  * Parse the LANGS value into a list of language codes
@@ -151,24 +141,6 @@ export function splitRange(from, to) {
 }
 
 /**
- * Remove duplicate items, keeping the first occurrence
- * @param {Array} items - Items to filter
- * @param {Function} keyFn - Returns the identity of an item
- * @param {Set} [seen] - Keys already taken, updated in place
- * @returns {Array} - Items whose key was not seen before
- */
-export function dedupeBy(items, keyFn, seen = new Set()) {
-  const unique = [];
-  for (const item of items) {
-    const key = keyFn(item);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    unique.push(item);
-  }
-  return unique;
-}
-
-/**
  * Extract the URL of the next page from a Link header
  * @param {string|null} header - Value of the Link header
  * @returns {string|null} - Next page URL, or null on the last page
@@ -216,7 +188,7 @@ export function getRetryDelay({
 
     if (status === 429 || /rate limit|abuse/i.test(bodyText)) {
       return {
-        delayMs: Math.max(SECONDARY_LIMIT_WAIT_MS, backoffMs(attempt)),
+        delayMs: SECONDARY_LIMIT_WAIT_MS,
         reason: "secondary rate limit",
       };
     }
@@ -233,7 +205,6 @@ export function getRetryDelay({
  * Create a GitHub API client
  * @param {object} options
  * @param {string} options.token - GitHub token
- * @param {Function} [options.fetchImpl] - fetch implementation, defaults to globalThis.fetch
  * @param {Function} [options.sleep] - (ms) => Promise, waits between retries
  * @param {Function} [options.now] - () => epoch milliseconds
  * @param {number} [options.searchIntervalMs] - Minimum gap between Search API requests
@@ -244,7 +215,6 @@ export function getRetryDelay({
  */
 export function createClient({
   token,
-  fetchImpl = (...args) => globalThis.fetch(...args),
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
   now = () => Date.now(),
   searchIntervalMs = SEARCH_INTERVAL_MS,
@@ -298,13 +268,12 @@ export function createClient({
 
       let res;
       try {
-        res = await fetchImpl(url, { headers });
+        res = await globalThis.fetch(url, { headers });
       } catch (cause) {
         if (attempt >= maxAttempts) {
-          throw new GitHubApiError(
-            `Request to ${url} failed: ${cause.message}`,
-            { url, cause }
-          );
+          throw new Error(`Request to ${url} failed: ${cause.message}`, {
+            cause,
+          });
         }
         await wait(backoffMs(attempt), `Network error (${cause.message})`, attempt);
         continue;
@@ -325,9 +294,11 @@ export function createClient({
           : null;
 
       if (!retry) {
-        throw new GitHubApiError(
-          `GitHub API error (${res.status}) for ${url}: ${bodyText.slice(0, 300)}`,
-          { status: res.status, url }
+        throw Object.assign(
+          new Error(
+            `GitHub API error (${res.status}) for ${url}: ${bodyText.slice(0, 300)}`
+          ),
+          { status: res.status }
         );
       }
       await wait(retry.delayMs, retry.reason, attempt);
@@ -369,11 +340,12 @@ export function createClient({
     return items;
   }
 
-  async function searchPage(q, page, { sort, order }) {
+  async function searchPage(q, page) {
+    // An explicit sort keeps pagination stable while results are added
     const params = new URLSearchParams({
       q,
-      sort,
-      order,
+      sort: "created",
+      order: "asc",
       per_page: String(PAGE_SIZE),
       page: String(page),
     });
@@ -388,9 +360,9 @@ export function createClient({
     }
   }
 
-  async function searchRange(query, dateField, from, to, sorting) {
+  async function searchRange(query, dateField, from, to) {
     const q = `${query} ${dateField}:${from}..${to}`;
-    const first = await searchPage(q, 1, sorting);
+    const first = await searchPage(q, 1);
 
     if (first.total_count > SEARCH_RESULT_CAP) {
       if (from === to) {
@@ -404,14 +376,14 @@ export function createClient({
           `splitting at ${left[1]}`
       );
       return [
-        ...(await searchRange(query, dateField, ...left, sorting)),
-        ...(await searchRange(query, dateField, ...right, sorting)),
+        ...(await searchRange(query, dateField, ...left)),
+        ...(await searchRange(query, dateField, ...right)),
       ];
     }
 
     const items = [...first.items];
     for (let page = 2; items.length < first.total_count; page++) {
-      const next = await searchPage(q, page, sorting);
+      const next = await searchPage(q, page);
       if (next.items.length === 0) break;
       items.push(...next.items);
     }
@@ -426,23 +398,11 @@ export function createClient({
    * @param {string} params.dateField - Date qualifier name (e.g., "created", "merged")
    * @param {string} params.from - First day (YYYY-MM-DD)
    * @param {string} params.to - Last day (YYYY-MM-DD)
-   * @param {string} [params.sort] - Sort field, "created" by default
-   * @param {string} [params.order] - "asc" (default) or "desc"
    * @returns {Array} - Unique search items
    */
-  async function ghSearchIssues({
-    query,
-    dateField,
-    from,
-    to,
-    sort = "created",
-    order = "asc",
-  }) {
-    const items = await searchRange(query, dateField, from, to, {
-      sort,
-      order,
-    });
-    return dedupeBy(items, (item) => item.id);
+  async function ghSearchIssues({ query, dateField, from, to }) {
+    const items = await searchRange(query, dateField, from, to);
+    return [...new Map(items.map((item) => [item.id, item])).values()];
   }
 
   return { ghRequest, ghFetch, ghPaginate, ghSearchIssues };
@@ -460,22 +420,6 @@ export function writeJson(name, data, dir = "data") {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
   return outputPath;
-}
-
-/**
- * Whether a module was started directly with `node <file>`
- * @param {string} moduleUrl - The module's import.meta.url
- * @returns {boolean}
- */
-export function isEntryPoint(moduleUrl) {
-  const entry = process.argv[1];
-  if (!entry) return false;
-
-  try {
-    return fs.realpathSync(entry) === fs.realpathSync(fileURLToPath(moduleUrl));
-  } catch {
-    return false;
-  }
 }
 
 /**

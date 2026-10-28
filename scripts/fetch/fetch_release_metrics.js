@@ -1,7 +1,6 @@
 import {
   config,
   createClient,
-  isEntryPoint,
   monthRange,
   run,
   writeJson,
@@ -97,39 +96,6 @@ export function summarizeCoverage(tree, lang) {
 }
 
 /**
- * Build the record stored for a language in a release month
- * @param {object} params - { lang, month, stats, coverage, prCount }
- * @returns {object} - Release metrics record
- */
-export function buildRecord({ lang, month, stats, coverage, prCount }) {
-  return {
-    lang,
-    month,
-    lines_added: stats.lines_added,
-    pages_added: stats.pages_added,
-    files_updated: stats.files_updated,
-    coverage_pct: coverage.percentage,
-    pr_count: prCount,
-  };
-}
-
-/**
- * Sum the stats of several PRs
- * @param {Array} statsList - Results of summarizePRFiles
- * @returns {object} - { lines_added, pages_added, files_updated }
- */
-export function sumStats(statsList) {
-  return statsList.reduce(
-    (total, stats) => ({
-      lines_added: total.lines_added + stats.lines_added,
-      pages_added: total.pages_added + stats.pages_added,
-      files_updated: total.files_updated + stats.files_updated,
-    }),
-    { lines_added: 0, pages_added: 0, files_updated: 0 }
-  );
-}
-
-/**
  * Fetch all GitHub releases and filter to YYYY.MM pattern
  */
 async function fetchReleases(gh, { owner, repo, year }) {
@@ -171,15 +137,18 @@ async function fetchLanguageMonth(gh, { owner, repo }, lang, dateRange) {
   const prNumbers = items.map((item) => item.number);
   console.log(`    Found ${prNumbers.length} PRs`);
 
-  const statsList = [];
+  const stats = { lines_added: 0, pages_added: 0, files_updated: 0 };
   for (const prNumber of prNumbers) {
     const files = await gh.ghPaginate(
       `/repos/${owner}/${repo}/pulls/${prNumber}/files`
     );
-    statsList.push(summarizePRFiles(files, lang));
+    const prStats = summarizePRFiles(files, lang);
+    stats.lines_added += prStats.lines_added;
+    stats.pages_added += prStats.pages_added;
+    stats.files_updated += prStats.files_updated;
   }
 
-  return { stats: sumStats(statsList), prCount: prNumbers.length };
+  return { stats, prCount: prNumbers.length };
 }
 
 /**
@@ -232,15 +201,15 @@ async function main() {
       console.log(`    Coverage: ${coverage.percentage}%`);
 
       // Months without PRs are still recorded to show 0 activity
-      results.push(
-        buildRecord({
-          lang,
-          month: dateRange.month,
-          stats,
-          coverage,
-          prCount,
-        })
-      );
+      results.push({
+        lang,
+        month: dateRange.month,
+        lines_added: stats.lines_added,
+        pages_added: stats.pages_added,
+        files_updated: stats.files_updated,
+        coverage_pct: coverage.percentage,
+        pr_count: prCount,
+      });
     }
   }
 
@@ -251,6 +220,6 @@ async function main() {
   console.log(`Languages: ${locales.join(", ")}`);
 }
 
-if (isEntryPoint(import.meta.url)) {
+if (import.meta.main) {
   run(main);
 }

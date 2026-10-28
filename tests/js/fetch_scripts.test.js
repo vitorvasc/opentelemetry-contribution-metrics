@@ -176,43 +176,6 @@ describe("fetch_release_metrics", () => {
       });
     });
   });
-
-  it("sums per-PR stats", () => {
-    assert.deepEqual(
-      releaseMetrics.sumStats([
-        { lines_added: 1, pages_added: 2, files_updated: 3 },
-        { lines_added: 10, pages_added: 20, files_updated: 30 },
-      ]),
-      { lines_added: 11, pages_added: 22, files_updated: 33 }
-    );
-    assert.deepEqual(releaseMetrics.sumStats([]), {
-      lines_added: 0,
-      pages_added: 0,
-      files_updated: 0,
-    });
-  });
-
-  it("builds records with the fields the processing step reads", () => {
-    const record = releaseMetrics.buildRecord({
-      lang: "pt",
-      month: "2025-10",
-      stats: { lines_added: 5, pages_added: 1, files_updated: 2 },
-      coverage: { percentage: 12.5, lang_files: 1, en_files: 8 },
-      prCount: 3,
-    });
-
-    assert.deepEqual(Object.keys(record), [
-      "lang",
-      "month",
-      "lines_added",
-      "pages_added",
-      "files_updated",
-      "coverage_pct",
-      "pr_count",
-    ]);
-    assert.equal(record.coverage_pct, 12.5);
-    assert.equal(record.pr_count, 3);
-  });
 });
 
 describe("script entry points", () => {

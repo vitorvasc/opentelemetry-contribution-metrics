@@ -6,10 +6,8 @@ import path from "path";
 
 import {
   ALL_LOCALES,
-  GitHubApiError,
   config,
   createClient,
-  dedupeBy,
   getRetryDelay,
   monthRange,
   parseLocales,
@@ -196,24 +194,6 @@ describe("splitRange", () => {
   });
 });
 
-describe("dedupeBy", () => {
-  it("keeps the first item of each key", () => {
-    const items = [{ n: 1, v: "a" }, { n: 2, v: "b" }, { n: 1, v: "c" }];
-    assert.deepEqual(
-      dedupeBy(items, (i) => i.n),
-      [{ n: 1, v: "a" }, { n: 2, v: "b" }]
-    );
-  });
-
-  it("shares a seen set across calls", () => {
-    const seen = new Set();
-    dedupeBy([{ n: 1 }], (i) => i.n, seen);
-    assert.deepEqual(dedupeBy([{ n: 1 }, { n: 2 }], (i) => i.n, seen), [
-      { n: 2 },
-    ]);
-  });
-});
-
 describe("parseNextLink", () => {
   it("returns the rel=next URL", () => {
     const header =
@@ -314,7 +294,6 @@ describe("ghFetch", () => {
     const gh = testClient();
 
     await assert.rejects(gh.ghFetch("/repos/o/missing"), (error) => {
-      assert.ok(error instanceof GitHubApiError);
       assert.equal(error.status, 404);
       assert.match(error.message, /404.*\/repos\/o\/missing.*Not Found/s);
       assert.doesNotMatch(error.message, /test-token/);

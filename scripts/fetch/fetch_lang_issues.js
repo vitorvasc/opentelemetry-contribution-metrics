@@ -1,7 +1,6 @@
 import {
   config,
   createClient,
-  isEntryPoint,
   run,
   writeJson,
 } from "./lib/github.js";
@@ -79,6 +78,6 @@ async function main() {
   console.log(`Languages fetched: ${locales.join(", ")}`);
 }
 
-if (isEntryPoint(import.meta.url)) {
+if (import.meta.main) {
   run(main);
 }

@@ -1,9 +1,4 @@
-import {
-  config,
-  createClient,
-  run,
-  writeJson,
-} from "./lib/github.js";
+import { config, createClient, run, writeJson } from "./lib/github.js";
 
 const OUTPUT_FILE = "lang_contributions.json";
 
@@ -74,7 +69,9 @@ async function main() {
 
   const outputPath = writeJson(OUTPUT_FILE, merged);
 
-  console.log(`\n✓ Done! Saved ${merged.length} contributions to ${outputPath}`);
+  console.log(
+    `\n✓ Done! Saved ${merged.length} contributions to ${outputPath}`,
+  );
   console.log(`Languages fetched: ${locales.join(", ")}`);
 }
 

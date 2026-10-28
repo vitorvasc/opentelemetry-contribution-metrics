@@ -1,5 +1,5 @@
-import { afterEach, describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { afterEach, describe, it } from "node:test";
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -206,7 +206,7 @@ describe("parseNextLink", () => {
   it("returns null on the last page or without a header", () => {
     assert.equal(
       parseNextLink('<https://api.github.com/x?page=1>; rel="first"'),
-      null
+      null,
     );
     assert.equal(parseNextLink(null), null);
   });
@@ -252,15 +252,22 @@ describe("getRetryDelay", () => {
   it("backs off exponentially on 5xx, capped at 30s", () => {
     const delays = [1, 2, 3, 4, 5, 6, 7].map(
       (attempt) =>
-        getRetryDelay({ status: 502, headers: headers(), attempt, nowMs: START })
-          .delayMs
+        getRetryDelay({
+          status: 502,
+          headers: headers(),
+          attempt,
+          nowMs: START,
+        }).delayMs,
     );
     assert.deepEqual(delays, [1000, 2000, 4000, 8000, 16_000, 30_000, 30_000]);
   });
 
   it("does not retry client errors", () => {
     for (const status of [400, 401, 404, 422]) {
-      assert.equal(getRetryDelay({ ...base, status, headers: headers() }), null);
+      assert.equal(
+        getRetryDelay({ ...base, status, headers: headers() }),
+        null,
+      );
     }
     assert.equal(
       getRetryDelay({
@@ -269,7 +276,7 @@ describe("getRetryDelay", () => {
         headers: headers(),
         bodyText: "Resource not accessible",
       }),
-      null
+      null,
     );
   });
 });
@@ -282,10 +289,7 @@ describe("ghFetch", () => {
     assert.deepEqual(await gh.ghFetch("/repos/o/r"), { ok: true });
     assert.equal(calls[0].url, "https://api.github.com/repos/o/r");
     assert.equal(calls[0].init.headers.Authorization, "Bearer test-token");
-    assert.equal(
-      calls[0].init.headers.Accept,
-      "application/vnd.github+json"
-    );
+    assert.equal(calls[0].init.headers.Accept, "application/vnd.github+json");
     assert.ok(calls[0].init.headers["X-GitHub-Api-Version"]);
   });
 
@@ -304,7 +308,9 @@ describe("ghFetch", () => {
   });
 
   it("does not retry a bad token", async () => {
-    const calls = mockFetch([{ status: 401, body: { message: "Bad credentials" } }]);
+    const calls = mockFetch([
+      { status: 401, body: { message: "Bad credentials" } },
+    ]);
     const gh = testClient();
 
     await assert.rejects(gh.ghFetch("/user"), /401/);
@@ -374,7 +380,10 @@ describe("ghFetch", () => {
     assert.equal(calls.length, 2);
 
     mockFetch(() => ({ throws: new TypeError("fetch failed") }));
-    await assert.rejects(testClient({ maxAttempts: 2 }).ghFetch("/x"), /fetch failed/);
+    await assert.rejects(
+      testClient({ maxAttempts: 2 }).ghFetch("/x"),
+      /fetch failed/,
+    );
   });
 
   it("never sends the token to another host", async () => {
@@ -408,12 +417,12 @@ describe("ghPaginate", () => {
     const items = await gh.ghPaginate("/repos/o/r/releases");
     assert.deepEqual(
       items.map((i) => i.id),
-      [1, 2, 3, 4]
+      [1, 2, 3, 4],
     );
     assert.equal(calls.length, 3);
     assert.equal(
       calls[0].url,
-      "https://api.github.com/repos/o/r/releases?per_page=100"
+      "https://api.github.com/repos/o/r/releases?per_page=100",
     );
     assert.match(calls[1].url, /page=2/);
   });
@@ -448,7 +457,10 @@ function fakeSearch(perDay, { onRequest } = {}) {
     const page = Number(params.get("page"));
     const perPage = Number(params.get("per_page"));
     if (page * perPage > 1000) {
-      return { status: 422, body: { message: "Only the first 1000 search results are available" } };
+      return {
+        status: 422,
+        body: { message: "Only the first 1000 search results are available" },
+      };
     }
 
     const items = [];
@@ -494,7 +506,7 @@ describe("ghSearchIssues", () => {
     const params = new URL(calls[0].url).searchParams;
     assert.equal(
       params.get("q"),
-      "repo:o/r is:pr merged:2025-01-01..2025-01-31"
+      "repo:o/r is:pr merged:2025-01-01..2025-01-31",
     );
     assert.equal(params.get("per_page"), "100");
     assert.equal(params.get("sort"), "created");
@@ -504,7 +516,7 @@ describe("ghSearchIssues", () => {
   it("splits the date range when more than 1000 results match", async () => {
     const queries = [];
     const calls = mockFetch(
-      fakeSearch(60, { onRequest: (q) => queries.push(q) })
+      fakeSearch(60, { onRequest: (q) => queries.push(q) }),
     );
     const gh = testClient();
 
@@ -536,7 +548,7 @@ describe("ghSearchIssues", () => {
 
     await assert.rejects(
       search(gh, { from: "2025-01-05", to: "2025-01-05" }),
-      /More than 1000 results on 2025-01-05/
+      /More than 1000 results on 2025-01-05/,
     );
   });
 
@@ -595,14 +607,19 @@ describe("ghSearchIssues", () => {
     const calls = mockFetch((url) => {
       const page = Number(new URL(url).searchParams.get("page"));
       if (page > 10) {
-        return { status: 422, body: { message: "Only the first 1000 search results are available" } };
+        return {
+          status: 422,
+          body: { message: "Only the first 1000 search results are available" },
+        };
       }
       const size = page < 10 ? 100 : 49;
       return {
         body: {
           total_count: 950,
           incomplete_results: false,
-          items: Array.from({ length: size }, (_, k) => ({ id: page * 1000 + k })),
+          items: Array.from({ length: size }, (_, k) => ({
+            id: page * 1000 + k,
+          })),
         },
       };
     });
@@ -624,7 +641,7 @@ describe("writeJson", () => {
     const dir = path.join(
       fs.mkdtempSync(path.join(os.tmpdir(), "write-json-")),
       "nested",
-      "data"
+      "data",
     );
 
     const written = writeJson("out.json", [], dir);
@@ -634,7 +651,7 @@ describe("writeJson", () => {
     writeJson("out.json", [{ a: 1 }], dir);
     assert.equal(
       fs.readFileSync(written, "utf8"),
-      JSON.stringify([{ a: 1 }], null, 2)
+      JSON.stringify([{ a: 1 }], null, 2),
     );
   });
 });

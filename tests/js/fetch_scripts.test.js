@@ -1,6 +1,6 @@
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { describe, it } from "node:test";
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -12,7 +12,7 @@ import * as releaseMetrics from "../../scripts/fetch/fetch_release_metrics.js";
 
 const scriptsDir = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
-  "../../scripts/fetch"
+  "../../scripts/fetch",
 );
 
 describe("fetch_lang_issues", () => {
@@ -21,15 +21,15 @@ describe("fetch_lang_issues", () => {
   it("builds a query per contribution type", () => {
     assert.equal(
       langIssues.buildQuery({ ...base, type: "both" }),
-      'repo:o/r label:"lang:pt"'
+      'repo:o/r label:"lang:pt"',
     );
     assert.equal(
       langIssues.buildQuery({ ...base, type: "prs" }),
-      'repo:o/r label:"lang:pt" is:pr'
+      'repo:o/r label:"lang:pt" is:pr',
     );
     assert.equal(
       langIssues.buildQuery({ ...base, type: "issues" }),
-      'repo:o/r label:"lang:pt" is:issue'
+      'repo:o/r label:"lang:pt" is:issue',
     );
   });
 
@@ -62,7 +62,7 @@ describe("fetch_merged_prs", () => {
   it("builds the merged PR query", () => {
     assert.equal(
       mergedPrs.buildQuery({ owner: "o", repo: "r" }),
-      "repo:o/r is:pr is:merged"
+      "repo:o/r is:pr is:merged",
     );
   });
 
@@ -73,11 +73,11 @@ describe("fetch_merged_prs", () => {
         pull_request: { merged_at: "2025-03-01T10:00:00Z" },
         closed_at: "2025-03-02T10:00:00Z",
       }),
-      { number: 1, merged_at: "2025-03-01T10:00:00Z" }
+      { number: 1, merged_at: "2025-03-01T10:00:00Z" },
     );
     assert.deepEqual(
       mergedPrs.toMergedPR({ number: 2, closed_at: "2025-03-02T10:00:00Z" }),
-      { number: 2, merged_at: "2025-03-02T10:00:00Z" }
+      { number: 2, merged_at: "2025-03-02T10:00:00Z" },
     );
   });
 });
@@ -95,8 +95,10 @@ describe("fetch_release_metrics", () => {
     ];
 
     assert.deepEqual(
-      releaseMetrics.selectMonthlyReleases(releases, "2025").map((r) => r.tag_name),
-      ["2025.02", "2025.09", "2025.10"]
+      releaseMetrics
+        .selectMonthlyReleases(releases, "2025")
+        .map((r) => r.tag_name),
+      ["2025.02", "2025.09", "2025.10"],
     );
     assert.deepEqual(releaseMetrics.selectMonthlyReleases([], "2025"), []);
   });
@@ -114,7 +116,7 @@ describe("fetch_release_metrics", () => {
   it("builds the localization PR query", () => {
     assert.equal(
       releaseMetrics.buildQuery({ owner: "o", repo: "r", lang: "ja" }),
-      "repo:o/r is:pr is:merged label:lang:ja"
+      "repo:o/r is:pr is:merged label:lang:ja",
     );
   });
 
@@ -164,7 +166,10 @@ describe("fetch_release_metrics", () => {
         lang_files: 1,
         en_files: 3,
       });
-      assert.equal(releaseMetrics.summarizeCoverage(tree, "ja").percentage, 66.7);
+      assert.equal(
+        releaseMetrics.summarizeCoverage(tree, "ja").percentage,
+        66.7,
+      );
     });
 
     it("reports zero for a language without content or without English files", () => {
@@ -199,7 +204,7 @@ describe("script entry points", () => {
           "-e",
           `await import(${JSON.stringify(pathToFileURL(file).href)}); console.log("imported");`,
         ],
-        { cwd, env, encoding: "utf8" }
+        { cwd, env, encoding: "utf8" },
       );
 
       assert.equal(result.status, 0, result.stderr);

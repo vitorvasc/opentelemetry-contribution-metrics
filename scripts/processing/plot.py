@@ -113,7 +113,7 @@ def load_config():
         fail(f"{CONFIG_PATH} not found.")
 
     try:
-        with open(CONFIG_PATH, "r") as f:
+        with open(CONFIG_PATH) as f:
             return yaml.safe_load(f) or {}
     except (OSError, yaml.YAMLError) as e:
         fail(f"could not read config: {e}")

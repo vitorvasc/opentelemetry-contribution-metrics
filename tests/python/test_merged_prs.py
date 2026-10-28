@@ -133,7 +133,9 @@ def test_main_fails_when_year_has_no_prs(stage, workdir, monkeypatch, capsys):
     assert "no merged PRs in 2023" in err
     assert "found: 2024" in err
     # Leads with replotting the data on disk; fetching is the alternative
-    assert err.index("make plot-merged-prs YEAR=2024") < err.index("make fetch-merged-prs YEAR=2023")
+    assert err.index("make plot-merged-prs YEAR=2024") < err.index(
+        "make fetch-merged-prs YEAR=2023"
+    )
     assert not (workdir / "data" / "merged_prs_accumulated.csv").exists()
 
 

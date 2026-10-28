@@ -34,7 +34,9 @@ async function main() {
   const gh = createClient({ token });
 
   console.log(`\nFetching merged PRs for year: ${year}`);
-  console.log(`Using monthly date-chunking to keep searches under the API cap\n`);
+  console.log(
+    `Using monthly date-chunking to keep searches under the API cap\n`,
+  );
 
   const allPRs = [];
 

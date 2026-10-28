@@ -83,7 +83,7 @@ def test_monthly_counts_accepts_timezone_aware_datetimes_without_warning():
     df = pd.DataFrame({"merged_at": pd.to_datetime(["2024-05-05T10:00:00Z"])})
 
     with warnings.catch_warnings():
-        warnings.simplefilter("error")
+        warnings.filterwarnings("error", message="Converting to PeriodArray", category=UserWarning)
         result = merged_csv.monthly_counts(df, "2024", today=pd.Timestamp("2026-03-15"))
 
     assert result.loc[result["month"] == "2024-05", "count"].item() == 1

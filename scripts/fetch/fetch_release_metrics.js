@@ -81,7 +81,7 @@ export function summarizeCoverage(tree, lang) {
   // Count .md files in content/en/ and content/{lang}/
   const countMarkdown = (prefix) =>
     tree.filter(
-      (item) => item.path.startsWith(prefix) && item.path.endsWith(".md")
+      (item) => item.path.startsWith(prefix) && item.path.endsWith(".md"),
     ).length;
 
   const enFiles = countMarkdown("content/en/");
@@ -113,12 +113,12 @@ async function fetchReleases(gh, { owner, repo, year }) {
  */
 async function fetchTree(gh, { owner, repo }, tagName) {
   const data = await gh.ghFetch(
-    `/repos/${owner}/${repo}/git/trees/${tagName}?recursive=1`
+    `/repos/${owner}/${repo}/git/trees/${tagName}?recursive=1`,
   );
 
   if (data.truncated) {
     throw new Error(
-      `Git tree for ${tagName} is truncated, coverage would be undercounted`
+      `Git tree for ${tagName} is truncated, coverage would be undercounted`,
     );
   }
   return data.tree;
@@ -140,7 +140,7 @@ async function fetchLanguageMonth(gh, { owner, repo }, lang, dateRange) {
   const stats = { lines_added: 0, pages_added: 0, files_updated: 0 };
   for (const prNumber of prNumbers) {
     const files = await gh.ghPaginate(
-      `/repos/${owner}/${repo}/pulls/${prNumber}/files`
+      `/repos/${owner}/${repo}/pulls/${prNumber}/files`,
     );
     const prStats = summarizePRFiles(files, lang);
     stats.lines_added += prStats.lines_added;
@@ -159,7 +159,9 @@ async function main() {
   const gh = createClient({ token });
   const repoRef = { owner, repo };
 
-  console.log(`\nFetching release metrics for languages: ${locales.join(", ")}`);
+  console.log(
+    `\nFetching release metrics for languages: ${locales.join(", ")}`,
+  );
   console.log(`Filtering releases for year: ${year}\n`);
   console.log("Starting release metrics collection...\n");
 
@@ -191,7 +193,7 @@ async function main() {
         gh,
         repoRef,
         lang,
-        dateRange
+        dateRange,
       );
       const coverage = summarizeCoverage(tree, lang);
 

@@ -1,10 +1,10 @@
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import fs from "fs";
-import os from "os";
-import path from "path";
-import { fileURLToPath, pathToFileURL } from "url";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { describe, it } from "node:test";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const stub = pathToFileURL(path.join(here, "support/stub-fetch.js")).href;
@@ -31,7 +31,7 @@ function runScript(script, routes, { staleOutput } = {}) {
         LANGS: "pt",
         STUB_ROUTES: JSON.stringify(routes),
       },
-    }
+    },
   );
 
   const read = (name) => {
@@ -62,7 +62,7 @@ describe("fetch_release_metrics main", () => {
     const result = runScript(
       "fetch_release_metrics.js",
       { releases: { body: [{ tag_name: "2024.12" }, { tag_name: "v1.0.0" }] } },
-      { staleOutput: "release_metrics.json" }
+      { staleOutput: "release_metrics.json" },
     );
 
     assert.equal(result.status, 0, result.stderr);

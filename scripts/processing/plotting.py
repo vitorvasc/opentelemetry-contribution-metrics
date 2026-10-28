@@ -57,7 +57,7 @@ def draw_bars(ax, x, y, color, annotate=False):
     ax.bar(x, y, width=20, color=color, alpha=0.8, edgecolor=color, linewidth=1)
 
     if annotate:
-        for bar_x, bar_y in zip(x, y):
+        for bar_x, bar_y in zip(x, y, strict=True):
             ax.annotate(
                 f"{int(bar_y)}",
                 xy=(bar_x, bar_y),

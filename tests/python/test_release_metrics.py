@@ -106,7 +106,9 @@ def test_main_fails_when_year_matches_no_month(stage, workdir, monkeypatch, caps
 
 
 def test_main_suggests_plotting_the_latest_year_found(workdir, monkeypatch, capsys):
-    record = '{"lang": "pt", "month": "%s", "lines_added": 1, "pages_added": 0, "coverage_pct": 1.0}'
+    record = (
+        '{"lang": "pt", "month": "%s", "lines_added": 1, "pages_added": 0, "coverage_pct": 1.0}'
+    )
     months = ["2025-12", "2026-01", "2026-02"]
     (workdir / "data" / "release_metrics.json").write_text(
         "[" + ",".join(record % month for month in months) + "]"

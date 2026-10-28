@@ -1,6 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
 import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
 
 export const OWNER = "open-telemetry";
 export const REPO = "opentelemetry.io";
@@ -43,14 +43,14 @@ const SECONDARY_LIMIT_WAIT_MS = 60 * 1000;
  * @returns {string[]} - Language codes
  */
 export function parseLocales(value) {
-  if (!value || !value.trim()) return [...ALL_LOCALES];
+  if (!value?.trim()) return [...ALL_LOCALES];
 
   const locales = [
     ...new Set(
       value
         .split(",")
         .map((locale) => locale.trim())
-        .filter(Boolean)
+        .filter(Boolean),
     ),
   ];
   if (locales.length === 0) {
@@ -83,7 +83,7 @@ export function config(env = process.env) {
   const type = env.TYPE || "both";
   if (!CONTRIBUTION_TYPES.includes(type)) {
     throw new Error(
-      `TYPE must be one of ${CONTRIBUTION_TYPES.join(", ")}, got "${type}".`
+      `TYPE must be one of ${CONTRIBUTION_TYPES.join(", ")}, got "${type}".`,
     );
   }
 
@@ -240,7 +240,7 @@ export function createClient({
   async function wait(delayMs, reason, attempt) {
     warn(
       `⚠️  ${reason}. Retrying in ${Math.ceil(delayMs / 1000)}s ` +
-        `(attempt ${attempt}/${maxAttempts})`
+        `(attempt ${attempt}/${maxAttempts})`,
     );
     await sleep(delayMs);
   }
@@ -278,7 +278,11 @@ export function createClient({
             cause,
           });
         }
-        await wait(backoffMs(attempt), `Network error (${cause.message})`, attempt);
+        await wait(
+          backoffMs(attempt),
+          `Network error (${cause.message})`,
+          attempt,
+        );
         continue;
       }
 
@@ -299,9 +303,9 @@ export function createClient({
       if (!retry) {
         throw Object.assign(
           new Error(
-            `GitHub API error (${res.status}) for ${url}: ${bodyText.slice(0, 300)}`
+            `GitHub API error (${res.status}) for ${url}: ${bodyText.slice(0, 300)}`,
           ),
-          { status: res.status }
+          { status: res.status },
         );
       }
       await wait(retry.delayMs, retry.reason, attempt);
@@ -363,7 +367,7 @@ export function createClient({
       await wait(
         INCOMPLETE_RESULTS_BACKOFF_MS * 2 ** (attempt - 1),
         "Search returned incomplete results",
-        attempt
+        attempt,
       );
     }
   }
@@ -375,13 +379,13 @@ export function createClient({
     if (first.total_count > SEARCH_RESULT_CAP) {
       if (from === to) {
         throw new Error(
-          `More than ${SEARCH_RESULT_CAP} results on ${from} for: ${query}`
+          `More than ${SEARCH_RESULT_CAP} results on ${from} for: ${query}`,
         );
       }
       const [left, right] = splitRange(from, to);
       log(
         `  ${from}..${to} has ${first.total_count} results, ` +
-          `splitting at ${left[1]}`
+          `splitting at ${left[1]}`,
       );
       return [
         ...(await searchRange(query, dateField, ...left)),

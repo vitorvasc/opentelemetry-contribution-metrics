@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices"],
+  "extends": ["config:best-practices", "customManagers:githubActionsVersions"],
   "timezone": "America/Sao_Paulo",
   "schedule": ["before 6am on monday"],
   "prConcurrentLimit": 5,
@@ -26,6 +26,13 @@
       "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor"],
+      "automerge": true
+    },
+    {
+      "description": "Automerge minor and patch updates of the Renovate version that validates this config",
+      "matchManagers": ["custom.regex"],
+      "matchDepNames": ["renovate"],
+      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     },
     {

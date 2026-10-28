@@ -15,9 +15,14 @@ globalThis.fetch = async (url) => {
   const route = routes[endpointKind(pathname)];
 
   if (!route) {
-    return new Response(JSON.stringify({ message: `No stub for ${pathname}` }), {
-      status: 404,
-    });
+    return new Response(
+      JSON.stringify({ message: `No stub for ${pathname}` }),
+      {
+        status: 404,
+      },
+    );
   }
-  return new Response(JSON.stringify(route.body), { status: route.status ?? 200 });
+  return new Response(JSON.stringify(route.body), {
+    status: route.status ?? 200,
+  });
 };

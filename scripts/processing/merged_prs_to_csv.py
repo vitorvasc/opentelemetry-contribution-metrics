@@ -49,7 +49,9 @@ def main():
     result = monthly_counts(df, year, today)
     if result["count"].sum() == 0:
         years = sorted(to_utc_naive(df["merged_at"]).dt.year.dropna().astype(int).unique())
-        plot_advice = f"'{PLOT_HINT} YEAR={years[-1]}' to plot the data you have, or " if years else ""
+        plot_advice = (
+            f"'{PLOT_HINT} YEAR={years[-1]}' to plot the data you have, or " if years else ""
+        )
         fail(
             f"no merged PRs in {year} (found: {', '.join(map(str, years)) or 'no dates'}). "
             f"Run {plot_advice}'{FETCH_HINT} YEAR={year}' to fetch {year}."

@@ -689,6 +689,9 @@ The `plot.py` script generates a presentation-ready graph:
   release months, or one bar per language ranked from most to least covered
 - PR flow: a marked line per language across the months, breaking where a
   language has no value (no PR merged that month)
+- End-of-line values on line charts: labels that would overlap are nudged apart
+  vertically (the lines and points do not move), labels that do not overlap
+  stay put
 - Legend outside the plot area
 - Opens in a matplotlib window (zoom and pan with its toolbar), or saves a PNG
   with `OUTPUT=` / `--output`

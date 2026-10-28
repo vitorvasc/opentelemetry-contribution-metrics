@@ -172,6 +172,43 @@ def set_symlog_axis(ax, ticks):
     ax.yaxis.set_minor_locator(NullLocator())
 
 
+def spread_labels(ax, labels, min_gap=1.2 * LEGEND_FONTSIZE):
+    """Nudge the value labels at the same x apart vertically so none overlaps another.
+
+    Each label stays as close as it can to the point it labels, in the same order
+    and inside the axes. `min_gap` is the least distance between the centers of two
+    labels, in points. Only the text moves, never the point. Call it once the layout
+    is final, since the distance is measured on the screen.
+    """
+    scale = ax.figure.dpi / 72
+    gap = min_gap * scale
+    columns = {}
+    for label in labels:
+        columns.setdefault(label.xy[0], []).append(label)
+
+    for column in columns.values():
+        column.sort(key=lambda label: label.xy[1])
+        anchors = [ax.transData.transform((0, label.xy[1]))[1] for label in column]
+
+        # Least-squares positions that keep each label `gap` above the one below:
+        # pool neighbors that collide into a block that shares one position
+        blocks = []
+        for i, anchor in enumerate(anchors):
+            blocks.append([anchor - i * gap, 1])
+            while len(blocks) > 1 and blocks[-2][0] / blocks[-2][1] > blocks[-1][0] / blocks[-1][1]:
+                total, count = blocks.pop()
+                blocks[-1][0] += total
+                blocks[-1][1] += count
+        bottoms = [total / count for total, count in blocks for _ in range(count)]
+
+        low, high = ax.bbox.y0, ax.bbox.y1 - (len(column) - 1) * gap
+        for i, (label, anchor, bottom) in enumerate(zip(column, anchors, bottoms, strict=True)):
+            shift = min(max(bottom, low), high) + i * gap - anchor
+            if abs(shift) > 0.01:
+                dx, dy = label.xyann
+                label.xyann = (dx, dy + shift / scale)
+
+
 def style_legend(ax, title=None):
     """Legend outside the plot area to avoid overlap."""
     legend = ax.legend(

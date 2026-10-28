@@ -19,6 +19,7 @@ from plotting import (
     draw_ranked_bars,
     draw_series,
     set_symlog_axis,
+    spread_labels,
     style_axes,
     style_legend,
 )
@@ -249,6 +250,9 @@ def render(df, source, config):
 
     # Tight layout with extra padding for cleaner look
     fig.tight_layout(pad=1.5)
+    if date_column is not None and not source.bars:
+        # The layout is final, so the distance between labels can be measured
+        spread_labels(ax, ax.texts)
     return fig
 
 

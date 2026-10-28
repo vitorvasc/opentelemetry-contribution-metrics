@@ -39,10 +39,12 @@ describe("fetch_lang_issues", () => {
       number: 7,
       title: "Translate",
       created_at: "2025-01-02T00:00:00Z",
-      closed_at: null,
-      state: "open",
+      closed_at: "2025-01-09T12:00:00Z",
+      state: "closed",
       labels: [{ name: "lang:pt" }, { name: "sig:docs" }],
       html_url: "https://github.com/o/r/pull/7",
+      pull_request: { merged_at: "2025-01-09T12:00:00Z" },
+      user: { login: "maria", type: "User" },
       extra: "ignored",
     });
 
@@ -51,11 +53,46 @@ describe("fetch_lang_issues", () => {
       number: 7,
       title: "Translate",
       created_at: "2025-01-02T00:00:00Z",
-      closed_at: null,
-      state: "open",
+      closed_at: "2025-01-09T12:00:00Z",
+      state: "closed",
       labels: ["lang:pt", "sig:docs"],
       url: "https://github.com/o/r/pull/7",
+      merged_at: "2025-01-09T12:00:00Z",
+      author: "maria",
+      author_type: "User",
     });
+  });
+
+  it("records an unmerged PR, a bot author and a missing user", () => {
+    const item = {
+      number: 8,
+      title: "Bump",
+      created_at: "2025-01-02T00:00:00Z",
+      closed_at: "2025-01-03T00:00:00Z",
+      state: "closed",
+      labels: [],
+      html_url: "https://github.com/o/r/pull/8",
+      pull_request: { merged_at: null },
+    };
+
+    const bot = langIssues.toContribution("pt", {
+      ...item,
+      user: { login: "renovate[bot]", type: "Bot" },
+    });
+    assert.equal(bot.merged_at, null);
+    assert.equal(bot.author, "renovate[bot]");
+    assert.equal(bot.author_type, "Bot");
+
+    // Absent values stay in the record as null, so every record has one shape
+    const issue = langIssues.toContribution("pt", {
+      ...item,
+      pull_request: undefined,
+    });
+    assert.deepEqual(
+      [issue.merged_at, issue.author, issue.author_type],
+      [null, null, null],
+    );
+    assert.deepEqual(Object.keys(issue), Object.keys(bot));
   });
 });
 

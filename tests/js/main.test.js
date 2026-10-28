@@ -269,6 +269,8 @@ describe("fetch_lang_issues main", () => {
               state: "open",
               labels: [{ name: "lang:pt" }],
               html_url: "https://github.com/o/r/pull/7",
+              pull_request: { merged_at: "2025-01-03T00:00:00Z" },
+              user: { login: "maria", type: "User" },
             },
           ],
         },
@@ -286,6 +288,9 @@ describe("fetch_lang_issues main", () => {
         state: "open",
         labels: ["lang:pt"],
         url: "https://github.com/o/r/pull/7",
+        merged_at: "2025-01-03T00:00:00Z",
+        author: "maria",
+        author_type: "User",
       },
     ]);
   });

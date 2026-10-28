@@ -6,11 +6,12 @@ Visualization tool for tracking accumulated contributions — OpenTelemetry.io.
 
 - Fetches contribution data from GitHub API
 - Filters PRs by language labels (bn, es, fr, ja, ko, pl, pt, ro, uk, zh)
-- **Four tracking modes**:
+- **Five tracking modes**:
   - **PR-based**: Track individual PRs over time by language
   - **Release-based**: Measure lines/pages translated per monthly release
   - **Merged PRs**: Track total merged PRs across the entire repository
   - **Translation coverage**: Show how complete each locale is, now and at each monthly release
+  - **PR flow**: Show how fast each locale's PRs are merged and how many stay open
 - Calculates translation coverage percentages
 - Generates accumulated contribution metrics over time
 - Creates Grafana-style dark theme visualizations
@@ -186,6 +187,37 @@ The history has no fetch of its own: it plots the `coverage_pct` that
 `make fetch-release-metrics` already records for each release, so it needs that
 data first.
 
+#### PR Flow Pipeline
+
+Show how responsive the review of each locale is, from every `lang:*` PR the
+repository ever had: the median days from creation to merge per month, and the
+PRs still open at each month end.
+
+```bash
+# Fetch every localization PR (all time), then draw the median time to merge
+# of the current year as a line chart
+make fetch-pr-flow
+
+# Draw the PRs open at each month end from the same data
+make plot-pr-backlog
+
+# Another year, from the data already fetched (no API calls)
+make plot-pr-flow YEAR=2025
+make plot-pr-backlog YEAR=2025
+
+# Only some languages
+make fetch-pr-flow LANGS=pt,ja
+
+# Clean generated data
+make clean-pr-flow
+```
+
+The fetch always covers every PR since the repository was created, whatever
+`YEAR` is: the backlog needs the PRs created before the year that were still
+open, and a later metric needs the full history. `YEAR` only picks the months
+drawn. The backlog has no fetch of its own, it plots the data
+`make fetch-pr-flow` fetched.
+
 #### All Charts
 
 Run every pipeline and write the charts as PNG files to `out/` (needs
@@ -200,7 +232,8 @@ make charts YEAR=2024 LANGS=pt,es
 
 This writes `out/lang-contributions.png`, `out/release-metrics.png`,
 `out/merged-prs-accumulated.png`, `out/merged-prs-monthly.png`,
-`out/coverage-history.png` and `out/coverage-snapshot.png`.
+`out/coverage-history.png`, `out/coverage-snapshot.png`, `out/time-to-merge.png`
+and `out/backlog.png`.
 
 Every chart is attempted even when one fails, for example the release metrics
 of a year with no published release. `make charts` then names the charts it
@@ -226,9 +259,12 @@ make plot-release-metrics
 make plot-merged-prs MODE=monthly
 make plot-coverage
 make plot-coverage-history
+make plot-pr-flow
+make plot-pr-backlog
 ```
 
-Use the same `YEAR` as the fetch, see [Parameters](#parameters).
+Use the same `YEAR` as the fetch, see [Parameters](#parameters). The PR flow
+charts can show any year from one fetch.
 
 #### Other Commands
 
@@ -263,6 +299,8 @@ Not every pipeline reads every parameter:
 | Merged PRs             | `YEAR`                  | `YEAR`, `MODE`    |
 | Translation coverage   | `LANGS`                 | none              |
 | Coverage history       | (release metrics)       | `YEAR`            |
+| PR flow                | `LANGS`                 | `YEAR`            |
+| PR backlog             | (PR flow)               | `YEAR`            |
 
 - `OUTPUT` applies to every plot step.
 - Use the same `YEAR` for `plot-*` as for the fetch. The release metrics and
@@ -270,6 +308,9 @@ Not every pipeline reads every parameter:
   that year (merged PRs also when `YEAR` is unset and the data is not from the
   current year). The language contributions CSV step has no year filter and
   relies on the fetch's.
+- The PR flow fetch is all time and ignores `YEAR`; its CSV step takes any
+  `YEAR` and exits with a hint when no PR was merged that year (the fetched data
+  covers every year, so re-plot with another `YEAR` instead of fetching again).
 - `TYPE` must be `prs`, `issues` or `both`; any other value exits with status 1.
 - `MODE` is a `make` parameter. When calling `plot.py` directly, use `--mode`.
 
@@ -280,10 +321,12 @@ npm run fetch-lang-contributions  # Language contributions pipeline
 npm run fetch-release-metrics     # Release metrics pipeline
 npm run fetch-merged-prs          # Merged PRs pipeline
 npm run fetch-coverage            # Translation coverage snapshot pipeline
+npm run fetch-pr-flow             # PR flow pipeline (time to merge chart)
 npm run clean-lang-contributions  # Clean language data
 npm run clean-release-metrics     # Clean release data
 npm run clean-merged-prs          # Clean merged PRs data
 npm run clean-coverage            # Clean coverage data
+npm run clean-pr-flow             # Clean PR flow data
 npm run setup-check               # Verify setup
 npm test                          # JavaScript tests
 ```
@@ -322,19 +365,25 @@ python3 scripts/processing/plot.py --source=coverage-snapshot
 # Coverage history (after fetching the release metrics)
 python3 scripts/processing/release_metrics_to_csv.py
 python3 scripts/processing/plot.py --source=coverage
+
+# PR flow: time to merge, then the backlog from the same data
+node scripts/fetch/fetch_pr_flow.js
+python3 scripts/processing/pr_flow_to_csv.py
+python3 scripts/processing/plot.py --source=time-to-merge
+python3 scripts/processing/plot.py --source=backlog
 ```
 
 `plot.py` options:
 
 ```bash
-python3 scripts/processing/plot.py --source {prs,releases,merged,coverage,coverage-snapshot}  # default: prs
+python3 scripts/processing/plot.py --source {prs,releases,merged,coverage,coverage-snapshot,time-to-merge,backlog}  # default: prs
 python3 scripts/processing/plot.py --mode {accumulated,monthly}    # merged PRs only
 python3 scripts/processing/plot.py --output out/chart.png          # save instead of opening a window
 ```
 
 ## Understanding the Pipelines
 
-The tool provides four complementary ways to track OpenTelemetry contributions:
+The tool provides five complementary ways to track OpenTelemetry contributions:
 
 ### Language Contributions Pipeline
 
@@ -379,6 +428,26 @@ Tracks **how complete each locale is**:
 - **Data source**: https://github.com/open-telemetry/opentelemetry.io, the
   recursive git tree of the default branch
 
+### PR Flow Pipeline
+
+Tracks **how responsive the review of each locale is**:
+
+- **What it tracks**: Every PR with a `lang:*` label since the repository was
+  created (`data/pr_flow.json`, with `merged_at`, `author` and `author_type`)
+- **Time to merge**: Per language and month of merge (UTC), the median and p90
+  of the days from `created_at` to `merged_at`, with the PR count. PRs closed
+  without a merge are left out. A language with no merge in a month has no
+  value that month (a gap in the line, not a zero)
+- **Open backlog**: Per language, the PRs open at the end of each month: created
+  by then and not yet closed or merged. A PR closed without a merge leaves the
+  backlog when it is closed. The current month is counted as of now
+- **Charts**: The median time to merge (`--source=time-to-merge`) and the open
+  backlog (`--source=backlog`), one marked line per language. The p90 is in the
+  CSV only
+- **Use case**: See which locales are waiting for review and which merge quickly
+- **Cost**: One repository request and about 40 Search requests for all
+  languages (the search of a language over 1000 PRs is split by date range)
+
 ### Metrics Calculated
 
 For each release month and language:
@@ -411,6 +480,14 @@ For each release month and language:
 
 The coverage history has no files of its own: it plots `coverage_pct` from the
 release metrics files.
+
+**PR Flow:**
+- `data/pr_flow.json` - Every `lang:*` PR since the repository was created
+- `data/pr_flow_time_to_merge.csv` - Median days, p90 days and count per month
+  and language (empty median and p90 where nothing was merged)
+- `data/pr_flow_backlog.csv` - PRs open at each month end per language
+
+The PR backlog chart has no fetch of its own: it plots the PR flow files.
 
 **Charts:** `make charts` writes PNG files to `out/`.
 
@@ -491,7 +568,8 @@ opentelemetry-contribution-metrics/
 │   │   ├── fetch_lang_issues.js       # Fetches PR-based data from GitHub API
 │   │   ├── fetch_release_metrics.js   # Fetches release-based metrics
 │   │   ├── fetch_merged_prs.js        # Fetches total merged PRs
-│   │   └── fetch_coverage.js          # Fetches the translation coverage snapshot
+│   │   ├── fetch_coverage.js          # Fetches the translation coverage snapshot
+│   │   └── fetch_pr_flow.js           # Fetches every localization PR, all time
 │   ├── processing/                    # Data processing scripts (Python)
 │   │   ├── common.py                      # Shared helpers: JSON loading, CSV writing, error exit
 │   │   ├── plotting.py                    # Shared matplotlib styling and drawing helpers
@@ -499,6 +577,7 @@ opentelemetry-contribution-metrics/
 │   │   ├── release_metrics_to_csv.py      # Converts release JSON to accumulated CSV
 │   │   ├── merged_prs_to_csv.py           # Converts merged PRs JSON to accumulated CSV
 │   │   ├── coverage_to_csv.py             # Ranks the coverage snapshot JSON into a CSV
+│   │   ├── pr_flow_to_csv.py              # Computes time to merge and open backlog CSVs
 │   │   └── plot.py                        # Generates visualization (supports all modes)
 │   └── check_setup.sh                 # Validates environment setup
 ├── tests/
@@ -514,7 +593,10 @@ opentelemetry-contribution-metrics/
 │   ├── merged_prs.json                # Raw merged PRs data (generated)
 │   ├── merged_prs_accumulated.csv     # Accumulated merged PRs data (generated)
 │   ├── coverage_snapshot.json         # Raw coverage snapshot (generated)
-│   └── coverage_snapshot.csv          # Ranked coverage snapshot (generated)
+│   ├── coverage_snapshot.csv          # Ranked coverage snapshot (generated)
+│   ├── pr_flow.json                   # Raw localization PRs, all time (generated)
+│   ├── pr_flow_time_to_merge.csv      # Time to merge per month and language (generated)
+│   └── pr_flow_backlog.csv            # Open PRs per month end and language (generated)
 ├── out/                               # Charts written by make charts (generated, gitignored)
 ├── config.yaml                        # Plot configuration
 ├── .env.example                       # Environment template
@@ -576,10 +658,10 @@ the GitHub API requests left.
   not written.
 - **Token**: `METRICS_TOKEN` if the secret exists, otherwise the Actions
   `GITHUB_TOKEN`. The Actions token reads public repositories but is limited to
-  about 1000 core requests per hour. A full run needs about 1400 core and 160
+  about 1000 core requests per hour. A full run needs about 1400 core and 200
   search requests, so with that token it waits for the hourly reset (up to an
   hour each) and the job's 180-minute timeout leaves room for two. Create a
-  `METRICS_TOKEN` secret (5000 requests per hour) to finish in about 17
+  `METRICS_TOKEN` secret (5000 requests per hour) to finish in about 19
   minutes. Use a fine-grained personal access token with "Public
   repositories (read-only)" access and no permissions, or a classic token with
   no scopes. Do not use the `public_repo` scope, it grants write access to
@@ -595,6 +677,8 @@ The `plot.py` script generates a presentation-ready graph:
 - Accumulated contributions over time per language
 - Translation coverage as percentages: a plain line per language across the
   release months, or one bar per language ranked from most to least covered
+- PR flow: a marked line per language across the months, breaking where a
+  language has no value (no PR merged that month)
 - Legend outside the plot area
 - Opens in a matplotlib window (zoom and pan with its toolbar), or saves a PNG
   with `OUTPUT=` / `--output`

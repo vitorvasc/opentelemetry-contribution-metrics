@@ -486,10 +486,12 @@ days. It never commits to the repository. The job summary lists the files and
 the GitHub API requests left.
 
 - **Schedule**: monthly, on day 2 at 06:00 UTC, after the upstream `YYYY.MM`
-  release tags. It uses the current year and all languages.
+  release tags. It charts the year of the month that just ended (the previous
+  year on January 2) for all languages.
 - **Manual run** (Actions → Charts → Run workflow): optional `year` (four
-  digits) and `langs` (comma-separated codes such as `pt,es`). Empty means the
-  default. Invalid values fail before any request.
+  digits) and `langs` (comma-separated codes such as `pt,es`, lowercased and
+  stripped of spaces). Empty means the current year and all languages. Invalid
+  values fail before any request.
 - **Pull requests** that change the workflow file run it with `LANGS=pt`.
 - **Token**: `METRICS_TOKEN` if the secret exists, otherwise the Actions
   `GITHUB_TOKEN`. The Actions token reads public repositories but is limited to

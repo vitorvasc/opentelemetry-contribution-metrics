@@ -32,24 +32,40 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
-      YEAR: ${{ inputs.year }}
+      EVENT_NAME: ${{ github.event_name }}
+      INPUT_YEAR: ${{ inputs.year }}
       # Pull requests only validate the workflow, so they fetch one language
-      LANGS: ${{ github.event_name == 'pull_request' && 'pt' || inputs.langs }}
+      INPUT_LANGS: ${{ github.event_name == 'pull_request' && 'pt' || inputs.langs }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Validate YEAR and LANGS
+      - name: Resolve and validate YEAR and LANGS
         run: |
-          if [[ -n "$YEAR" && ! "$YEAR" =~ ^[0-9]{4}$ ]]; then
-            echo "::error::year must be empty or four digits, got '$YEAR'"
+          year="$INPUT_YEAR"
+          langs="${INPUT_LANGS,,}"
+          langs="${langs//[[:blank:]]/}"
+
+          # A scheduled run charts the year of the month that just ended, so the
+          # run on January 2 covers the previous year, not the new one
+          if [[ -z "$year" && "$EVENT_NAME" == "schedule" ]]; then
+            year="$(date -u -d "$(date -u +%Y-%m-01) -1 day" +%Y)"
+          fi
+
+          if [[ -n "$year" && ! "$year" =~ ^[0-9]{4}$ ]]; then
+            echo "::error::year must be empty or four digits, got '$year'"
             exit 1
           fi
-          if [[ -n "$LANGS" && ! "$LANGS" =~ ^[a-z]{2,5}(,[a-z]{2,5})*$ ]]; then
-            echo "::error::langs must be empty or comma-separated lowercase codes of 2-5 letters such as pt,es, got '$LANGS'"
+          if [[ -n "$langs" && ! "$langs" =~ ^[a-z]{2,5}(,[a-z]{2,5})*$ ]]; then
+            echo "::error::langs must be empty or comma-separated codes of 2-5 letters such as pt,es, got '$langs'"
             exit 1
           fi
+
+          {
+            echo "YEAR=$year"
+            echo "LANGS=$langs"
+          } >> "$GITHUB_ENV"
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:

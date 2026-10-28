@@ -14,7 +14,7 @@
     "clean-release-metrics": "rm -f data/release_metrics.json data/release_metrics_accumulated.csv",
     "clean-merged-prs": "rm -f data/merged_prs.json data/merged_prs_accumulated.csv",
     "clean-coverage": "rm -f data/coverage_snapshot.json data/coverage_snapshot.csv",
-    "clean-pr-flow": "rm -f data/pr_flow.json data/pr_flow_time_to_merge.csv data/pr_flow_backlog.csv",
+    "clean-pr-flow": "rm -f data/pr_flow.json data/pr_flow_time_to_merge.csv data/pr_flow_backlog.csv data/pr_flow_contributors.csv data/pr_flow_contributors_year.csv",
     "setup-check": "bash scripts/check_setup.sh",
     "test": "node --test \"tests/js/**/*.test.js\"",
     "lint": "biome ci ."

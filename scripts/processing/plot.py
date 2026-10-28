@@ -1,5 +1,4 @@
 import argparse
-import os
 from dataclasses import dataclass, replace
 from pathlib import Path
 
@@ -10,7 +9,7 @@ import yaml
 import lang_contributions_to_csv as lang_csv
 import merged_prs_to_csv as merged_csv
 import release_metrics_to_csv as releases_csv
-from common import fail
+from common import fail, resolve_year, utc_now
 from plotting import (
     create_figure,
     draw_bars,
@@ -177,7 +176,7 @@ def describe(df, source):
 def main(argv=None):
     args = parse_args(argv)
     config = load_config()
-    source = resolve_source(args.source, args.mode, os.environ.get("YEAR", ""))
+    source = resolve_source(args.source, args.mode, resolve_year(utc_now()))
     df = load_csv(source)
 
     fig = render(df, source, config)

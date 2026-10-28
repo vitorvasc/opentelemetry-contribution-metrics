@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from common import fail, load_json, to_utc_naive, write_csv
+from common import fail, load_json, resolve_year, to_utc_naive, utc_now, write_csv
 
 HINT = "make fetch-something"
 
@@ -75,3 +75,21 @@ def test_to_utc_naive_normalizes_every_input_flavor():
 
         assert result.dt.tz is None
         assert result.iloc[0] == expected
+
+
+def test_utc_now_is_timezone_aware_utc():
+    assert str(utc_now().tz) == "UTC"
+
+
+def test_resolve_year_prefers_the_environment(monkeypatch):
+    monkeypatch.setenv("YEAR", " 2023 ")
+
+    assert resolve_year(pd.Timestamp("2025-06-15", tz="UTC")) == "2023"
+
+
+@pytest.mark.parametrize("value", [None, "", "  "])
+def test_resolve_year_defaults_to_the_year_of_today(value, monkeypatch):
+    if value is not None:
+        monkeypatch.setenv("YEAR", value)
+
+    assert resolve_year(pd.Timestamp("2025-06-15", tz="UTC")) == "2025"

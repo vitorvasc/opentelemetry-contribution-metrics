@@ -122,6 +122,44 @@ def test_resolve_source_ignores_mode_for_language_sources():
     assert plot.resolve_source("releases", "monthly") is plot.SOURCES["releases"]
 
 
+@pytest.fixture
+def spy_titles(monkeypatch):
+    """Titles of the charts drawn by plot.main."""
+    titles = []
+    draw = plot.render
+
+    def render(df, source, config):
+        fig = draw(df, source, config)
+        titles.append(fig.axes[0].get_title())
+        return fig
+
+    monkeypatch.setattr(plot, "render", render)
+    return titles
+
+
+def test_plot_titles_merged_prs_with_the_default_year_when_year_is_unset(
+    stage, workdir, monkeypatch, spy_titles
+):
+    stage("merged_prs_accumulated.csv")
+    monkeypatch.setattr(plot, "utc_now", lambda: pd.Timestamp("2024-03-15 12:00", tz="UTC"))
+
+    plot.main(["--source", "merged", "--output", str(workdir / "x.png")])
+
+    assert spy_titles == ["Merged PRs - 2024, accumulated"]
+
+
+def test_plot_titles_merged_prs_with_the_year_from_the_environment(
+    stage, workdir, monkeypatch, spy_titles
+):
+    stage("merged_prs_accumulated.csv")
+    monkeypatch.setenv("YEAR", "2023")
+    monkeypatch.setattr(plot, "utc_now", lambda: pd.Timestamp("2024-03-15 12:00", tz="UTC"))
+
+    plot.main(["--source", "merged", "--mode", "monthly", "--output", str(workdir / "x.png")])
+
+    assert spy_titles == ["Merged PRs - 2023, month over month"]
+
+
 def test_draw_series_reuses_the_line_color_when_none_is_configured():
     fig, ax = plt.subplots()
     x = pd.Series(pd.to_datetime(["2025-01-01", "2025-02-01"]))

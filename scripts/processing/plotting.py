@@ -1,7 +1,7 @@
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib.ticker import NullLocator
+from matplotlib.ticker import MaxNLocator, NullLocator
 
 # Grafana-style dark theme configuration
 BACKGROUND_COLOR = "#282828"
@@ -66,6 +66,58 @@ def draw_bars(ax, x, y, color, annotate=False):
             ax.annotate(
                 f"{int(bar_y)}",
                 xy=(bar_x, bar_y),
+                xytext=(0, 5),
+                textcoords="offset points",
+                fontsize=TICK_FONTSIZE,
+                fontweight="bold",
+                color=TEXT_COLOR,
+                ha="center",
+                va="bottom",
+            )
+
+
+def draw_stacked_bars(
+    ax, df, date_column, value_column, colors, annotate=False, value_format="{:.0f}"
+):
+    """One bar per date, with a segment per language stacked in the language's color.
+
+    The language with the most overall is at the bottom. A language without a
+    positive value is left out, and a date without one for a language has no
+    segment of it. With `annotate`, each bar is labeled with its total. The y axis
+    ticks whole counts and the grid stays behind the bars.
+    """
+    ax.set_axisbelow(True)
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    values = df.pivot_table(
+        index=date_column, columns="lang", values=value_column, aggfunc="sum", fill_value=0
+    )
+    langs = values.sum().sort_values(ascending=False, kind="stable").index
+    bottom = pd.Series(0, index=values.index)
+
+    for lang in langs:
+        present = values[lang] > 0
+        if not present.any():
+            continue
+
+        color = colors.get(lang)
+        ax.bar(
+            values.index[present],
+            values.loc[present, lang],
+            bottom=bottom[present],
+            width=20,
+            label=lang.upper(),
+            color=color,
+            alpha=0.8,
+            edgecolor=color,
+            linewidth=1,
+        )
+        bottom = bottom + values[lang]
+
+    if annotate:
+        for x, total in bottom[bottom > 0].items():
+            ax.annotate(
+                value_format.format(total),
+                xy=(x, total),
                 xytext=(0, 5),
                 textcoords="offset points",
                 fontsize=TICK_FONTSIZE,

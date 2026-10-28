@@ -1,41 +1,57 @@
-import pandas as pd
-import sys
-from pathlib import Path
+import os
 
-# Check if input file exists
-input_file = Path("data/lang_contributions.json")
-if not input_file.exists():
-    print(f"Error: {input_file} not found. Run 'make fetch' first.")
-    sys.exit(1)
+from common import fail, load_json, to_utc_naive, write_csv
 
-# Read JSON with error handling
-try:
-    df = pd.read_json(input_file)
-except Exception as e:
-    print(f"Error reading JSON: {e}")
-    sys.exit(1)
+INPUT_FILE = "data/lang_contributions.json"
+OUTPUT_FILE = "data/lang_accumulated.csv"
+FETCH_HINT = "make fetch-lang-contributions"
 
-# Filter PRs only (exclude issues)
-df = df[df["url"].str.contains("/pull/")]
+# TYPE values: "" and "both" keep everything
+TYPE_LABELS = {"prs": "PRs", "issues": "issues"}
 
-# usar created_at como data
-df["date"] = pd.to_datetime(df["created_at"])
 
-# ordenar
-df = df.sort_values("date")
+def filter_by_type(df, type_filter):
+    """Keep pull requests, issues or both, telling them apart by URL."""
+    if type_filter in ("", "both"):
+        return df
+    if type_filter not in TYPE_LABELS:
+        raise ValueError(f"TYPE must be prs, issues or both, got '{type_filter}'")
 
-# contador = cada linha vale 1 para aquele idioma
-df["count"] = 1
+    is_pr = df["url"].str.contains("/pull/")
+    return df[is_pr] if type_filter == "prs" else df[~is_pr]
 
-# acumular por idioma
-df_accum = df.groupby(["lang", "date"])["count"].sum().groupby(level=0).cumsum()
 
-df_accum = df_accum.reset_index()
+def accumulate(df):
+    """Cumulative contribution count per language, one row per language and timestamp."""
+    # Use created_at as the date; each row counts as one contribution for its language
+    df = df.assign(date=to_utc_naive(df["created_at"]), count=1)
+    accumulated = df.groupby(["lang", "date"])["count"].sum().groupby(level=0).cumsum()
+    return accumulated.reset_index()
 
-# Write output
-output_file = Path("data/lang_accumulated.csv")
-df_accum.to_csv(output_file, index=False)
 
-print(f"✓ Successfully converted {len(df)} PRs to accumulated CSV")
-print(f"  Output: {output_file}")
-print(f"  Languages: {', '.join(sorted(df['lang'].unique()))}")
+def main():
+    type_filter = os.environ.get("TYPE", "").strip()
+
+    df = load_json(INPUT_FILE, FETCH_HINT)
+    try:
+        df = filter_by_type(df, type_filter)
+    except ValueError as e:
+        fail(str(e))
+
+    if df.empty:
+        fail(
+            f"{INPUT_FILE} has no {TYPE_LABELS[type_filter]}. "
+            f"Run '{FETCH_HINT} TYPE={type_filter}' to fetch them."
+        )
+
+    df_accum = accumulate(df)
+    write_csv(df_accum, OUTPUT_FILE)
+
+    label = TYPE_LABELS.get(type_filter, "contributions")
+    print(f"✓ Successfully converted {len(df)} {label} to accumulated CSV")
+    print(f"  Output: {OUTPUT_FILE}")
+    print(f"  Languages: {', '.join(sorted(df['lang'].unique()))}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,110 @@
+[
+  {
+    "lang": "pt",
+    "month": "2025-01",
+    "lines_added": 420,
+    "pages_added": 3,
+    "files_updated": 5,
+    "coverage_pct": 38.2,
+    "pr_count": 4
+  },
+  {
+    "lang": "es",
+    "month": "2025-01",
+    "lines_added": 80,
+    "pages_added": 0,
+    "files_updated": 2,
+    "coverage_pct": 22.5,
+    "pr_count": 1
+  },
+  {
+    "lang": "de",
+    "month": "2025-01",
+    "lines_added": 30,
+    "pages_added": 0,
+    "files_updated": 1,
+    "coverage_pct": 5.0,
+    "pr_count": 1
+  },
+  {
+    "lang": "pt",
+    "month": "2025-02",
+    "lines_added": 0,
+    "pages_added": 0,
+    "files_updated": 0,
+    "coverage_pct": 38.2,
+    "pr_count": 0
+  },
+  {
+    "lang": "es",
+    "month": "2025-02",
+    "lines_added": 610,
+    "pages_added": 6,
+    "files_updated": 3,
+    "coverage_pct": 24.8,
+    "pr_count": 5
+  },
+  {
+    "lang": "de",
+    "month": "2025-02",
+    "lines_added": 0,
+    "pages_added": 0,
+    "files_updated": 0,
+    "coverage_pct": 5.0,
+    "pr_count": 0
+  },
+  {
+    "lang": "pt",
+    "month": "2025-03",
+    "lines_added": 1310,
+    "pages_added": 12,
+    "files_updated": 9,
+    "coverage_pct": 41.0,
+    "pr_count": 7
+  },
+  {
+    "lang": "es",
+    "month": "2025-03",
+    "lines_added": 150,
+    "pages_added": 1,
+    "files_updated": 1,
+    "coverage_pct": 25.1,
+    "pr_count": 2
+  },
+  {
+    "lang": "de",
+    "month": "2025-03",
+    "lines_added": 0,
+    "pages_added": 0,
+    "files_updated": 0,
+    "coverage_pct": 4.9,
+    "pr_count": 0
+  },
+  {
+    "lang": "pt",
+    "month": "2025-04",
+    "lines_added": 250,
+    "pages_added": 1,
+    "files_updated": 4,
+    "coverage_pct": 41.9,
+    "pr_count": 3
+  },
+  {
+    "lang": "es",
+    "month": "2025-04",
+    "lines_added": 0,
+    "pages_added": 0,
+    "files_updated": 0,
+    "coverage_pct": 25.1,
+    "pr_count": 0
+  },
+  {
+    "lang": "de",
+    "month": "2025-04",
+    "lines_added": 900,
+    "pages_added": 9,
+    "files_updated": 2,
+    "coverage_pct": 9.6,
+    "pr_count": 6
+  }
+]

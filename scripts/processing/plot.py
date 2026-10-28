@@ -1,295 +1,203 @@
-import matplotlib.pyplot as plt
-import pandas as pd
-import matplotlib.dates as mdates
-import yaml
-import sys
-import os
 import argparse
+import os
+from dataclasses import dataclass, replace
 from pathlib import Path
 
-# Parse arguments
-parser = argparse.ArgumentParser(description="Plot OpenTelemetry contribution metrics")
-parser.add_argument(
-    "--source",
-    choices=["prs", "releases", "merged"],
-    default="prs",
-    help="Data source: 'prs' for PR-based metrics (default), 'releases' for monthly release metrics, 'merged' for total merged PRs"
+import matplotlib.pyplot as plt
+import pandas as pd
+import yaml
+
+import lang_contributions_to_csv as lang_csv
+import merged_prs_to_csv as merged_csv
+import release_metrics_to_csv as releases_csv
+from common import fail
+from plotting import (
+    create_figure,
+    draw_bars,
+    draw_by_language,
+    draw_series,
+    style_axes,
+    style_legend,
 )
-parser.add_argument(
-    "--mode",
-    choices=["accumulated", "monthly"],
-    default="accumulated",
-    help="Plot mode for merged PRs: 'accumulated' for cumulative line chart (default), 'monthly' for month-over-month bar chart"
-)
-args = parser.parse_args()
 
-# Load configuration
-config_path = Path(__file__).parent.parent.parent / "config.yaml"
-if not config_path.exists():
-    print(f"Error: {config_path} not found.")
-    sys.exit(1)
+CONFIG_PATH = Path(__file__).parent.parent.parent / "config.yaml"
 
-try:
-    with open(config_path, "r") as f:
-        config = yaml.safe_load(f)
-except Exception as e:
-    print(f"Error reading config: {e}")
-    sys.exit(1)
 
-# Load data based on source
-# Initialize flags
-is_bar_chart = False
+@dataclass(frozen=True)
+class Source:
+    csv_path: Path
+    date_column: str
+    value_column: str
+    title: str
+    xlabel: str
+    ylabel: str
+    hint: str  # make command that produces the CSV
+    by_language: bool = True  # one series per `lang`, otherwise a single total
+    bars: bool = False
 
-if args.source == "releases":
-    csv_path = Path("data/release_metrics_accumulated.csv")
-    date_column = "month"
-    value_column = "total_lines"  # Use total_lines for releases
-    title_text = "Accumulated Localization by Release Month"
-    error_command = "make csv-releases"
-    is_single_line = False
-elif args.source == "merged":
-    csv_path = Path("data/merged_prs_accumulated.csv")
-    date_column = "month"
-    value_column = "total" if args.mode == "accumulated" else "count"
-    year = os.environ.get("YEAR", "")
-    mode_label = "accumulated" if args.mode == "accumulated" else "month over month"
-    title_text = f"Merged PRs - {year}, {mode_label}" if year else f"Merged PRs ({mode_label})"
-    error_command = "make fetch-merged-prs"
-    is_single_line = True
-    is_bar_chart = args.mode == "monthly"
-else:
-    csv_path = Path("data/lang_accumulated.csv")
-    date_column = "date"
-    value_column = "count"  # Use count for PRs
-    title_text = "Accumulated Contributions by Language"
-    error_command = "make csv"
-    is_single_line = False
 
-if not csv_path.exists():
-    print(f"Error: {csv_path} not found. Run '{error_command}' first.")
-    sys.exit(1)
+SOURCES = {
+    "prs": Source(
+        csv_path=Path(lang_csv.OUTPUT_FILE),
+        date_column="date",
+        value_column="count",
+        title="Accumulated Contributions by Language",
+        xlabel="Date",
+        ylabel="Accumulated Contributions",
+        hint=lang_csv.FETCH_HINT,
+    ),
+    "releases": Source(
+        csv_path=Path(releases_csv.OUTPUT_FILE),
+        date_column="month",
+        value_column="total_lines",
+        title="Accumulated Localization by Release Month",
+        xlabel="Month",
+        ylabel="Accumulated Lines Translated",
+        hint=releases_csv.FETCH_HINT,
+    ),
+    "merged": Source(
+        csv_path=Path(merged_csv.OUTPUT_FILE),
+        date_column="month",
+        value_column="total",
+        title="Merged PRs",
+        xlabel="Month",
+        ylabel="Accumulated Merged PRs",
+        hint=merged_csv.FETCH_HINT,
+        by_language=False,
+    ),
+}
 
-try:
-    df = pd.read_csv(csv_path, parse_dates=[date_column])
-except Exception as e:
-    print(f"Error reading CSV: {e}")
-    sys.exit(1)
 
-# Grafana-style dark theme configuration
-BACKGROUND_COLOR = "#282828"
-GRID_COLOR = "#3a3a3a"
-TEXT_COLOR = "#cccccc"
+def resolve_source(name, mode, year=""):
+    """Look up a source, applying the plot mode to the merged PRs one."""
+    source = SOURCES[name]
+    if name != "merged":
+        return source
 
-# Presentation-ready settings
-TITLE_FONTSIZE = 22
-LABEL_FONTSIZE = 16
-TICK_FONTSIZE = 14
-LEGEND_FONTSIZE = 14
-LINE_WIDTH = 3.5
+    monthly = mode == "monthly"
+    mode_label = "month over month" if monthly else "accumulated"
+    return replace(
+        source,
+        value_column="count" if monthly else "total",
+        title=f"Merged PRs - {year}, {mode_label}" if year else f"Merged PRs ({mode_label})",
+        ylabel="Merged PRs" if monthly else "Accumulated Merged PRs",
+        bars=monthly,
+    )
 
-# Config options
-SHOW_ENDPOINT_VALUES = config.get("show_endpoint_values", False)
-COLORS = config.get("colors", {})
 
-# Higher DPI for sharper rendering
-fig, ax = plt.subplots(figsize=(14, 6), dpi=120)
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description="Plot OpenTelemetry contribution metrics")
+    parser.add_argument(
+        "--source",
+        choices=list(SOURCES),
+        default="prs",
+        help="Data source: 'prs' for PR-based metrics (default), 'releases' for monthly release metrics, 'merged' for total merged PRs",
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["accumulated", "monthly"],
+        default="accumulated",
+        help="Plot mode for merged PRs: 'accumulated' for cumulative line chart (default), 'monthly' for month-over-month bar chart",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        metavar="PATH",
+        help="Save the chart to PATH (e.g. chart.png) instead of opening a window",
+    )
+    return parser.parse_args(argv)
 
-# Set background colors
-fig.patch.set_facecolor(BACKGROUND_COLOR)
-ax.set_facecolor(BACKGROUND_COLOR)
 
-# Plot based on whether it's single-line or multi-language
-if is_single_line:
-    # Single line/bar plot for total merged PRs
-    subset = df.sort_values(date_column)
-    color = COLORS.get("total", "#CCCCCC")  # Neutral gray default
+def load_config():
+    if not CONFIG_PATH.exists():
+        fail(f"{CONFIG_PATH} not found.")
 
-    if is_bar_chart:
-        # Bar chart for month-over-month view
-        ax.bar(
-            subset[date_column],
-            subset[value_column],
-            width=20,
-            color=color,
-            alpha=0.8,
-            edgecolor=color,
-            linewidth=1
-        )
+    try:
+        with open(CONFIG_PATH, "r") as f:
+            return yaml.safe_load(f) or {}
+    except (OSError, yaml.YAMLError) as e:
+        fail(f"could not read config: {e}")
 
-        # Add value labels on top of bars
-        if SHOW_ENDPOINT_VALUES:
-            for idx, row in subset.iterrows():
-                ax.annotate(
-                    f'{int(row[value_column])}',
-                    xy=(row[date_column], row[value_column]),
-                    xytext=(0, 5),
-                    textcoords='offset points',
-                    fontsize=TICK_FONTSIZE,
-                    fontweight='bold',
-                    color=TEXT_COLOR,
-                    ha='center',
-                    va='bottom'
-                )
+
+def load_csv(source):
+    if not source.csv_path.exists():
+        fail(f"{source.csv_path} not found. Run '{source.hint}' first.")
+
+    try:
+        df = pd.read_csv(source.csv_path, parse_dates=[source.date_column])
+    except (OSError, ValueError) as e:
+        fail(f"could not read {source.csv_path}: {e}. Run '{source.hint}' to generate it again.")
+
+    if df.empty:
+        fail(f"{source.csv_path} has no rows. Run '{source.hint}' first.")
+
+    return df
+
+
+def render(df, source, config):
+    """Draw `df` as described by `source` and return the figure."""
+    colors = config.get("colors", {})
+    show_endpoint_values = config.get("show_endpoint_values", False)
+    date_column = source.date_column
+    value_column = source.value_column
+
+    fig, ax = create_figure()
+
+    if source.by_language:
+        draw_by_language(ax, df, date_column, value_column, colors, show_endpoint_values)
     else:
-        # Step-style line plot for accumulated view
-        ax.plot(
-            subset[date_column],
-            subset[value_column],
-            label="Total",
-            linewidth=LINE_WIDTH,
-            color=color,
-            drawstyle='steps-post'
-        )
-
-        # Semi-transparent area fill
-        ax.fill_between(
-            subset[date_column],
-            subset[value_column],
-            step='post',
-            alpha=0.3,
-            color=color
-        )
-
-        # Endpoint annotation (configurable)
-        if SHOW_ENDPOINT_VALUES:
-            final_date = subset[date_column].iloc[-1]
-            final_value = subset[value_column].iloc[-1]
-            ax.annotate(
-                f'{int(final_value)}',
-                xy=(final_date, final_value),
-                xytext=(10, 0),
-                textcoords='offset points',
-                fontsize=LEGEND_FONTSIZE,
-                fontweight='bold',
-                color=color,
-                va='center'
-            )
-else:
-    # Multi-language plot
-    # Sort languages by max value (descending) so larger areas are drawn first
-    langs_sorted = df.groupby("lang")[value_column].max().sort_values(ascending=False).index
-
-    # Plot each language line with step-style and area fill
-    max_date = df[date_column].max()  # Get the latest date across all languages
-
-    for lang in langs_sorted:
-        subset = df[df["lang"] == lang].sort_values(date_column)
-        color = COLORS.get(lang, None)
-
-        # Extend to max_date if this language ends earlier
-        if subset[date_column].iloc[-1] < max_date:
-            extension = pd.DataFrame({
-                date_column: [max_date],
-                value_column: [subset[value_column].iloc[-1]],
-                "lang": [lang]
-            })
-            subset = pd.concat([subset, extension], ignore_index=True)
-
-        # Step-style line plot
-        ax.plot(
-            subset[date_column],
-            subset[value_column],
-            label=lang.upper(),
-            linewidth=LINE_WIDTH,
-            color=color,
-            drawstyle='steps-post'
-        )
-
-        # Semi-transparent area fill
-        ax.fill_between(
-            subset[date_column],
-            subset[value_column],
-            step='post',
-            alpha=0.3,
-            color=color
-        )
-
-        # Endpoint annotation (configurable)
-        if SHOW_ENDPOINT_VALUES:
-            final_date = subset[date_column].iloc[-1]
-            final_value = subset[value_column].iloc[-1]
-            ax.annotate(
-                f'{int(final_value)}',
-                xy=(final_date, final_value),
-                xytext=(10, 0),
-                textcoords='offset points',
-                fontsize=LEGEND_FONTSIZE,
-                fontweight='bold',
-                color=color,
-                va='center'
+        subset = df.sort_values(date_column)
+        color = colors.get("total", "#CCCCCC")  # Neutral gray default
+        if source.bars:
+            draw_bars(ax, subset[date_column], subset[value_column], color, show_endpoint_values)
+        else:
+            draw_series(
+                ax, subset[date_column], subset[value_column], "Total", color, show_endpoint_values
             )
 
-# Grid styling (Grafana-like)
-ax.grid(color=GRID_COLOR, linestyle="--", linewidth=0.5, alpha=0.6)
+    style_axes(ax, source.title, source.xlabel, source.ylabel)
 
-# Axis styling for dark background with larger fonts
-ax.tick_params(colors=TEXT_COLOR, labelsize=TICK_FONTSIZE)
-ax.xaxis.label.set_color(TEXT_COLOR)
-ax.yaxis.label.set_color(TEXT_COLOR)
-ax.title.set_color(TEXT_COLOR)
-
-# Spine colors
-for spine in ax.spines.values():
-    spine.set_color(GRID_COLOR)
-
-# Cleaner date formatting with MonthLocator
-ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
-ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
-plt.xticks(rotation=30, ha="right")
-
-# Labels and title (English, larger fonts)
-ax.set_xlabel("Date" if args.source == "prs" else "Month", fontsize=LABEL_FONTSIZE)
-if args.source == "releases":
-    ylabel_text = "Accumulated Lines Translated"
-elif args.source == "merged":
-    ylabel_text = "Merged PRs" if is_bar_chart else "Accumulated Merged PRs"
-else:
-    ylabel_text = "Accumulated Contributions"
-ax.set_ylabel(ylabel_text, fontsize=LABEL_FONTSIZE)
-ax.set_title(title_text, fontsize=TITLE_FONTSIZE, fontweight='bold', pad=20)
-
-# Legend (outside plot area to avoid overlap)
-if is_bar_chart:
     # No legend for bar chart
-    pass
-elif is_single_line:
-    # Simplified legend for single-line plot
-    legend = ax.legend(
-        fontsize=LEGEND_FONTSIZE,
-        loc='center left',
-        bbox_to_anchor=(1.01, 0.5),
-        facecolor=BACKGROUND_COLOR,
-        edgecolor=GRID_COLOR
+    if not source.bars:
+        style_legend(ax, "Language" if source.by_language else None)
+
+    # Tight layout with extra padding for cleaner look
+    fig.tight_layout(pad=1.5)
+    return fig
+
+
+def describe(df, source):
+    if source.by_language:
+        return f"Generated plot with {df['lang'].nunique()} languages"
+    if source.bars:
+        return "Generated bar chart for merged PRs (month-over-month)"
+    return "Generated line chart for merged PRs (accumulated)"
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    config = load_config()
+    source = resolve_source(args.source, args.mode, os.environ.get("YEAR", ""))
+    df = load_csv(source)
+
+    fig = render(df, source, config)
+
+    print(f"✓ {describe(df, source)}")
+    date_column = source.date_column
+    print(
+        f"  Date range: {df[date_column].min().strftime('%Y-%m-%d')} "
+        f"to {df[date_column].max().strftime('%Y-%m-%d')}"
     )
-    legend.get_frame().set_alpha(0.8)
-    for text in legend.get_texts():
-        text.set_color(TEXT_COLOR)
-else:
-    legend = ax.legend(
-        title="Language",
-        fontsize=LEGEND_FONTSIZE,
-        title_fontsize=LEGEND_FONTSIZE,
-        loc='center left',
-        bbox_to_anchor=(1.01, 0.5),
-        facecolor=BACKGROUND_COLOR,
-        edgecolor=GRID_COLOR
-    )
-    legend.get_title().set_color(TEXT_COLOR)
-    legend.get_frame().set_alpha(0.8)
-    for text in legend.get_texts():
-        text.set_color(TEXT_COLOR)
 
-# Tight layout with extra padding for cleaner look
-plt.tight_layout(pad=1.5)
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        # Tight bbox keeps the legend, which sits outside the axes, inside the image
+        fig.savefig(args.output, bbox_inches="tight")
+        plt.close(fig)
+        print(f"  Saved: {args.output}")
+    else:
+        plt.show()
 
-# Success message
-if is_bar_chart:
-    print(f"✓ Generated bar chart for merged PRs (month-over-month)")
-elif is_single_line:
-    print(f"✓ Generated line chart for merged PRs (accumulated)")
-else:
-    print(f"✓ Generated plot with {len(df['lang'].unique())} languages")
-print(f"  Date range: {df[date_column].min().strftime('%Y-%m-%d')} to {df[date_column].max().strftime('%Y-%m-%d')}")
 
-# Show the plot
-plt.show()
+if __name__ == "__main__":
+    main()

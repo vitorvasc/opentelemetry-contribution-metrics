@@ -11,13 +11,13 @@
     "clean-lang-contributions": "rm -f data/lang_contributions.json data/lang_accumulated.csv",
     "clean-release-metrics": "rm -f data/release_metrics.json data/release_metrics_accumulated.csv",
     "clean-merged-prs": "rm -f data/merged_prs.json data/merged_prs_accumulated.csv",
-    "setup-check": "bash scripts/check_setup.sh"
+    "setup-check": "bash scripts/check_setup.sh",
+    "test": "node --test \"tests/js/**/*.test.js\""
   },
   "dependencies": {
-    "dotenv": "^17.0.0",
-    "node-fetch": "^3.3.2"
+    "dotenv": "^17.0.0"
   },
   "engines": {
-    "node": ">=22"
+    "node": "^22.18.0 || >=24.2.0"
   }
 }

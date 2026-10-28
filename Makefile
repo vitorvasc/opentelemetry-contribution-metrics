@@ -94,17 +94,42 @@ $(CLEAN_TARGETS): clean-%:
 	@echo "✔ Removed $($*.title) data"
 
 # Every chart the project draws, written headless as a PNG under $(OUT_DIR).
-# Add a chart as one more line: fetch a dataset once, then re-plot it with
-# plot-NAME for any further chart of the same data.
+# Per chart:
+#   chart.NAME  the pipeline target (and variables) that draws $(OUT_DIR)/NAME.png
+# Add a chart: append its name to CHARTS and set chart.NAME. Fetch a dataset
+# once with fetch-NAME, then re-plot it with plot-NAME for any further chart of
+# the same data (and make that chart depend on the one that fetched it).
 OUT_DIR := out
 HEADLESS := MPLBACKEND=Agg
 
+CHARTS := lang-contributions release-metrics merged-prs-accumulated merged-prs-monthly
+chart.lang-contributions := fetch-lang-contributions
+chart.release-metrics := fetch-release-metrics
+chart.merged-prs-accumulated := fetch-merged-prs MODE=accumulated
+chart.merged-prs-monthly := plot-merged-prs MODE=monthly
+CHART_TARGETS := $(addprefix chart-,$(CHARTS))
+
+chart-merged-prs-monthly: chart-merged-prs-accumulated
+
+# A stale chart is removed first, so a PNG in $(OUT_DIR) is always from this run
+$(CHART_TARGETS): chart-%:
+	@rm -f $(OUT_DIR)/$*.png
+	$(HEADLESS) $(MAKE) $(chart.$*) OUTPUT=$(OUT_DIR)/$*.png
+
+# --keep-going tries every chart even when one fails (for example a year with
+# no releases yet), then the target fails and names the charts not written
 charts: check-env ## Fetch every dataset and write all charts to out/
-	$(HEADLESS) $(MAKE) fetch-lang-contributions OUTPUT=$(OUT_DIR)/lang-contributions.png
-	$(HEADLESS) $(MAKE) fetch-release-metrics OUTPUT=$(OUT_DIR)/release-metrics.png
-	$(HEADLESS) $(MAKE) fetch-merged-prs MODE=accumulated OUTPUT=$(OUT_DIR)/merged-prs-accumulated.png
-	$(HEADLESS) $(MAKE) plot-merged-prs MODE=monthly OUTPUT=$(OUT_DIR)/merged-prs-monthly.png
+	@$(MAKE) --keep-going $(CHART_TARGETS) || { \
+		for chart in $(CHARTS); do \
+			[ -f $(OUT_DIR)/$$chart.png ] || echo "Error: chart $$chart was not written" >&2; \
+		done; \
+		exit 1; \
+	}
 	@echo "✔ Charts written to $(OUT_DIR)/"
+
+# Names of the charts, for scripts that check which ones were written
+list-charts:
+	@echo $(CHARTS)
 
 test: ## Run the JavaScript and Python tests
 	npm test
@@ -146,4 +171,4 @@ help: ## Show this help
 	@echo "  make plot-merged-prs OUTPUT=out/merged-prs.png"
 
 .PHONY: $(FETCH_TARGETS) $(PLOT_TARGETS) $(CLEAN_TARGETS)
-.PHONY: charts test lint help check-env setup-check
+.PHONY: $(CHART_TARGETS) charts list-charts test lint help check-env setup-check

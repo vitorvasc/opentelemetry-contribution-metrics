@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { describe, it } from "node:test";
-import fs from "fs";
-import os from "os";
-import path from "path";
-import { fileURLToPath, pathToFileURL } from "url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const stub = pathToFileURL(path.join(here, "support/stub-fetch.js")).href;

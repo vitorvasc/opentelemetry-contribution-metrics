@@ -1,6 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
 import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
 
 export const OWNER = "open-telemetry";
 export const REPO = "opentelemetry.io";
@@ -43,7 +43,7 @@ const SECONDARY_LIMIT_WAIT_MS = 60 * 1000;
  * @returns {string[]} - Language codes
  */
 export function parseLocales(value) {
-  if (!value || !value.trim()) return [...ALL_LOCALES];
+  if (!value?.trim()) return [...ALL_LOCALES];
 
   const locales = [
     ...new Set(

@@ -1,5 +1,4 @@
 import argparse
-import os
 from dataclasses import dataclass, replace
 from pathlib import Path
 
@@ -7,14 +6,16 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import yaml
 
+import coverage_to_csv as coverage_csv
 import lang_contributions_to_csv as lang_csv
 import merged_prs_to_csv as merged_csv
 import release_metrics_to_csv as releases_csv
-from common import fail
+from common import fail, resolve_year, utc_now
 from plotting import (
     create_figure,
     draw_bars,
     draw_by_language,
+    draw_ranked_bars,
     draw_series,
     style_axes,
     style_legend,
@@ -26,7 +27,7 @@ CONFIG_PATH = Path(__file__).parent.parent.parent / "config.yaml"
 @dataclass(frozen=True)
 class Source:
     csv_path: Path
-    date_column: str
+    date_column: str | None  # None for one bar per language, with no date axis
     value_column: str
     title: str
     xlabel: str
@@ -34,6 +35,8 @@ class Source:
     hint: str  # make command that produces the CSV
     by_language: bool = True  # one series per `lang`, otherwise a single total
     bars: bool = False
+    value_format: str = "{:.0f}"  # how values are written on the chart
+    area: bool = True  # fill under a line, for running totals
 
 
 SOURCES = {
@@ -65,10 +68,32 @@ SOURCES = {
         hint=merged_csv.FETCH_HINT,
         by_language=False,
     ),
+    "coverage": Source(
+        csv_path=Path(releases_csv.OUTPUT_FILE),
+        date_column="month",
+        value_column="coverage_pct",
+        title="Translation Coverage by Release Month",
+        xlabel="Month",
+        ylabel="Coverage (% of English pages)",
+        hint=releases_csv.FETCH_HINT,
+        value_format="{:.1f}%",
+        area=False,
+    ),
+    "coverage-snapshot": Source(
+        csv_path=Path(coverage_csv.OUTPUT_FILE),
+        date_column=None,
+        value_column="coverage_pct",
+        title="Translation Coverage by Language",
+        xlabel="Language",
+        ylabel="Coverage (% of English pages)",
+        hint=coverage_csv.FETCH_HINT,
+        bars=True,
+        value_format="{:.1f}%",
+    ),
 }
 
 
-def resolve_source(name, mode, year=""):
+def resolve_source(name, mode, year):
     """Look up a source, applying the plot mode to the merged PRs one."""
     source = SOURCES[name]
     if name != "merged":
@@ -79,7 +104,7 @@ def resolve_source(name, mode, year=""):
     return replace(
         source,
         value_column="count" if monthly else "total",
-        title=f"Merged PRs - {year}, {mode_label}" if year else f"Merged PRs ({mode_label})",
+        title=f"Merged PRs - {year}, {mode_label}",
         ylabel="Merged PRs" if monthly else "Accumulated Merged PRs",
         bars=monthly,
     )
@@ -91,7 +116,11 @@ def parse_args(argv=None):
         "--source",
         choices=list(SOURCES),
         default="prs",
-        help="Data source: 'prs' for PR-based metrics (default), 'releases' for monthly release metrics, 'merged' for total merged PRs",
+        help=(
+            "Data source: 'prs' for PR-based metrics (default), 'releases' for monthly release "
+            "metrics, 'merged' for total merged PRs, 'coverage' for the translation coverage "
+            "of each release, 'coverage-snapshot' for the current coverage of each language"
+        ),
     )
     parser.add_argument(
         "--mode",
@@ -124,7 +153,8 @@ def load_csv(source):
         fail(f"{source.csv_path} not found. Run '{source.hint}' first.")
 
     try:
-        df = pd.read_csv(source.csv_path, parse_dates=[source.date_column])
+        dates = [source.date_column] if source.date_column else []
+        df = pd.read_csv(source.csv_path, parse_dates=dates)
     except (OSError, ValueError) as e:
         fail(f"could not read {source.csv_path}: {e}. Run '{source.hint}' to generate it again.")
 
@@ -140,11 +170,25 @@ def render(df, source, config):
     show_endpoint_values = config.get("show_endpoint_values", False)
     date_column = source.date_column
     value_column = source.value_column
+    title = source.title
 
     fig, ax = create_figure()
 
-    if source.by_language:
-        draw_by_language(ax, df, date_column, value_column, colors, show_endpoint_values)
+    if date_column is None:
+        draw_ranked_bars(ax, df, value_column, colors, show_endpoint_values, source.value_format)
+        if "as_of" in df:
+            title = f"{title} - {df['as_of'].iloc[0]}"
+    elif source.by_language:
+        draw_by_language(
+            ax,
+            df,
+            date_column,
+            value_column,
+            colors,
+            show_endpoint_values,
+            source.value_format,
+            source.area,
+        )
     else:
         subset = df.sort_values(date_column)
         color = colors.get("total", "#CCCCCC")  # Neutral gray default
@@ -155,7 +199,14 @@ def render(df, source, config):
                 ax, subset[date_column], subset[value_column], "Total", color, show_endpoint_values
             )
 
-    style_axes(ax, source.title, source.xlabel, source.ylabel)
+    style_axes(ax, title, source.xlabel, source.ylabel, dates=date_column is not None)
+    if not source.area:
+        # Without a fill to anchor it, a line chart would not start at zero
+        ax.set_ylim(bottom=0)
+        # Room for the endpoint values, which are wider than the counts and
+        # would run under the legend
+        left, right = ax.get_xlim()
+        ax.set_xlim(left, right + 0.1 * (right - left))
 
     # No legend for bar chart
     if not source.bars:
@@ -167,6 +218,8 @@ def render(df, source, config):
 
 
 def describe(df, source):
+    if source.date_column is None:
+        return f"Generated coverage bar chart for {len(df)} languages"
     if source.by_language:
         return f"Generated plot with {df['lang'].nunique()} languages"
     if source.bars:
@@ -177,17 +230,18 @@ def describe(df, source):
 def main(argv=None):
     args = parse_args(argv)
     config = load_config()
-    source = resolve_source(args.source, args.mode, os.environ.get("YEAR", ""))
+    source = resolve_source(args.source, args.mode, resolve_year(utc_now()))
     df = load_csv(source)
 
     fig = render(df, source, config)
 
     print(f"✓ {describe(df, source)}")
     date_column = source.date_column
-    print(
-        f"  Date range: {df[date_column].min().strftime('%Y-%m-%d')} "
-        f"to {df[date_column].max().strftime('%Y-%m-%d')}"
-    )
+    if date_column:
+        print(
+            f"  Date range: {df[date_column].min().strftime('%Y-%m-%d')} "
+            f"to {df[date_column].max().strftime('%Y-%m-%d')}"
+        )
 
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,72 @@
+[
+  {
+    "lang": "bn",
+    "coverage_pct": 3.1,
+    "lang_files": 36,
+    "en_files": 1180,
+    "as_of": "2025-06-15"
+  },
+  {
+    "lang": "es",
+    "coverage_pct": 35.6,
+    "lang_files": 420,
+    "en_files": 1180,
+    "as_of": "2025-06-15"
+  },
+  {
+    "lang": "fr",
+    "coverage_pct": 25.4,
+    "lang_files": 300,
+    "en_files": 1180,
+    "as_of": "2025-06-15"
+  },
+  {
+    "lang": "ja",
+    "coverage_pct": 45.8,
+    "lang_files": 540,
+    "en_files": 1180,
+    "as_of": "2025-06-15"
+  },
+  {
+    "lang": "ko",
+    "coverage_pct": 2.0,
+    "lang_files": 24,
+    "en_files": 1180,
+    "as_of": "2025-06-15"
+  },
+  {
+    "lang": "pl",
+    "coverage_pct": 1.0,
+    "lang_files": 12,
+    "en_files": 1180,
+    "as_of": "2025-06-15"
+  },
+  {
+    "lang": "pt",
+    "coverage_pct": 50.8,
+    "lang_files": 600,
+    "en_files": 1180,
+    "as_of": "2025-06-15"
+  },
+  {
+    "lang": "ro",
+    "coverage_pct": 10.2,
+    "lang_files": 120,
+    "en_files": 1180,
+    "as_of": "2025-06-15"
+  },
+  {
+    "lang": "uk",
+    "coverage_pct": 25.4,
+    "lang_files": 300,
+    "en_files": 1180,
+    "as_of": "2025-06-15"
+  },
+  {
+    "lang": "zh",
+    "coverage_pct": 40.7,
+    "lang_files": 480,
+    "en_files": 1180,
+    "as_of": "2025-06-15"
+  }
+]

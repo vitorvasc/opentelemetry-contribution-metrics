@@ -20,6 +20,7 @@ make fetch-lang-contributions TYPE=prs     # PRs only
 make fetch-release-metrics                 # Release-based metrics
 make fetch-merged-prs                      # Total merged PRs (accumulated line chart)
 make fetch-merged-prs MODE=monthly         # Total merged PRs (bar chart)
+make fetch-coverage                        # Translation coverage per language now (ranked bar chart, one API request)
 
 # With filters
 make fetch-lang-contributions YEAR=2024 LANGS=pt,es TYPE=prs
@@ -29,6 +30,8 @@ make fetch-merged-prs YEAR=2024 MODE=monthly
 make plot-lang-contributions
 make plot-release-metrics
 make plot-merged-prs MODE=monthly
+make plot-coverage
+make plot-coverage-history                 # Coverage of each release, from the release metrics data
 
 # Save a chart instead of opening a window
 make plot-merged-prs OUTPUT=out/merged-prs.png
@@ -48,6 +51,7 @@ make setup-check
 make clean-lang-contributions
 make clean-release-metrics
 make clean-merged-prs
+make clean-coverage
 
 # List targets and variables
 make help
@@ -61,9 +65,9 @@ The project uses a two-stage pipeline: **Node.js for data fetching** → **Pytho
 
 ### Data Flow
 
-1. **Fetch scripts** (`scripts/fetch/*.js`) call GitHub API through `scripts/fetch/lib/github.js` (config from env, client with retries and rate-limit handling, search range splitting under the 1000-result cap, `writeJson`, `run`), output JSON to `data/`
-2. **Processing scripts** (`scripts/processing/*_to_csv.py`) convert JSON to accumulated CSV, using `common.py` (`load_json`, `write_csv`, `fail`, `to_utc_naive`)
-3. **Plot script** (`scripts/processing/plot.py`) reads CSV + `config.yaml`, draws with `plotting.py`, and either displays the chart or saves it with `--output` (`--source {prs,releases,merged}`, `--mode {accumulated,monthly}`)
+1. **Fetch scripts** (`scripts/fetch/*.js`) call GitHub API through `scripts/fetch/lib/github.js` (config from env, client with retries and rate-limit handling, search range splitting under the 1000-result cap, `writeJson`, `run`), output JSON to `data/`. `scripts/fetch/lib/coverage.js` holds the git tree fetch (throws on a truncated tree) and the coverage calculation shared by the release metrics and coverage fetches
+2. **Processing scripts** (`scripts/processing/*_to_csv.py`) convert JSON to accumulated CSV, using `common.py` (`load_json`, `write_csv`, `fail`, `to_utc_naive`, `utc_now`, `resolve_year`)
+3. **Plot script** (`scripts/processing/plot.py`) reads CSV + `config.yaml`, draws with `plotting.py`, and either displays the chart or saves it with `--output` (`--source {prs,releases,merged,coverage,coverage-snapshot}`, `--mode {accumulated,monthly}`). A `Source` with no `date_column` is drawn as ranked bars per language instead of a time series. The default year in a title comes from `resolve_year`, like the CSV steps
 
 Paths under `data/` are relative to the cwd, so run everything from the project root; `config.yaml` is resolved from `__file__`.
 
@@ -78,24 +82,25 @@ Fetch errors (failed requests, exhausted retries or rate limits, incomplete sear
 - CI (`.github/workflows/ci.yml`): lint, test-js, test-python, renovate-config, dependency-review; the `ci` aggregator job is the required check
 - Charts workflow (`.github/workflows/charts.yml`): monthly (day 2, 06:00 UTC; upstream `YYYY.MM` releases can lag their month by weeks), manual (`year`, `langs` inputs) and on pull requests that edit the workflow (`LANGS=pt`, previous year); runs `make charts` and uploads `out/*.png` + `data/*.csv` as an artifact (90 days), no write-back. Inputs go through `env:`, are normalized (`langs` lowercased, spaces stripped) and validated before `make`; an empty year resolves in that step (scheduled: the year of the month that just ended; pull request: previous year; manual: current year) and is exported through `GITHUB_ENV`. A chart without data (e.g. no release yet for the year) does not stop the others: they are still uploaded, the run ends red, and the job summary lists the charts not written. Token is `secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN`: a full run costs about 1400 core + 160 search requests, over the Actions token's ~1000/hour, so without `METRICS_TOKEN` the fetch waits out hourly resets (180-minute timeout). `METRICS_TOKEN` should be a fine-grained PAT with public read-only access or a classic PAT with no scopes, never `public_repo` (it grants write access)
 
-### Three Pipelines
+### Pipelines
 
 - **Language Contributions**: Tracks individual PRs/issues with `lang:*` labels over time
 - **Release Metrics**: Tracks translation lines/pages per monthly release tag (YYYY.MM)
 - **Merged PRs**: Tracks total merged PRs across the repository (monthly accumulation)
+- **Translation Coverage**: `fetch_coverage.js` reads the default branch tree once (`HEAD`, one request) and writes `data/coverage_snapshot.json`; `coverage_to_csv.py` ranks it into `data/coverage_snapshot.csv` (plot source `coverage-snapshot`, ranked bars). Coverage is the `.md` pages under `content/<lang>/` over those under `content/en/`. The **coverage history** (plot source `coverage`, one line per language) is not a pipeline: it plots `coverage_pct` from the release metrics data through the plot-only target `plot-coverage-history`, so it needs `fetch-release-metrics` first and `make charts` runs it after the release metrics chart
 
 ### Key Files
 
 - `config.yaml` - Plot appearance (colors per language, display options)
 - `.env` - GitHub token, optional when `GITHUB_TOKEN` is in the environment (loaded via `dotenv`; the environment wins)
-- `Makefile` - Entry point for all operations; the three pipelines share one set of rules driven by per-pipeline variables
+- `Makefile` - Entry point for all operations; the pipelines share one set of rules driven by per-pipeline variables
 - `out/` - Charts from `make charts` (gitignored, like `data/`)
 
 ## Environment Variables
 
 - `GITHUB_TOKEN` - Required for `fetch-*` and `charts`; from the environment or `.env`
-- `YEAR` - Year to fetch and plot (default when unset or empty: current year, UTC). Honored by all three fetches and by the release metrics and merged PRs CSV steps, which exit 1 with a hint if the data has no such year, so `plot-*` needs the same `YEAR` as the fetch. The lang contributions CSV step ignores it
-- `LANGS` - Comma-separated language codes (bn,es,fr,ja,ko,pl,pt,ro,uk,zh), default all; lang contributions and release metrics fetches
+- `YEAR` - Year to fetch and plot (default when unset or empty: current year, UTC). Honored by the lang contributions, release metrics and merged PRs fetches (the coverage fetch only validates it) and by the release metrics and merged PRs CSV steps, which exit 1 with a hint if the data has no such year, so `plot-*` needs the same `YEAR` as the fetch. The lang contributions CSV step ignores it
+- `LANGS` - Comma-separated language codes (bn,es,fr,ja,ko,pl,pt,ro,uk,zh), default all; lang contributions, release metrics and coverage fetches
 - `TYPE` - Contribution type: `prs`, `issues`, or `both` (default `both`; anything else exits 1). Lang contributions fetch and CSV/plot steps
 - `MODE` - Plot mode for merged PRs: `accumulated` (line, default) or `monthly` (bars). Make only; `plot.py` takes `--mode`
 - `OUTPUT` - Path of a PNG to write instead of opening a window; passed to `plot.py` as `--output`

@@ -1,3 +1,4 @@
+import { fetchTree, summarizeCoverage } from "./lib/coverage.js";
 import {
   config,
   createClient,
@@ -72,30 +73,6 @@ export function summarizePRFiles(files, lang) {
 }
 
 /**
- * Calculate translation coverage from a git tree
- * @param {Array} tree - Entries of a recursive git tree
- * @param {string} lang - Language code
- * @returns {object} - { percentage, lang_files, en_files }
- */
-export function summarizeCoverage(tree, lang) {
-  // Count .md files in content/en/ and content/{lang}/
-  const countMarkdown = (prefix) =>
-    tree.filter(
-      (item) => item.path.startsWith(prefix) && item.path.endsWith(".md"),
-    ).length;
-
-  const enFiles = countMarkdown("content/en/");
-  const langFiles = countMarkdown(`content/${lang}/`);
-  const percentage = enFiles > 0 ? (langFiles / enFiles) * 100 : 0;
-
-  return {
-    percentage: Math.round(percentage * 10) / 10, // Round to 1 decimal
-    lang_files: langFiles,
-    en_files: enFiles,
-  };
-}
-
-/**
  * Fetch all GitHub releases and filter to YYYY.MM pattern
  */
 async function fetchReleases(gh, { owner, repo, year }) {
@@ -106,22 +83,6 @@ async function fetchReleases(gh, { owner, repo, year }) {
 
   console.log(`✓ Found ${monthlyReleases.length} monthly releases`);
   return monthlyReleases;
-}
-
-/**
- * Get the full file tree of a release tag
- */
-async function fetchTree(gh, { owner, repo }, tagName) {
-  const data = await gh.ghFetch(
-    `/repos/${owner}/${repo}/git/trees/${tagName}?recursive=1`,
-  );
-
-  if (data.truncated) {
-    throw new Error(
-      `Git tree for ${tagName} is truncated, coverage would be undercounted`,
-    );
-  }
-  return data.tree;
 }
 
 /**

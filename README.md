@@ -6,10 +6,11 @@ Visualization tool for tracking accumulated contributions — OpenTelemetry.io.
 
 - Fetches contribution data from GitHub API
 - Filters PRs by language labels (bn, es, fr, ja, ko, pl, pt, ro, uk, zh)
-- **Three tracking modes**:
+- **Four tracking modes**:
   - **PR-based**: Track individual PRs over time by language
   - **Release-based**: Measure lines/pages translated per monthly release
   - **Merged PRs**: Track total merged PRs across the entire repository
+  - **Translation coverage**: Show how complete each locale is, now and at each monthly release
 - Calculates translation coverage percentages
 - Generates accumulated contribution metrics over time
 - Creates Grafana-style dark theme visualizations
@@ -90,7 +91,7 @@ environment or `.env`) and the installed dependencies.
 
 ### Using Make (Recommended)
 
-The tool provides three automated pipelines - each command fetches data, converts
+The tool provides four automated pipelines - each command fetches data, converts
 to CSV, and generates visualizations automatically:
 
 #### Language Contributions Pipeline
@@ -159,6 +160,32 @@ make fetch-merged-prs YEAR=2024 MODE=monthly
 make clean-merged-prs
 ```
 
+#### Translation Coverage Pipeline
+
+Show how complete each locale is: the Markdown pages under `content/<lang>/`
+as a percentage of the Markdown pages under `content/en/`.
+
+```bash
+# Current coverage of every language at the HEAD of the default branch
+# (one API request), as a bar chart ranked from most to least covered
+make fetch-coverage
+
+# Only some languages
+make fetch-coverage LANGS=pt,ja
+
+# Coverage of each language at every monthly release of a year, as a line
+# chart, from the release metrics data (see Release Metrics Pipeline)
+make fetch-release-metrics YEAR=2024
+make plot-coverage-history YEAR=2024
+
+# Clean generated data
+make clean-coverage
+```
+
+The history has no fetch of its own: it plots the `coverage_pct` that
+`make fetch-release-metrics` already records for each release, so it needs that
+data first.
+
 #### All Charts
 
 Run every pipeline and write the charts as PNG files to `out/` (needs
@@ -172,7 +199,8 @@ make charts YEAR=2024 LANGS=pt,es
 ```
 
 This writes `out/lang-contributions.png`, `out/release-metrics.png`,
-`out/merged-prs-accumulated.png` and `out/merged-prs-monthly.png`.
+`out/merged-prs-accumulated.png`, `out/merged-prs-monthly.png`,
+`out/coverage-history.png` and `out/coverage-snapshot.png`.
 
 Every chart is attempted even when one fails, for example the release metrics
 of a year with no published release. `make charts` then names the charts it
@@ -196,6 +224,8 @@ Re-process and re-plot the data from the last fetch:
 make plot-lang-contributions
 make plot-release-metrics
 make plot-merged-prs MODE=monthly
+make plot-coverage
+make plot-coverage-history
 ```
 
 Use the same `YEAR` as the fetch, see [Parameters](#parameters).
@@ -231,6 +261,8 @@ Not every pipeline reads every parameter:
 | Language contributions | `YEAR`, `LANGS`, `TYPE` | `TYPE`            |
 | Release metrics        | `YEAR`, `LANGS`         | `YEAR`            |
 | Merged PRs             | `YEAR`                  | `YEAR`, `MODE`    |
+| Translation coverage   | `LANGS`                 | none              |
+| Coverage history       | (release metrics)       | `YEAR`            |
 
 - `OUTPUT` applies to every plot step.
 - Use the same `YEAR` for `plot-*` as for the fetch. The release metrics and
@@ -247,9 +279,11 @@ Not every pipeline reads every parameter:
 npm run fetch-lang-contributions  # Language contributions pipeline
 npm run fetch-release-metrics     # Release metrics pipeline
 npm run fetch-merged-prs          # Merged PRs pipeline
+npm run fetch-coverage            # Translation coverage snapshot pipeline
 npm run clean-lang-contributions  # Clean language data
 npm run clean-release-metrics     # Clean release data
 npm run clean-merged-prs          # Clean merged PRs data
+npm run clean-coverage            # Clean coverage data
 npm run setup-check               # Verify setup
 npm test                          # JavaScript tests
 ```
@@ -279,19 +313,28 @@ python3 scripts/processing/plot.py --source=releases
 node scripts/fetch/fetch_merged_prs.js
 python3 scripts/processing/merged_prs_to_csv.py
 python3 scripts/processing/plot.py --source=merged
+
+# Translation coverage snapshot
+node scripts/fetch/fetch_coverage.js
+python3 scripts/processing/coverage_to_csv.py
+python3 scripts/processing/plot.py --source=coverage-snapshot
+
+# Coverage history (after fetching the release metrics)
+python3 scripts/processing/release_metrics_to_csv.py
+python3 scripts/processing/plot.py --source=coverage
 ```
 
 `plot.py` options:
 
 ```bash
-python3 scripts/processing/plot.py --source {prs,releases,merged}  # default: prs
+python3 scripts/processing/plot.py --source {prs,releases,merged,coverage,coverage-snapshot}  # default: prs
 python3 scripts/processing/plot.py --mode {accumulated,monthly}    # merged PRs only
 python3 scripts/processing/plot.py --output out/chart.png          # save instead of opening a window
 ```
 
-## Understanding the Three Pipelines
+## Understanding the Pipelines
 
-The tool provides three complementary ways to track OpenTelemetry contributions:
+The tool provides four complementary ways to track OpenTelemetry contributions:
 
 ### Language Contributions Pipeline
 
@@ -322,6 +365,20 @@ Tracks **total merged PRs** across the entire repository:
 - **Use case**: See overall repository activity and merged contribution volume
 - **Features**: Monthly date-chunking to handle large volumes, deduplication by PR number
 
+### Translation Coverage Pipeline
+
+Tracks **how complete each locale is**:
+
+- **What it tracks**: Markdown pages in `content/<lang>/` as a percentage of the
+  pages in `content/en/`
+- **Granularity**: A snapshot of the default branch (`HEAD`) read with a single
+  git tree request, plus the per-release history the Release Metrics Pipeline
+  already records
+- **Use case**: See which languages are furthest along and how fast they are
+  catching up with the English content
+- **Data source**: https://github.com/open-telemetry/opentelemetry.io, the
+  recursive git tree of the default branch
+
 ### Metrics Calculated
 
 For each release month and language:
@@ -347,6 +404,13 @@ For each release month and language:
 **Merged PRs:**
 - `data/merged_prs.json` - Raw merged PR data (number, merged_at)
 - `data/merged_prs_accumulated.csv` - Monthly counts with cumulative totals
+
+**Translation Coverage:**
+- `data/coverage_snapshot.json` - Coverage per language at the default branch HEAD
+- `data/coverage_snapshot.csv` - The same, ranked from most to least covered
+
+The coverage history has no files of its own: it plots `coverage_pct` from the
+release metrics files.
 
 **Charts:** `make charts` writes PNG files to `out/`.
 
@@ -422,16 +486,19 @@ opentelemetry-contribution-metrics/
 ├── scripts/
 │   ├── fetch/                         # Data fetching scripts (Node.js)
 │   │   ├── lib/
-│   │   │   └── github.js              # Shared config, GitHub API client (retries, rate limits, search splitting) and JSON output
+│   │   │   ├── github.js              # Shared config, GitHub API client (retries, rate limits, search splitting) and JSON output
+│   │   │   └── coverage.js            # Shared git tree fetch and translation coverage calculation
 │   │   ├── fetch_lang_issues.js       # Fetches PR-based data from GitHub API
 │   │   ├── fetch_release_metrics.js   # Fetches release-based metrics
-│   │   └── fetch_merged_prs.js        # Fetches total merged PRs
+│   │   ├── fetch_merged_prs.js        # Fetches total merged PRs
+│   │   └── fetch_coverage.js          # Fetches the translation coverage snapshot
 │   ├── processing/                    # Data processing scripts (Python)
 │   │   ├── common.py                      # Shared helpers: JSON loading, CSV writing, error exit
 │   │   ├── plotting.py                    # Shared matplotlib styling and drawing helpers
 │   │   ├── lang_contributions_to_csv.py   # Converts PR JSON to accumulated CSV
 │   │   ├── release_metrics_to_csv.py      # Converts release JSON to accumulated CSV
 │   │   ├── merged_prs_to_csv.py           # Converts merged PRs JSON to accumulated CSV
+│   │   ├── coverage_to_csv.py             # Ranks the coverage snapshot JSON into a CSV
 │   │   └── plot.py                        # Generates visualization (supports all modes)
 │   └── check_setup.sh                 # Validates environment setup
 ├── tests/
@@ -445,7 +512,9 @@ opentelemetry-contribution-metrics/
 │   ├── release_metrics.json           # Raw release data (generated)
 │   ├── release_metrics_accumulated.csv # Accumulated release data (generated)
 │   ├── merged_prs.json                # Raw merged PRs data (generated)
-│   └── merged_prs_accumulated.csv     # Accumulated merged PRs data (generated)
+│   ├── merged_prs_accumulated.csv     # Accumulated merged PRs data (generated)
+│   ├── coverage_snapshot.json         # Raw coverage snapshot (generated)
+│   └── coverage_snapshot.csv          # Ranked coverage snapshot (generated)
 ├── out/                               # Charts written by make charts (generated, gitignored)
 ├── config.yaml                        # Plot configuration
 ├── .env.example                       # Environment template
@@ -524,6 +593,8 @@ The `plot.py` script generates a presentation-ready graph:
 - Step-style lines with semi-transparent area fills
 - Large fonts optimized for presentations (1k+ viewers)
 - Accumulated contributions over time per language
+- Translation coverage as percentages: a plain line per language across the
+  release months, or one bar per language ranked from most to least covered
 - Legend outside the plot area
 - Opens in a matplotlib window (zoom and pan with its toolbar), or saves a PNG
   with `OUTPUT=` / `--output`

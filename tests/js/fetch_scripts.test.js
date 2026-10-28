@@ -6,6 +6,7 @@ import path from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import * as coverage from "../../scripts/fetch/fetch_coverage.js";
 import * as langIssues from "../../scripts/fetch/fetch_lang_issues.js";
 import * as mergedPrs from "../../scripts/fetch/fetch_merged_prs.js";
 import * as releaseMetrics from "../../scripts/fetch/fetch_release_metrics.js";
@@ -147,44 +148,49 @@ describe("fetch_release_metrics", () => {
       });
     });
   });
+});
 
-  describe("summarizeCoverage", () => {
-    const tree = [
-      { path: "content/en/docs/a.md" },
-      { path: "content/en/docs/b.md" },
-      { path: "content/en/docs/c.md" },
-      { path: "content/en/docs/img.png" },
-      { path: "content/pt/docs/a.md" },
-      { path: "content/pt/docs/img.png" },
-      { path: "content/ja/docs/a.md" },
-      { path: "content/ja/docs/b.md" },
-    ];
+describe("fetch_coverage", () => {
+  const tree = [
+    { path: "content/en/a.md" },
+    { path: "content/en/b.md" },
+    { path: "content/pt/a.md" },
+  ];
 
-    it("compares markdown file counts with the English content", () => {
-      assert.deepEqual(releaseMetrics.summarizeCoverage(tree, "pt"), {
-        percentage: 33.3,
-        lang_files: 1,
-        en_files: 3,
-      });
-      assert.equal(
-        releaseMetrics.summarizeCoverage(tree, "ja").percentage,
-        66.7,
-      );
-    });
+  it("builds one record per language, in the order given", () => {
+    assert.deepEqual(
+      coverage.buildSnapshot(
+        tree,
+        ["pt", "ko"],
+        new Date("2025-06-15T23:59:59Z"),
+      ),
+      [
+        {
+          lang: "pt",
+          coverage_pct: 50,
+          lang_files: 1,
+          en_files: 2,
+          as_of: "2025-06-15",
+        },
+        {
+          lang: "ko",
+          coverage_pct: 0,
+          lang_files: 0,
+          en_files: 2,
+          as_of: "2025-06-15",
+        },
+      ],
+    );
+  });
 
-    it("reports zero for a language without content or without English files", () => {
-      assert.equal(releaseMetrics.summarizeCoverage(tree, "ko").percentage, 0);
-      assert.deepEqual(releaseMetrics.summarizeCoverage([], "pt"), {
-        percentage: 0,
-        lang_files: 0,
-        en_files: 0,
-      });
-    });
+  it("returns no records without languages", () => {
+    assert.deepEqual(coverage.buildSnapshot(tree, [], new Date()), []);
   });
 });
 
 describe("script entry points", () => {
   const scripts = [
+    "fetch_coverage.js",
     "fetch_lang_issues.js",
     "fetch_merged_prs.js",
     "fetch_release_metrics.js",

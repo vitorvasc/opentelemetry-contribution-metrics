@@ -1,17 +1,11 @@
-import os
-
 import pandas as pd
 
-from common import fail, load_json, to_utc_naive, write_csv
+from common import fail, load_json, resolve_year, to_utc_naive, utc_now, write_csv
 
 INPUT_FILE = "data/merged_prs.json"
 OUTPUT_FILE = "data/merged_prs_accumulated.csv"
 FETCH_HINT = "make fetch-merged-prs"
 PLOT_HINT = "make plot-merged-prs"
-
-
-def utc_now():
-    return pd.Timestamp.now(tz="UTC")
 
 
 def monthly_counts(df, year, today=None):
@@ -42,7 +36,7 @@ def main():
     today = utc_now()
 
     # Year used to fill missing months
-    year = os.environ.get("YEAR", "").strip() or str(today.year)
+    year = resolve_year(today)
     if not (year.isdigit() and len(year) == 4):
         fail(f"YEAR must be a four-digit year, got '{year}'")
 

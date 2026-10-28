@@ -11,7 +11,7 @@ const stub = pathToFileURL(path.join(here, "support/stub-fetch.js")).href;
 const scriptsDir = path.resolve(here, "../../scripts/fetch");
 
 /** Run a fetch script in an empty directory against stubbed API routes. */
-function runScript(script, routes, { staleOutput } = {}) {
+function runScript(script, routes, { staleOutput, env = {} } = {}) {
   const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "fetch-main-"));
   if (staleOutput) {
     fs.mkdirSync(path.join(cwd, "data"));
@@ -29,6 +29,7 @@ function runScript(script, routes, { staleOutput } = {}) {
         GITHUB_TOKEN: "test-token",
         YEAR: "2025",
         LANGS: "pt",
+        ...env,
         STUB_ROUTES: JSON.stringify(routes),
       },
     },
@@ -153,6 +154,101 @@ describe("fetch_release_metrics main", () => {
     assert.equal(result.status, 1);
     assert.match(result.stderr, /truncated/);
     assert.equal(result.read("release_metrics.json"), null);
+  });
+});
+
+describe("fetch_coverage main", () => {
+  const tree = {
+    body: {
+      truncated: false,
+      tree: [
+        { path: "content/en/docs/a.md" },
+        { path: "content/en/docs/b.md" },
+        { path: "content/en/docs/c.md" },
+        { path: "content/en/docs/d.md" },
+        { path: "content/en/docs/logo.png" },
+        { path: "content/pt/docs/a.md" },
+        { path: "content/pt/docs/b.md" },
+        { path: "content/es/docs/a.md" },
+        { path: "content/es/docs/logo.png" },
+      ],
+    },
+  };
+
+  it("records the coverage of every language, zero when it has no content", () => {
+    const result = runScript(
+      "fetch_coverage.js",
+      { tree },
+      { env: { LANGS: "pt,es,ko" } },
+    );
+
+    assert.equal(result.status, 0, result.stderr);
+    const records = JSON.parse(result.read("coverage_snapshot.json"));
+    assert.deepEqual(
+      records.map(({ as_of, ...record }) => record),
+      [
+        { lang: "pt", coverage_pct: 50, lang_files: 2, en_files: 4 },
+        { lang: "es", coverage_pct: 25, lang_files: 1, en_files: 4 },
+        { lang: "ko", coverage_pct: 0, lang_files: 0, en_files: 4 },
+      ],
+    );
+    for (const record of records) {
+      assert.match(record.as_of, /^\d{4}-\d{2}-\d{2}$/);
+    }
+    assert.deepEqual(Object.keys(records[0]), [
+      "lang",
+      "coverage_pct",
+      "lang_files",
+      "en_files",
+      "as_of",
+    ]);
+  });
+
+  it("covers every tracked language when LANGS is unset", () => {
+    const result = runScript(
+      "fetch_coverage.js",
+      { tree },
+      { env: { LANGS: "" } },
+    );
+
+    assert.equal(result.status, 0, result.stderr);
+    const langs = JSON.parse(result.read("coverage_snapshot.json")).map(
+      (record) => record.lang,
+    );
+    assert.deepEqual(langs, [
+      "bn",
+      "es",
+      "fr",
+      "ja",
+      "ko",
+      "pl",
+      "pt",
+      "ro",
+      "uk",
+      "zh",
+    ]);
+  });
+
+  it("aborts when the git tree is truncated, keeping the previous data", () => {
+    const result = runScript(
+      "fetch_coverage.js",
+      { tree: { body: { truncated: true, tree: [] } } },
+      { staleOutput: "coverage_snapshot.json" },
+    );
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /Fatal error.*truncated/s);
+    assert.equal(result.read("coverage_snapshot.json"), '[{"stale":true}]');
+  });
+
+  it("exits non-zero when the tree request fails", () => {
+    const result = runScript("fetch_coverage.js", {
+      tree: { status: 404, body: { message: "Not Found" } },
+    });
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /404/);
+    assert.equal(result.read("coverage_snapshot.json"), null);
   });
 });
 

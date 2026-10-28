@@ -96,6 +96,12 @@ def parse_args(argv=None):
         default="accumulated",
         help="Plot mode for merged PRs: 'accumulated' for cumulative line chart (default), 'monthly' for month-over-month bar chart",
     )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        metavar="PATH",
+        help="Save the chart to PATH (e.g. chart.png) instead of opening a window",
+    )
     return parser.parse_args(argv)
 
 
@@ -117,7 +123,7 @@ def load_csv(source):
     try:
         df = pd.read_csv(source.csv_path, parse_dates=[source.date_column])
     except (OSError, ValueError) as e:
-        fail(f"could not read {source.csv_path}: {e}")
+        fail(f"could not read {source.csv_path}: {e}. Run '{source.hint}' to generate it again.")
 
     if df.empty:
         fail(f"{source.csv_path} has no rows. Run '{source.hint}' first.")
@@ -171,7 +177,7 @@ def main(argv=None):
     source = resolve_source(args.source, args.mode, os.environ.get("YEAR", ""))
     df = load_csv(source)
 
-    render(df, source, config)
+    fig = render(df, source, config)
 
     print(f"✓ {describe(df, source)}")
     date_column = source.date_column
@@ -180,7 +186,14 @@ def main(argv=None):
         f"to {df[date_column].max().strftime('%Y-%m-%d')}"
     )
 
-    plt.show()
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        # Tight bbox keeps the legend, which sits outside the axes, inside the image
+        fig.savefig(args.output, bbox_inches="tight")
+        plt.close(fig)
+        print(f"  Saved: {args.output}")
+    else:
+        plt.show()
 
 
 if __name__ == "__main__":

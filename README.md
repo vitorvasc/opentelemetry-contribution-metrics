@@ -6,13 +6,14 @@ Visualization tool for tracking accumulated contributions — OpenTelemetry.io.
 
 - Fetches contribution data from GitHub API
 - Filters PRs by language labels (bn, es, fr, ja, ko, pl, pt, ro, uk, zh)
-- **Six tracking modes**:
+- **Seven tracking modes**:
   - **PR-based**: Track individual PRs over time by language
   - **Release-based**: Measure lines/pages translated per monthly release
   - **Merged PRs**: Track total merged PRs across the entire repository
   - **Translation coverage**: Show how complete each locale is, now and at each monthly release
   - **PR flow**: Show how fast each locale's PRs are merged and how many stay open
   - **Contributors**: Show how many people contribute to each locale and how many are new
+  - **Translation drift**: Show what share of each locale's pages is out of date with the English source
 - Calculates translation coverage percentages
 - Generates accumulated contribution metrics over time
 - Creates Grafana-style dark theme visualizations
@@ -24,6 +25,9 @@ Visualization tool for tracking accumulated contributions — OpenTelemetry.io.
 - **Node.js `^22.18.0 || >=24.2.0`** (24 is pinned in `.node-version`). The fetch
   scripts use `import.meta.main`, which older 22.x releases lack
 - **Python 3.11+** (3.12 is pinned in `.python-version`)
+- **git 2.44+** for the translation drift pipeline, which clones
+  opentelemetry.io (it reads the clone with `GIT_NO_LAZY_FETCH`, which older
+  git ignores)
 - **GitHub Personal Access Token** that can read public repositories: a
   fine-grained token with "Public repositories (read-only)" access and no
   permissions, or a classic token with no scopes
@@ -251,6 +255,39 @@ month and language, read by both charts) and `data/pr_flow_contributors_year.csv
 logins of the contributors. `make clean-pr-flow` removes them with the rest of
 the PR flow data.
 
+#### Translation Drift Pipeline
+
+Show what share of each locale's translated pages is out of date with the
+English page it translates. It clones opentelemetry.io instead of calling the
+GitHub API, so it needs no token, but it needs git 2.44+.
+
+```bash
+# Clone opentelemetry.io (first run) or update the clone, then draw one 100%
+# bar per language, split into current, drifted, unpinned and orphan pages
+make fetch-drift
+
+# Only some languages
+make fetch-drift LANGS=pt,es
+
+# Clean generated data (keeps the clone)
+make clean-drift
+
+# Remove the clone too
+make clean-drift-cache
+```
+
+The clone lives in `data/.cache/opentelemetry.io` (set `CLONE_DIR` to move
+it). It is a blobless clone with a sparse checkout of the `content/<lang>`
+folders, so it holds the whole commit history but only the translated pages.
+Measured on the full upstream repository: the first run takes about 11 s and
+leaves 37 MB on disk (20 MB of it git history); later runs update the clone in
+about 1 s and take about 2 s in all.
+
+`fetch-drift` only updates (`git reset --hard`) a clone it created itself,
+which it marks with the `contribution-metrics.cache` git config key, and
+`clean-drift-cache` only removes such a clone. Pointing `CLONE_DIR` at your own
+checkout of opentelemetry.io fails instead of touching it.
+
 #### All Charts
 
 Run every pipeline and write the charts as PNG files to `out/` (needs
@@ -266,7 +303,10 @@ make charts YEAR=2024 LANGS=pt,es
 This writes `out/lang-contributions.png`, `out/release-metrics.png`,
 `out/merged-prs-accumulated.png`, `out/merged-prs-monthly.png`,
 `out/coverage-history.png`, `out/coverage-snapshot.png`, `out/time-to-merge.png`,
-`out/backlog.png`, `out/contributors.png` and `out/new-contributors.png`.
+`out/backlog.png`, `out/contributors.png`, `out/new-contributors.png` and
+`out/drift.png`. The drift chart clones or updates opentelemetry.io (see
+[Translation Drift Pipeline](#translation-drift-pipeline)), so `make charts`
+also needs git 2.44+ and network access to github.com.
 
 Every chart is attempted even when one fails, for example the release metrics
 of a year with no published release. `make charts` then names the charts it
@@ -296,6 +336,7 @@ make plot-pr-flow
 make plot-pr-backlog
 make plot-contributors
 make plot-new-contributors
+make plot-drift
 ```
 
 Use the same `YEAR` as the fetch, see [Parameters](#parameters). The PR flow and
@@ -323,6 +364,7 @@ unset or empty uses its default.
 | `TYPE=xxx`    | Contribution type: `prs`, `issues` or `both`               | both               | `TYPE=prs`               |
 | `MODE=xxx`    | Merged PRs chart: `accumulated` (line) or `monthly` (bars) | accumulated        | `MODE=monthly`           |
 | `OUTPUT=PATH` | Save the chart to a file instead of opening a window       | none               | `OUTPUT=out/chart.png`   |
+| `CLONE_DIR=PATH` | Where the drift pipeline keeps its opentelemetry.io clone | `data/.cache/opentelemetry.io` | `CLONE_DIR=/tmp/otel-io` |
 | `PYTHON=path` | Python interpreter used by `make`                          | `python3`          | `PYTHON=venv/bin/python` |
 
 Not every pipeline reads every parameter:
@@ -338,6 +380,7 @@ Not every pipeline reads every parameter:
 | PR backlog             | (PR flow)               | `YEAR`            |
 | Contributors           | (PR flow)               | `YEAR`            |
 | New contributors       | (PR flow)               | `YEAR`            |
+| Translation drift      | `LANGS`, `CLONE_DIR`    | none              |
 
 - `OUTPUT` applies to every plot step.
 - Use the same `YEAR` for `plot-*` as for the fetch. The release metrics and
@@ -365,11 +408,13 @@ npm run fetch-release-metrics     # Release metrics pipeline
 npm run fetch-merged-prs          # Merged PRs pipeline
 npm run fetch-coverage            # Translation coverage snapshot pipeline
 npm run fetch-pr-flow             # PR flow pipeline (time to merge chart)
+npm run fetch-drift               # Translation drift pipeline
 npm run clean-lang-contributions  # Clean language data
 npm run clean-release-metrics     # Clean release data
 npm run clean-merged-prs          # Clean merged PRs data
 npm run clean-coverage            # Clean coverage data
 npm run clean-pr-flow             # Clean PR flow data
+npm run clean-drift               # Clean translation drift data (keeps the clone)
 npm run setup-check               # Verify setup
 npm test                          # JavaScript tests
 ```
@@ -377,7 +422,9 @@ npm test                          # JavaScript tests
 The npm scripts call `python3` and cannot pass `MODE` or `OUTPUT`, so
 `npm run fetch-merged-prs` always plots the accumulated chart in a window.
 `YEAR`, `LANGS` and `TYPE` still work from the environment, for example
-`YEAR=2024 npm run fetch-merged-prs`.
+`YEAR=2024 npm run fetch-merged-prs`. Remove the drift clone with
+`make clean-drift-cache`, which checks that the folder is a clone the pipeline
+made; there is no npm script for it.
 
 ### Direct Script Execution
 
@@ -420,19 +467,24 @@ python3 scripts/processing/plot.py --source=backlog
 python3 scripts/processing/contributors_to_csv.py
 python3 scripts/processing/plot.py --source=contributors
 python3 scripts/processing/plot.py --source=new-contributors
+
+# Translation drift (clones or updates data/.cache/opentelemetry.io)
+node scripts/fetch/fetch_drift.js
+python3 scripts/processing/drift_to_csv.py
+python3 scripts/processing/plot.py --source=drift
 ```
 
 `plot.py` options:
 
 ```bash
-python3 scripts/processing/plot.py --source {prs,releases,merged,coverage,coverage-snapshot,time-to-merge,backlog,contributors,new-contributors}  # default: prs
+python3 scripts/processing/plot.py --source {prs,releases,merged,coverage,coverage-snapshot,time-to-merge,backlog,contributors,new-contributors,drift}  # default: prs
 python3 scripts/processing/plot.py --mode {accumulated,monthly}    # merged PRs only
 python3 scripts/processing/plot.py --output out/chart.png          # save instead of opening a window
 ```
 
 ## Understanding the Pipelines
 
-The tool provides six complementary ways to track OpenTelemetry contributions:
+The tool provides seven complementary ways to track OpenTelemetry contributions:
 
 ### Language Contributions Pipeline
 
@@ -529,6 +581,41 @@ data (no fetch of its own):
   few people, and how many newcomers keep arriving
 - **Cost**: None, it plots the data `make fetch-pr-flow` fetched
 
+### Translation Drift Pipeline
+
+Tracks **how up to date each locale's translated pages are**, with the rules of
+upstream's own drift check, `scripts/i18n/drift.mjs` in opentelemetry.io
+(checked at commit `618851c`):
+
+- **Pin**: A translated page records the English commit it was translated from
+  as `default_lang_commit: <sha>` in its front matter. The first line of the
+  file that matches, in any letter case, is the pin; a `# patched` comment after
+  it is kept in the per-page data but does not change the status
+- **English page**: `content/<lang>/<path>.md` translates
+  `content/en/<path>.md` (the same path, `_index.md` included)
+- **Pages**: Every `.md` file under `content/<lang>/` at the head of the default
+  branch, for the languages in `LANGS`
+- **Status**, decided in this order:
+  - **orphan**: The English page no longer exists (even if the page is pinned)
+  - **unpinned**: The page has no pin
+  - **drifted**: The English page changed since the pin, by
+    `git diff --name-only <pin>...HEAD -- content/en` (three dots: since the
+    common ancestor of the pin and the head)
+  - **current**: The English page has not changed since the pin
+  - **invalid_pin**: git cannot diff the pin, for example a commit that is not
+    in the repository
+- **Matches upstream**: On 2026-10-28 the statuses of all 1384 translated pages
+  matched the `drifted_from_default` values upstream stores in its pages
+- **Chart**: One 100% horizontal bar per language, from the most to the least
+  drifted share, with the number of translated pages next to the language. The
+  segments are current, drifted, unpinned, orphan and invalid pin, in that
+  order and in the `status_colors` of `config.yaml`; a status that no language
+  has is left out of the chart and its legend
+- **Use case**: See which locales need the most catch-up work after English
+  changes, and how large each locale is
+- **Cost**: No API requests. One `git diff` per distinct pin (about 620 for all
+  languages), about 1 s
+
 ### Metrics Calculated
 
 For each release month and language:
@@ -576,6 +663,14 @@ release metrics files.
 The PR backlog and contributor charts have no fetch of their own: they plot the
 PR flow files.
 
+**Translation Drift:**
+- `data/drift.json` - The upstream head commit, the counts per language and
+  status, and every translated page with its status, pin and `patched` flag
+- `data/drift.csv` - The counts per language, with `drifted_pct`, `as_of` and
+  `head_sha`, from the most to the least drifted
+- `data/.cache/opentelemetry.io/` - The clone, kept by `make clean-drift` and
+  removed by `make clean-drift-cache`
+
 **Charts:** `make charts` writes PNG files to `out/`.
 
 ### Example Output
@@ -611,11 +706,20 @@ colors:
   uk: '#14B8A6' # Ukrainian - teal
   zh: '#EF4444' # Chinese - red
   total: '#CCCCCC' # Total merged PRs - neutral gray
+
+# Translation drift statuses, from good to bad
+status_colors:
+  current: '#0CA30C'
+  drifted: '#FAB219'
+  unpinned: '#8A8A85'
+  orphan: '#EC835A'
+  invalid_pin: '#D03B3B'
 ```
 
 ### Environment Variables
 
-`GITHUB_TOKEN` (required for `fetch-*` and `charts`), in a `.env` file:
+`GITHUB_TOKEN` (required for `fetch-*` except `fetch-drift`, and for
+`charts`), in a `.env` file:
 
 ```bash
 GITHUB_TOKEN=your_token_here
@@ -651,12 +755,14 @@ opentelemetry-contribution-metrics/
 │   ├── fetch/                         # Data fetching scripts (Node.js)
 │   │   ├── lib/
 │   │   │   ├── github.js              # Shared config, GitHub API client (retries, rate limits, search splitting) and JSON output
-│   │   │   └── coverage.js            # Shared git tree fetch and translation coverage calculation
+│   │   │   ├── coverage.js            # Shared git tree fetch and translation coverage calculation
+│   │   │   └── drift.js               # Clone handling and translation drift classification
 │   │   ├── fetch_lang_issues.js       # Fetches PR-based data from GitHub API
 │   │   ├── fetch_release_metrics.js   # Fetches release-based metrics
 │   │   ├── fetch_merged_prs.js        # Fetches total merged PRs
 │   │   ├── fetch_coverage.js          # Fetches the translation coverage snapshot
-│   │   └── fetch_pr_flow.js           # Fetches every localization PR, all time
+│   │   ├── fetch_pr_flow.js           # Fetches every localization PR, all time
+│   │   └── fetch_drift.js             # Clones opentelemetry.io and measures translation drift
 │   ├── processing/                    # Data processing scripts (Python)
 │   │   ├── common.py                      # Shared helpers: JSON loading, CSV writing, error exit
 │   │   ├── plotting.py                    # Shared matplotlib styling and drawing helpers
@@ -666,6 +772,7 @@ opentelemetry-contribution-metrics/
 │   │   ├── coverage_to_csv.py             # Ranks the coverage snapshot JSON into a CSV
 │   │   ├── pr_flow_to_csv.py              # Computes time to merge and open backlog CSVs
 │   │   ├── contributors_to_csv.py         # Computes unique and new contributors per language
+│   │   ├── drift_to_csv.py                # Ranks the translation drift per language into a CSV
 │   │   └── plot.py                        # Generates visualization (supports all modes)
 │   └── check_setup.sh                 # Validates environment setup
 ├── tests/
@@ -686,7 +793,10 @@ opentelemetry-contribution-metrics/
 │   ├── pr_flow_time_to_merge.csv      # Time to merge per month and language (generated)
 │   ├── pr_flow_backlog.csv            # Open PRs per month end and language (generated)
 │   ├── pr_flow_contributors.csv       # Contributors per month and language (generated)
-│   └── pr_flow_contributors_year.csv  # Contributors per language for the year (generated)
+│   ├── pr_flow_contributors_year.csv  # Contributors per language for the year (generated)
+│   ├── drift.json                     # Translation drift per page and language (generated)
+│   ├── drift.csv                      # Translation drift per language (generated)
+│   └── .cache/opentelemetry.io/       # Clone used by the drift pipeline (generated)
 ├── out/                               # Charts written by make charts (generated, gitignored)
 ├── config.yaml                        # Plot configuration
 ├── .env.example                       # Environment template
@@ -756,6 +866,10 @@ the GitHub API requests left.
   repositories (read-only)" access and no permissions, or a classic token with
   no scopes. Do not use the `public_repo` scope, it grants write access to
   every public repository.
+- **Clone**: the drift chart clones opentelemetry.io anonymously over HTTPS
+  (no token) into `data/.cache/`, which takes about 11 s and 37 MB. The runner
+  image's git (2.55 on `ubuntu-24.04`) meets the 2.44 minimum. The clone is not
+  uploaded: the artifact holds `data/*.csv` only.
 
 ## Output
 
@@ -771,6 +885,8 @@ The `plot.py` script generates a presentation-ready graph:
   language has no value (no PR merged that month)
 - Contributors: a marked line per language for the unique contributors of each
   month, and bars stacked by language, with the total on top, for the new ones
+- Translation drift: a 100% horizontal bar per language split by page status,
+  each segment wide enough labeled with its share
 - End-of-line values on line charts: labels that would overlap are nudged apart
   vertically (the lines and points do not move), labels that do not overlap
   stay put
@@ -784,8 +900,10 @@ Errors exit with status 1 and an `Error:` message, so `make` never goes on to
 plot empty or zero data:
 
 - **Fetch step**: failed GitHub requests, exhausted rate limits and retries,
-  incomplete search results and a truncated git tree. The script stops before
-  writing, so data from an earlier run stays untouched.
+  incomplete search results, a truncated git tree, and for the drift pipeline a
+  failed clone or git command, git older than 2.44 or a `CLONE_DIR` it did not
+  create. The script stops before writing, so data from an earlier run stays
+  untouched.
 - **CSV and plot steps**: a missing, unreadable or empty JSON/CSV file, no
   records for the requested `YEAR` or `TYPE` (this is also how a fetch that
   found nothing, such as no releases for the year, is caught), and an invalid
@@ -799,6 +917,18 @@ Make sure:
    root contains `GITHUB_TOKEN=your_token_here`
 2. Token can read public repositories (a fine-grained token with "Public
    repositories (read-only)" access, or a classic token with no scopes)
+
+### "git 2.44 or newer is required"
+
+The drift pipeline needs git 2.44+. Check with `git --version` and upgrade git,
+or skip the drift chart by running the other pipelines on their own.
+
+### "... exists but is not a git clone" or "... is a git clone this script did not create"
+
+`fetch-drift` keeps its clone in `CLONE_DIR` (default
+`data/.cache/opentelemetry.io`) and refuses any other folder there, so it never
+resets your own work. Point `CLONE_DIR` at an empty or missing folder, or
+remove the folder yourself.
 
 ### "ModuleNotFoundError: No module named 'pandas'"
 

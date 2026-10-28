@@ -25,11 +25,14 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 // The Search API never returns more than 1000 results for a query
 const SEARCH_RESULT_CAP = 1000;
 const PAGE_SIZE = 100;
+const MAX_SEARCH_PAGES = SEARCH_RESULT_CAP / PAGE_SIZE;
 // The Search API allows 30 requests per minute
 const SEARCH_INTERVAL_MS = 2100;
 
 const MAX_ATTEMPTS = 5;
 const MAX_BACKOFF_MS = 30 * 1000;
+// Five attempts wait 4 + 8 + 16 + 32 seconds in total
+const INCOMPLETE_RESULTS_BACKOFF_MS = 4 * 1000;
 const RESET_BUFFER_MS = 1000;
 // Wait recommended by GitHub when a secondary rate limit has no retry-after
 const SECONDARY_LIMIT_WAIT_MS = 60 * 1000;
@@ -356,7 +359,12 @@ export function createClient({
       if (attempt >= maxAttempts) {
         throw new Error(`Search returned incomplete results for: ${q}`);
       }
-      await wait(backoffMs(attempt), "Search returned incomplete results", attempt);
+      // The search timed out server side; give the index time to recover
+      await wait(
+        INCOMPLETE_RESULTS_BACKOFF_MS * 2 ** (attempt - 1),
+        "Search returned incomplete results",
+        attempt
+      );
     }
   }
 
@@ -381,8 +389,14 @@ export function createClient({
       ];
     }
 
+    // Results may disappear while paging, so never ask past the last
+    // page the API serves (a request beyond it fails with 422)
     const items = [...first.items];
-    for (let page = 2; items.length < first.total_count; page++) {
+    for (
+      let page = 2;
+      items.length < first.total_count && page <= MAX_SEARCH_PAGES;
+      page++
+    ) {
       const next = await searchPage(q, page);
       if (next.items.length === 0) break;
       items.push(...next.items);

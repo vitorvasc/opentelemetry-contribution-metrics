@@ -584,10 +584,33 @@ describe("ghSearchIssues", () => {
     assert.deepEqual(await search(testClient()), [{ id: 1 }]);
 
     mockFetch(() => incomplete);
-    await assert.rejects(
-      search(testClient({ maxAttempts: 2 })),
-      /incomplete results/
-    );
+    const gh = testClient();
+    await assert.rejects(search(gh), /incomplete results/);
+    // Five attempts spread over about a minute
+    assert.deepEqual(gh.sleeps, [4000, 8000, 16_000, 32_000]);
+  });
+
+  it("does not request page 11 when results disappear while paging", async () => {
+    // total_count says 950 results, but one was removed before page 10
+    const calls = mockFetch((url) => {
+      const page = Number(new URL(url).searchParams.get("page"));
+      if (page > 10) {
+        return { status: 422, body: { message: "Only the first 1000 search results are available" } };
+      }
+      const size = page < 10 ? 100 : 49;
+      return {
+        body: {
+          total_count: 950,
+          incomplete_results: false,
+          items: Array.from({ length: size }, (_, k) => ({ id: page * 1000 + k })),
+        },
+      };
+    });
+
+    const items = await search(testClient());
+
+    assert.equal(items.length, 949);
+    assert.equal(calls.length, 10);
   });
 
   it("propagates API errors", async () => {

@@ -1,0 +1,210 @@
+[
+  {
+    "lang": "pt",
+    "number": 201,
+    "title": "[pt] Translate page 201",
+    "created_at": "2025-11-10T08:00:00Z",
+    "closed_at": "2026-01-20T08:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/201",
+    "merged_at": "2026-01-20T08:00:00Z",
+    "author": "maria",
+    "author_type": "User"
+  },
+  {
+    "lang": "pt",
+    "number": 202,
+    "title": "[pt] Translate page 202",
+    "created_at": "2026-01-05T12:00:00Z",
+    "closed_at": "2026-01-05T18:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/202",
+    "merged_at": "2026-01-05T18:00:00Z",
+    "author": "joao",
+    "author_type": "User"
+  },
+  {
+    "lang": "pt",
+    "number": 203,
+    "title": "[pt] Translate page 203",
+    "created_at": "2026-01-10T00:00:00Z",
+    "closed_at": "2026-01-12T00:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/203",
+    "merged_at": "2026-01-12T00:00:00Z",
+    "author": "maria",
+    "author_type": "User"
+  },
+  {
+    "lang": "pt",
+    "number": 204,
+    "title": "[pt] Translate page 204",
+    "created_at": "2026-01-15T00:00:00Z",
+    "closed_at": "2026-01-25T00:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/204",
+    "merged_at": "2026-01-25T00:00:00Z",
+    "author": "ana",
+    "author_type": "User"
+  },
+  {
+    "lang": "pt",
+    "number": 205,
+    "title": "[pt] Translate page 205",
+    "created_at": "2026-01-28T00:00:00Z",
+    "closed_at": "2026-02-10T00:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/205",
+    "merged_at": null,
+    "author": "joao",
+    "author_type": "User"
+  },
+  {
+    "lang": "pt",
+    "number": 206,
+    "title": "[pt] Translate page 206",
+    "created_at": "2025-06-01T00:00:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/206",
+    "merged_at": null,
+    "author": "ana",
+    "author_type": "User"
+  },
+  {
+    "lang": "pt",
+    "number": 207,
+    "title": "[pt] Translate page 207",
+    "created_at": "2026-02-20T00:00:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/207",
+    "merged_at": null,
+    "author": "renovate[bot]",
+    "author_type": "Bot"
+  },
+  {
+    "lang": "pt",
+    "number": 208,
+    "title": "[pt] Translate page 208",
+    "created_at": "2026-01-30T00:00:00Z",
+    "closed_at": "2026-02-01T04:30:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/208",
+    "merged_at": "2026-02-01T04:30:00Z",
+    "author": "maria",
+    "author_type": "User"
+  },
+  {
+    "lang": "pt",
+    "number": 209,
+    "title": "[pt] Translate page 209",
+    "created_at": "2025-03-01T00:00:00Z",
+    "closed_at": "2025-03-11T00:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:pt",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/209",
+    "merged_at": "2025-03-11T00:00:00Z",
+    "author": "joao",
+    "author_type": "User"
+  },
+  {
+    "lang": "es",
+    "number": 210,
+    "title": "[es] Translate page 210",
+    "created_at": "2026-01-03T00:00:00Z",
+    "closed_at": "2026-01-04T12:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/210",
+    "merged_at": "2026-01-04T12:00:00Z",
+    "author": "carlos",
+    "author_type": "User"
+  },
+  {
+    "lang": "es",
+    "number": 211,
+    "title": "[es] Translate page 211",
+    "created_at": "2026-03-01T00:00:00Z",
+    "closed_at": "2026-03-03T00:00:00Z",
+    "state": "closed",
+    "labels": [
+      "lang:es",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/211",
+    "merged_at": "2026-03-03T00:00:00Z",
+    "author": "carlos",
+    "author_type": "User"
+  },
+  {
+    "lang": "es",
+    "number": 212,
+    "title": "[es] Translate page 212",
+    "created_at": "2026-03-14T00:00:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:es",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/212",
+    "merged_at": null,
+    "author": "lucia",
+    "author_type": "User"
+  },
+  {
+    "lang": "ko",
+    "number": 213,
+    "title": "[ko] Translate page 213",
+    "created_at": "2026-02-01T00:00:00Z",
+    "closed_at": null,
+    "state": "open",
+    "labels": [
+      "lang:ko",
+      "area:localization"
+    ],
+    "url": "https://github.com/open-telemetry/opentelemetry.io/pull/213",
+    "merged_at": null,
+    "author": "minho",
+    "author_type": "User"
+  }
+]

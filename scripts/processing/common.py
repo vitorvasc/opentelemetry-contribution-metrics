@@ -30,7 +30,8 @@ def load_json(path, hint):
         fail(f"{path} not found. Run '{hint}' first.")
 
     try:
-        df = pd.read_json(path)
+        # precise_float: the default parser reads 0.3 as 0.30000000000000004
+        df = pd.read_json(path, precise_float=True)
     except (ValueError, OSError) as e:
         fail(f"could not read {path}: {e}. Run '{hint}' to fetch it again.")
 

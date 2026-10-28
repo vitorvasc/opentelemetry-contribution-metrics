@@ -24,6 +24,15 @@ def test_load_json_reads_records(tmp_path):
     assert df["a"].tolist() == [1, 2]
 
 
+def test_load_json_reads_decimals_exactly(tmp_path):
+    path = tmp_path / "data.json"
+    path.write_text('[{"pct": 0.3}, {"pct": 38.2}, {"pct": 0.1}]')
+
+    df = load_json(path, HINT)
+
+    assert df["pct"].tolist() == [0.3, 38.2, 0.1]
+
+
 def test_load_json_missing_file_names_the_make_target(tmp_path, capsys):
     with pytest.raises(SystemExit) as exc:
         load_json(tmp_path / "missing.json", HINT)

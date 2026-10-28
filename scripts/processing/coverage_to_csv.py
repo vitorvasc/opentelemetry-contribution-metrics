@@ -11,11 +11,7 @@ def rank_coverage(df):
 
 
 def main():
-    df = load_json(INPUT_FILE, FETCH_HINT)
-    # read_json parses decimals approximately (0.3 becomes 0.30000000000000004),
-    # and the fetch already rounded them to one decimal
-    df["coverage_pct"] = df["coverage_pct"].round(1)
-    df = rank_coverage(df)
+    df = rank_coverage(load_json(INPUT_FILE, FETCH_HINT))
     write_csv(df, OUTPUT_FILE)
 
     top = df.iloc[0]

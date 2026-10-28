@@ -21,6 +21,7 @@ make fetch-release-metrics                 # Release-based metrics
 make fetch-merged-prs                      # Total merged PRs (accumulated line chart)
 make fetch-merged-prs MODE=monthly         # Total merged PRs (bar chart)
 make fetch-coverage                        # Translation coverage per language now (ranked bar chart, one API request)
+make fetch-pr-flow                         # All-time lang:* PRs, then the median time to merge chart (1 core + ~41 search requests)
 
 # With filters
 make fetch-lang-contributions YEAR=2024 LANGS=pt,es TYPE=prs
@@ -32,6 +33,8 @@ make plot-release-metrics
 make plot-merged-prs MODE=monthly
 make plot-coverage
 make plot-coverage-history                 # Coverage of each release, from the release metrics data
+make plot-pr-flow                          # Median time to merge, from the PR flow data (any YEAR, no fetch)
+make plot-pr-backlog                       # PRs open at each month end, from the PR flow data
 
 # Save a chart instead of opening a window
 make plot-merged-prs OUTPUT=out/merged-prs.png
@@ -52,6 +55,7 @@ make clean-lang-contributions
 make clean-release-metrics
 make clean-merged-prs
 make clean-coverage
+make clean-pr-flow
 
 # List targets and variables
 make help
@@ -67,7 +71,7 @@ The project uses a two-stage pipeline: **Node.js for data fetching** → **Pytho
 
 1. **Fetch scripts** (`scripts/fetch/*.js`) call GitHub API through `scripts/fetch/lib/github.js` (config from env, client with retries and rate-limit handling, search range splitting under the 1000-result cap, `writeJson`, `run`), output JSON to `data/`. `scripts/fetch/lib/coverage.js` holds the git tree fetch (throws on a truncated tree) and the coverage calculation shared by the release metrics and coverage fetches
 2. **Processing scripts** (`scripts/processing/*_to_csv.py`) convert JSON to accumulated CSV, using `common.py` (`load_json`, `write_csv`, `fail`, `to_utc_naive`, `utc_now`, `resolve_year`)
-3. **Plot script** (`scripts/processing/plot.py`) reads CSV + `config.yaml`, draws with `plotting.py`, and either displays the chart or saves it with `--output` (`--source {prs,releases,merged,coverage,coverage-snapshot}`, `--mode {accumulated,monthly}`). A `Source` with no `date_column` is drawn as ranked bars per language instead of a time series. The default year in a title comes from `resolve_year`, like the CSV steps
+3. **Plot script** (`scripts/processing/plot.py`) reads CSV + `config.yaml`, draws with `plotting.py`, and either displays the chart or saves it with `--output` (`--source {prs,releases,merged,coverage,coverage-snapshot,time-to-merge,backlog}`, `--mode {accumulated,monthly}`). A `Source` with no `date_column` is drawn as ranked bars per language instead of a time series. A missing value in a by-language series breaks the line (no zero is drawn), the endpoint label stays on the last value, and a language with no value at all is not drawn. After `tight_layout`, `render` calls `plotting.spread_labels` on line charts: end-of-line labels at the same x that would overlap are nudged apart vertically (least-squares, in order, kept inside the axes, text only; labels that do not overlap are not moved). The default year in a title comes from `resolve_year`, like the CSV steps
 
 Paths under `data/` are relative to the cwd, so run everything from the project root; `config.yaml` is resolved from `__file__`.
 
@@ -80,7 +84,7 @@ Fetch errors (failed requests, exhausted retries or rate limits, incomplete sear
 - `tests/js/` - `node --test`, the fetch library and scripts (fetch is stubbed, no network)
 - `tests/python/` - pytest, fixtures in `tests/python/fixtures/`; `pytest.ini` puts `scripts/processing` on `pythonpath`
 - CI (`.github/workflows/ci.yml`): lint, test-js, test-python, renovate-config, dependency-review; the `ci` aggregator job is the required check
-- Charts workflow (`.github/workflows/charts.yml`): monthly (day 2, 06:00 UTC; upstream `YYYY.MM` releases can lag their month by weeks), manual (`year`, `langs` inputs) and on pull requests that edit the workflow (`LANGS=pt`, previous year); runs `make charts` and uploads `out/*.png` + `data/*.csv` as an artifact (90 days), no write-back. Inputs go through `env:`, are normalized (`langs` lowercased, spaces stripped) and validated before `make`; an empty year resolves in that step (scheduled: the year of the month that just ended; pull request: previous year; manual: current year) and is exported through `GITHUB_ENV`. A chart without data (e.g. no release yet for the year) does not stop the others: they are still uploaded, the run ends red, and the job summary lists the charts not written. Token is `secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN`: a full run costs about 1400 core + 160 search requests, over the Actions token's ~1000/hour, so without `METRICS_TOKEN` the fetch waits out hourly resets (180-minute timeout). `METRICS_TOKEN` should be a fine-grained PAT with public read-only access or a classic PAT with no scopes, never `public_repo` (it grants write access)
+- Charts workflow (`.github/workflows/charts.yml`): monthly (day 2, 06:00 UTC; upstream `YYYY.MM` releases can lag their month by weeks), manual (`year`, `langs` inputs) and on pull requests that edit the workflow (`LANGS=pt`, previous year); runs `make charts` and uploads `out/*.png` + `data/*.csv` as an artifact (90 days), no write-back. Inputs go through `env:`, are normalized (`langs` lowercased, spaces stripped) and validated before `make`; an empty year resolves in that step (scheduled: the year of the month that just ended; pull request: previous year; manual: current year) and is exported through `GITHUB_ENV`. A chart without data (e.g. no release yet for the year) does not stop the others: they are still uploaded, the run ends red, and the job summary lists the charts not written. Token is `secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN`: a full run costs about 1400 core + 200 search requests, over the Actions token's ~1000/hour, so without `METRICS_TOKEN` the fetch waits out hourly resets (180-minute timeout). `METRICS_TOKEN` should be a fine-grained PAT with public read-only access or a classic PAT with no scopes, never `public_repo` (it grants write access)
 
 ### Pipelines
 
@@ -88,6 +92,7 @@ Fetch errors (failed requests, exhausted retries or rate limits, incomplete sear
 - **Release Metrics**: Tracks translation lines/pages per monthly release tag (YYYY.MM)
 - **Merged PRs**: Tracks total merged PRs across the repository (monthly accumulation)
 - **Translation Coverage**: `fetch_coverage.js` reads the default branch tree once (`HEAD`, one request) and writes `data/coverage_snapshot.json`; `coverage_to_csv.py` ranks it into `data/coverage_snapshot.csv` (plot source `coverage-snapshot`, ranked bars). Coverage is the `.md` pages under `content/<lang>/` over those under `content/en/`. The **coverage history** (plot source `coverage`, one line per language) is not a pipeline: it plots `coverage_pct` from the release metrics data through the plot-only target `plot-coverage-history`, so it needs `fetch-release-metrics` first and `make charts` runs it after the release metrics chart
+- **PR Flow**: `fetch_pr_flow.js` fetches every `lang:*` PR since the repository was created (`GET /repos/{owner}/{repo}` for `created_at`, then a Search per language over the whole range, split by `ghSearchIssues` past the 1000-result cap; measured 1 core + 41 search requests for all languages) and writes `data/pr_flow.json`. It reuses `buildQuery` and `toContribution` from `fetch_lang_issues.js`; the record also carries `merged_at`, `author` and `author_type` (null when absent). `pr_flow_to_csv.py` computes and writes each dataset on its own (`--only {time-to-merge,backlog}` limits it to one and fails only if that one has nothing to chart; without it each CSV with data is written, then it exits 1 naming the ones without: no merges in `YEAR`, or `YEAR` not started / before the first PR for the backlog). It writes `data/pr_flow_time_to_merge.csv` (`time_to_merge(df, year, today)`: per month of merge in UTC and language, median, p90 and count of days from `created_at` to `merged_at`, unmerged closed PRs excluded, empty median/p90 and count 0 where nothing merged) and `data/pr_flow_backlog.csv` (`open_backlog(df, year, today)`: PRs created by the month end and not closed after it, the current month ending at `today`, 0 is a real value). Both have a row per month of `YEAR` (up to the current month) and per language in the data. Plot sources `time-to-merge` (median line, y axis symlog: `Source.symlog_ticks` gives the labeled days and `plotting.set_symlog_axis` makes it linear up to the first positive tick) and `backlog`; `fetch-pr-flow`/`plot-pr-flow` draw the first (`--only=time-to-merge`) and the plot-only `plot-pr-backlog` the second (`--only=backlog`). In `make charts` both charts plot after one `pr-flow-data` (fetch only) step instead of one depending on the other, so a year with open PRs but no merges still writes the backlog chart and only the time to merge is reported missing
 
 ### Key Files
 
@@ -99,8 +104,8 @@ Fetch errors (failed requests, exhausted retries or rate limits, incomplete sear
 ## Environment Variables
 
 - `GITHUB_TOKEN` - Required for `fetch-*` and `charts`; from the environment or `.env`
-- `YEAR` - Year to fetch and plot (default when unset or empty: current year, UTC). Honored by the lang contributions, release metrics and merged PRs fetches (the coverage fetch only validates it) and by the release metrics and merged PRs CSV steps, which exit 1 with a hint if the data has no such year, so `plot-*` needs the same `YEAR` as the fetch. The lang contributions CSV step ignores it
-- `LANGS` - Comma-separated language codes (bn,es,fr,ja,ko,pl,pt,ro,uk,zh), default all; lang contributions, release metrics and coverage fetches
+- `YEAR` - Year to fetch and plot (default when unset or empty: current year, UTC). Honored by the lang contributions, release metrics and merged PRs fetches (the coverage and PR flow fetches only validate it; PR flow is all-time) and by the release metrics, merged PRs and PR flow CSV steps, which exit 1 with a hint if the data has no such year, so `plot-*` needs the same `YEAR` as the fetch, except for PR flow, which can plot any year from one fetch. The lang contributions CSV step ignores it
+- `LANGS` - Comma-separated language codes (bn,es,fr,ja,ko,pl,pt,ro,uk,zh), default all; lang contributions, release metrics, coverage and PR flow fetches
 - `TYPE` - Contribution type: `prs`, `issues`, or `both` (default `both`; anything else exits 1). Lang contributions fetch and CSV/plot steps
 - `MODE` - Plot mode for merged PRs: `accumulated` (line, default) or `monthly` (bars). Make only; `plot.py` takes `--mode`
 - `OUTPUT` - Path of a PNG to write instead of opening a window; passed to `plot.py` as `--output`

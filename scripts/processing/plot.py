@@ -9,6 +9,7 @@ import yaml
 import coverage_to_csv as coverage_csv
 import lang_contributions_to_csv as lang_csv
 import merged_prs_to_csv as merged_csv
+import pr_flow_to_csv as pr_flow_csv
 import release_metrics_to_csv as releases_csv
 from common import fail, resolve_year, utc_now
 from plotting import (
@@ -17,6 +18,8 @@ from plotting import (
     draw_by_language,
     draw_ranked_bars,
     draw_series,
+    set_symlog_axis,
+    spread_labels,
     style_axes,
     style_legend,
 )
@@ -37,6 +40,7 @@ class Source:
     bars: bool = False
     value_format: str = "{:.0f}"  # how values are written on the chart
     area: bool = True  # fill under a line, for running totals
+    symlog_ticks: tuple[float, ...] = ()  # symlog y axis labeled at these values, if any
 
 
 SOURCES = {
@@ -90,12 +94,40 @@ SOURCES = {
         bars=True,
         value_format="{:.1f}%",
     ),
+    "time-to-merge": Source(
+        csv_path=Path(pr_flow_csv.TIME_TO_MERGE_FILE),
+        date_column="month",
+        value_column="median_days",
+        title="Median Time to Merge",
+        xlabel="Month of merge",
+        ylabel="Median days from open to merge",
+        hint=pr_flow_csv.FETCH_HINT,
+        value_format="{:.1f}",
+        area=False,
+        # Sub-day medians stay linear, the weeks-long outliers of small languages log
+        symlog_ticks=(0, 1, 2, 5, 10, 30, 90, 180, 365),
+    ),
+    "backlog": Source(
+        csv_path=Path(pr_flow_csv.BACKLOG_FILE),
+        date_column="month",
+        value_column="open_prs",
+        title="Open Localization PRs",
+        xlabel="Month",
+        ylabel="Open PRs at month end",
+        hint=pr_flow_csv.FETCH_HINT,
+        area=False,
+    ),
 }
+
+# Sources whose data depends on the year, so the title names it
+YEAR_TITLED = ("time-to-merge", "backlog")
 
 
 def resolve_source(name, mode, year):
-    """Look up a source, applying the plot mode to the merged PRs one."""
+    """Look up a source, naming the year in the titles that depend on it and applying the plot mode to the merged PRs one."""
     source = SOURCES[name]
+    if name in YEAR_TITLED:
+        return replace(source, title=f"{source.title} - {year}")
     if name != "merged":
         return source
 
@@ -119,7 +151,9 @@ def parse_args(argv=None):
         help=(
             "Data source: 'prs' for PR-based metrics (default), 'releases' for monthly release "
             "metrics, 'merged' for total merged PRs, 'coverage' for the translation coverage "
-            "of each release, 'coverage-snapshot' for the current coverage of each language"
+            "of each release, 'coverage-snapshot' for the current coverage of each language, "
+            "'time-to-merge' for the median days to merge a PR, 'backlog' for the PRs open at "
+            "the end of each month"
         ),
     )
     parser.add_argument(
@@ -207,6 +241,8 @@ def render(df, source, config):
         # would run under the legend
         left, right = ax.get_xlim()
         ax.set_xlim(left, right + 0.1 * (right - left))
+    if source.symlog_ticks:
+        set_symlog_axis(ax, source.symlog_ticks)
 
     # No legend for bar chart
     if not source.bars:
@@ -214,6 +250,9 @@ def render(df, source, config):
 
     # Tight layout with extra padding for cleaner look
     fig.tight_layout(pad=1.5)
+    if date_column is not None and not source.bars:
+        # The layout is final, so the distance between labels can be measured
+        spread_labels(ax, ax.texts)
     return fig
 
 

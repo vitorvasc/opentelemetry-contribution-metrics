@@ -1,6 +1,7 @@
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
+from matplotlib.ticker import NullLocator
 
 # Grafana-style dark theme configuration
 BACKGROUND_COLOR = "#282828"
@@ -27,6 +28,8 @@ def create_figure():
 def draw_series(ax, x, y, label, color=None, annotate=False, value_format="{:.0f}", area=True):
     """Line with an optional endpoint value.
 
+    A missing value in `y` leaves a gap in the line.
+
     With `area` (the default) it is a step line over a semi-transparent fill,
     for running totals. Without it, a plain line with a marker at each date,
     for values measured at each date.
@@ -39,10 +42,12 @@ def draw_series(ax, x, y, label, color=None, annotate=False, value_format="{:.0f
     if area:
         ax.fill_between(x, y, step="post", alpha=0.3, color=color)
 
-    if annotate:
+    # A gap at the end leaves the label on the last point that has a value
+    last = y.last_valid_index()
+    if annotate and last is not None:
         ax.annotate(
-            value_format.format(y.iloc[-1]),
-            xy=(x.iloc[-1], y.iloc[-1]),
+            value_format.format(y.loc[last]),
+            xy=(x.loc[last], y.loc[last]),
             xytext=(10, 0),
             textcoords="offset points",
             fontsize=LEGEND_FONTSIZE,
@@ -105,7 +110,10 @@ def draw_ranked_bars(ax, df, value_column, colors, annotate=False, value_format=
 def draw_by_language(
     ax, df, date_column, value_column, colors, annotate=False, value_format="{:.0f}", area=True
 ):
-    """One series per language, from the `lang` column of `df`."""
+    """One series per language, from the `lang` column of `df`.
+
+    A language without a single value is left out.
+    """
     # Sort languages by max value (descending) so larger areas are drawn first
     langs_sorted = df.groupby("lang")[value_column].max().sort_values(ascending=False).index
 
@@ -116,6 +124,8 @@ def draw_by_language(
         subset = df[df["lang"] == lang].sort_values(date_column)
         x = subset[date_column]
         y = subset[value_column]
+        if y.isna().all():
+            continue
 
         # Extend to max_date if this language ends earlier
         if x.iloc[-1] < max_date:
@@ -143,6 +153,60 @@ def style_axes(ax, title, xlabel, ylabel, dates=True):
     ax.set_xlabel(xlabel, fontsize=LABEL_FONTSIZE, color=TEXT_COLOR)
     ax.set_ylabel(ylabel, fontsize=LABEL_FONTSIZE, color=TEXT_COLOR)
     ax.set_title(title, fontsize=TITLE_FONTSIZE, fontweight="bold", pad=20, color=TEXT_COLOR)
+
+
+def set_symlog_axis(ax, ticks):
+    """Symmetric log y axis from zero, labeled at `ticks`.
+
+    It is linear up to the first positive tick and logarithmic above it, so small
+    values stay readable next to large ones. The axis ends on the first tick that
+    covers the data.
+    """
+    top = ax.get_ylim()[1]
+    top = next((tick for tick in ticks if tick >= top), top)
+
+    ax.set_yscale("symlog", linthresh=min(tick for tick in ticks if tick > 0))
+    ax.set_ylim(0, top)
+    shown = [tick for tick in ticks if tick <= top]
+    ax.set_yticks(shown, labels=[f"{tick:g}" for tick in shown])
+    ax.yaxis.set_minor_locator(NullLocator())
+
+
+def spread_labels(ax, labels, min_gap=1.2 * LEGEND_FONTSIZE):
+    """Nudge the value labels at the same x apart vertically so none overlaps another.
+
+    Each label stays as close as it can to the point it labels, in the same order
+    and inside the axes. `min_gap` is the least distance between the centers of two
+    labels, in points. Only the text moves, never the point. Call it once the layout
+    is final, since the distance is measured on the screen.
+    """
+    scale = ax.figure.dpi / 72
+    gap = min_gap * scale
+    columns = {}
+    for label in labels:
+        columns.setdefault(label.xy[0], []).append(label)
+
+    for column in columns.values():
+        column.sort(key=lambda label: label.xy[1])
+        anchors = [ax.transData.transform((0, label.xy[1]))[1] for label in column]
+
+        # Least-squares positions that keep each label `gap` above the one below:
+        # pool neighbors that collide into a block that shares one position
+        blocks = []
+        for i, anchor in enumerate(anchors):
+            blocks.append([anchor - i * gap, 1])
+            while len(blocks) > 1 and blocks[-2][0] / blocks[-2][1] > blocks[-1][0] / blocks[-1][1]:
+                total, count = blocks.pop()
+                blocks[-1][0] += total
+                blocks[-1][1] += count
+        bottoms = [total / count for total, count in blocks for _ in range(count)]
+
+        low, high = ax.bbox.y0, ax.bbox.y1 - (len(column) - 1) * gap
+        for i, (label, anchor, bottom) in enumerate(zip(column, anchors, bottoms, strict=True)):
+            shift = min(max(bottom, low), high) + i * gap - anchor
+            if abs(shift) > 0.01:
+                dx, dy = label.xyann
+                label.xyann = (dx, dy + shift / scale)
 
 
 def style_legend(ax, title=None):

@@ -1,3 +1,5 @@
+from itertools import pairwise
+
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -5,7 +7,13 @@ import pytest
 from matplotlib.colors import to_rgb
 
 import plot
-from plotting import draw_by_language, draw_ranked_bars, draw_series
+from plotting import (
+    draw_by_language,
+    draw_ranked_bars,
+    draw_series,
+    set_symlog_axis,
+    spread_labels,
+)
 
 PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
 
@@ -21,6 +29,8 @@ SMOKE_CASES = [
     ),
     ("coverage", ["--source", "coverage"], "release_metrics_accumulated.csv"),
     ("coverage-snapshot", ["--source", "coverage-snapshot"], "coverage_snapshot.csv"),
+    ("time-to-merge", ["--source", "time-to-merge"], "pr_flow_time_to_merge.csv"),
+    ("backlog", ["--source", "backlog"], "pr_flow_backlog.csv"),
 ]
 
 
@@ -292,3 +302,280 @@ def test_draw_by_language_extends_shorter_series_to_the_latest_date():
     assert list(lines) == ["PT", "DE"]  # larger series is drawn first
     assert pd.Timestamp(lines["DE"].get_xdata()[-1]) == pd.Timestamp("2025-03-01")
     assert lines["DE"].get_ydata()[-1] == 1
+
+
+def test_draw_series_leaves_a_gap_where_a_value_is_missing():
+    fig, ax = plt.subplots()
+    x = pd.Series(pd.to_datetime(["2025-01-01", "2025-02-01", "2025-03-01"]))
+
+    draw_series(ax, x, pd.Series([1.0, None, 3.0]), "XX", area=False)
+
+    assert pd.isna(ax.lines[0].get_ydata()[1])
+
+
+def test_draw_series_labels_the_last_value_when_the_series_ends_in_a_gap():
+    fig, ax = plt.subplots()
+    x = pd.Series(pd.to_datetime(["2025-01-01", "2025-02-01", "2025-03-01"]))
+
+    draw_series(
+        ax, x, pd.Series([1.0, 2.5, None]), "XX", annotate=True, value_format="{:.1f}", area=False
+    )
+
+    assert [text.get_text() for text in ax.texts] == ["2.5"]
+    assert ax.texts[0].xy[0] == pd.Timestamp("2025-02-01")
+
+
+def test_draw_series_without_any_value_has_nothing_to_label():
+    fig, ax = plt.subplots()
+    x = pd.Series(pd.to_datetime(["2025-01-01", "2025-02-01"]))
+
+    draw_series(ax, x, pd.Series([None, None], dtype=float), "XX", annotate=True, area=False)
+
+    assert len(ax.texts) == 0
+
+
+def test_draw_by_language_skips_a_language_without_any_value():
+    fig, ax = plt.subplots()
+    months = pd.to_datetime(["2025-01-01", "2025-02-01"])
+    df = pd.DataFrame(
+        {
+            "lang": ["pt", "pt", "ko", "ko"],
+            "month": list(months) * 2,
+            "days": [1.0, 2.0, None, None],
+        }
+    )
+
+    draw_by_language(ax, df, "month", "days", colors={}, area=False)
+
+    assert [line.get_label() for line in ax.lines] == ["PT"]
+
+
+def test_pr_flow_titles_name_the_year():
+    assert plot.resolve_source("time-to-merge", "accumulated", "2026").title == (
+        "Median Time to Merge - 2026"
+    )
+    assert plot.resolve_source("backlog", "accumulated", "2025").title == (
+        "Open Localization PRs - 2025"
+    )
+    assert plot.SOURCES["backlog"].title == "Open Localization PRs"
+
+
+def test_time_to_merge_draws_a_line_per_language_with_a_median_and_breaks_at_gaps(stage, workdir):
+    stage("pr_flow_time_to_merge.csv")
+    source = plot.resolve_source("time-to-merge", "accumulated", "2026")
+
+    fig = plot.render(plot.load_csv(source), source, plot.load_config())
+
+    ax = fig.axes[0]
+    lines = {line.get_label(): line for line in ax.lines}
+    # ko never merged a PR, so it has nothing to draw
+    assert list(lines) == ["PT", "ES"]
+    assert pd.isna(lines["ES"].get_ydata()[1])
+    assert lines["PT"].get_ydata()[0] == 6.0
+    assert ax.get_ylim()[0] == 0
+    assert ax.get_title() == "Median Time to Merge - 2026"
+    # Each label sits on the last month with a value: February for PT, March for ES
+    assert [text.get_text() for text in ax.texts] == ["2.2", "2.0"]
+
+
+def test_backlog_draws_every_language_including_zero_counts(stage, workdir):
+    stage("pr_flow_backlog.csv")
+    source = plot.resolve_source("backlog", "accumulated", "2026")
+
+    fig = plot.render(plot.load_csv(source), source, plot.load_config())
+
+    ax = fig.axes[0]
+    lines = {line.get_label(): line for line in ax.lines}
+    assert sorted(lines) == ["ES", "KO", "PT"]
+    assert list(lines["ES"].get_ydata()) == [0, 0, 1]
+    assert ax.get_ylim()[0] == 0
+    assert ax.get_ylabel() == "Open PRs at month end"
+
+
+def test_time_to_merge_uses_a_symlog_axis_labeled_in_days(stage, workdir):
+    stage("pr_flow_time_to_merge.csv")
+    source = plot.resolve_source("time-to-merge", "accumulated", "2026")
+
+    ax = plot.render(plot.load_csv(source), source, plot.load_config()).axes[0]
+
+    assert ax.get_yscale() == "symlog"
+    # The largest median is 6 days, so the axis ends on the next tick, 10
+    assert ax.get_ylim() == (0, 10)
+    assert [tick.get_text() for tick in ax.get_yticklabels()] == ["0", "1", "2", "5", "10"]
+
+
+def test_backlog_and_the_other_charts_keep_a_linear_axis(stage, workdir):
+    stage("pr_flow_backlog.csv")
+    source = plot.resolve_source("backlog", "accumulated", "2026")
+
+    ax = plot.render(plot.load_csv(source), source, plot.load_config()).axes[0]
+
+    assert ax.get_yscale() == "linear"
+    assert all(not s.symlog_ticks for name, s in plot.SOURCES.items() if name != "time-to-merge")
+
+
+def test_set_symlog_axis_is_linear_below_the_first_tick_and_log_above():
+    fig, ax = plt.subplots()
+    ax.plot([0, 1, 2], [0.1, 3, 81])
+
+    set_symlog_axis(ax, (0, 1, 2, 5, 10, 30, 90, 180))
+
+    assert ax.get_yscale() == "symlog"
+    assert ax.get_ylim() == (0, 90)
+    assert [tick.get_text() for tick in ax.get_yticklabels()] == [
+        "0",
+        "1",
+        "2",
+        "5",
+        "10",
+        "30",
+        "90",
+    ]
+    # 0 to 1 is linear, so 0.5 sits halfway; above 1 each factor of 10 is one decade
+    to_axes = ax.transData.transform
+    zero, half, one, ten, hundred = (to_axes((0, y))[1] for y in (0, 0.5, 1, 10, 100))
+    assert half - zero == pytest.approx((one - zero) / 2)
+    assert ten - one == pytest.approx(hundred - ten)
+
+
+def test_set_symlog_axis_keeps_the_top_of_data_beyond_the_last_tick():
+    fig, ax = plt.subplots()
+    ax.plot([0, 1], [0, 500])
+
+    set_symlog_axis(ax, (0, 1, 10, 100))
+
+    assert ax.get_ylim()[1] > 500
+    assert [tick.get_text() for tick in ax.get_yticklabels()] == ["0", "1", "10", "100"]
+
+
+# ---------- end-of-line labels ----------
+
+
+def label_axes(values, x="2025-03-01"):
+    """Axes with one endpoint label per value, all at the same x, like line chart ends."""
+    fig, ax = plt.subplots(figsize=(8, 4), dpi=100)
+    ax.set_ylim(0, 10)
+    xs = pd.Series(pd.to_datetime(["2025-01-01", x]))
+    for value in values:
+        draw_series(ax, xs, pd.Series([value, value], dtype=float), "XX", annotate=True, area=False)
+    fig.tight_layout()
+    return fig, ax
+
+
+def display_y(ax, label):
+    """Vertical position of the center of a label's text, in pixels."""
+    renderer = ax.figure.canvas.get_renderer()
+    box = label.get_window_extent(renderer)
+    return (box.y0 + box.y1) / 2
+
+
+def test_spread_labels_separates_labels_that_overlap():
+    fig, ax = label_axes([5.0, 5.1, 5.2])
+
+    spread_labels(ax, ax.texts)
+
+    centers = sorted(display_y(ax, label) for label in ax.texts)
+    gap = 1.2 * 14 * fig.dpi / 72
+    assert centers[1] - centers[0] == pytest.approx(gap)
+    assert centers[2] - centers[1] == pytest.approx(gap)
+
+
+def test_spread_labels_keeps_the_order_and_centers_the_group_on_its_points():
+    fig, ax = label_axes([5.0, 5.1, 5.2])
+    before = [display_y(ax, label) for label in ax.texts]
+
+    spread_labels(ax, ax.texts)
+
+    after = [display_y(ax, label) for label in ax.texts]
+    assert after == sorted(after)
+    assert sum(after) / 3 == pytest.approx(sum(before) / 3)
+    # The points are not touched, only the text
+    assert [label.xy[1] for label in ax.texts] == [5.0, 5.1, 5.2]
+
+
+def test_spread_labels_leaves_labels_that_are_apart_where_they_are():
+    fig, ax = label_axes([1.0, 5.0, 9.0])
+
+    spread_labels(ax, ax.texts)
+
+    assert [tuple(label.xyann) for label in ax.texts] == [(10, 0)] * 3
+
+
+def test_spread_labels_only_moves_the_nearby_labels():
+    fig, ax = label_axes([1.0, 5.0, 5.1, 9.0])
+
+    spread_labels(ax, ax.texts)
+
+    assert [tuple(label.xyann) for label in ax.texts][0] == (10, 0)
+    assert [tuple(label.xyann) for label in ax.texts][3] == (10, 0)
+    assert tuple(ax.texts[1].xyann) != (10, 0)
+    assert tuple(ax.texts[2].xyann) != (10, 0)
+
+
+def test_spread_labels_keeps_a_group_at_the_bottom_inside_the_axes():
+    fig, ax = label_axes([0.0, 0.0, 0.0, 0.1])
+
+    spread_labels(ax, ax.texts)
+
+    centers = sorted(display_y(ax, label) for label in ax.texts)
+    assert centers[0] >= ax.bbox.y0 - 0.5
+    assert all(b - a > 1.2 * 14 * fig.dpi / 72 - 0.5 for a, b in pairwise(centers))
+
+
+def test_spread_labels_ignores_labels_at_other_x_positions():
+    fig, ax = label_axes([5.0])
+    xs = pd.Series(pd.to_datetime(["2025-01-01", "2025-02-01"]))
+    draw_series(ax, xs, pd.Series([5.0, 5.0]), "YY", annotate=True, area=False)
+
+    spread_labels(ax, ax.texts)
+
+    assert [tuple(label.xyann) for label in ax.texts] == [(10, 0)] * 2
+
+
+def test_spread_labels_works_on_a_symlog_axis():
+    fig, ax = label_axes([0.5, 0.6, 8.0])
+    set_symlog_axis(ax, (0, 1, 10, 30))
+
+    spread_labels(ax, ax.texts)
+
+    centers = sorted(display_y(ax, label) for label in ax.texts)
+    assert centers[1] - centers[0] == pytest.approx(1.2 * 14 * fig.dpi / 72)
+
+
+LINE_CHARTS = [
+    ("prs", "lang_accumulated.csv"),
+    ("releases", "release_metrics_accumulated.csv"),
+    ("coverage", "release_metrics_accumulated.csv"),
+    ("time-to-merge", "pr_flow_time_to_merge.csv"),
+    ("backlog", "pr_flow_backlog.csv"),
+]
+
+
+@pytest.mark.parametrize("name, csv_name", LINE_CHARTS, ids=[c[0] for c in LINE_CHARTS])
+def test_line_charts_do_not_draw_end_labels_over_each_other(name, csv_name, stage, workdir):
+    stage(csv_name)
+    source = plot.resolve_source(name, "accumulated", "2025")
+
+    fig = plot.render(plot.load_csv(source), source, plot.load_config())
+
+    ax = fig.axes[0]
+    renderer = fig.canvas.get_renderer()
+    columns = {}
+    for label in ax.texts:
+        columns.setdefault(label.xy[0], []).append(label.get_window_extent(renderer))
+    assert ax.texts
+    for boxes in columns.values():
+        for i, a in enumerate(boxes):
+            for b in boxes[i + 1 :]:
+                assert a.y0 >= b.y1 - 0.5 or b.y0 >= a.y1 - 0.5
+
+
+def test_backlog_end_labels_stay_on_their_points_with_the_right_values(stage, workdir):
+    stage("pr_flow_backlog.csv")
+    source = plot.resolve_source("backlog", "accumulated", "2026")
+
+    ax = plot.render(plot.load_csv(source), source, plot.load_config()).axes[0]
+
+    # March 2026: es 1, ko 1, pt 2 overlap and are nudged, never moved off their value
+    assert sorted(label.get_text() for label in ax.texts) == ["1", "1", "2"]
+    assert sorted(label.xy[1] for label in ax.texts) == [1, 1, 2]

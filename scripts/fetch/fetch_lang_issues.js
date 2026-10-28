@@ -35,6 +35,9 @@ export function toContribution(lang, item) {
     state: item.state,
     labels: item.labels.map((l) => l.name),
     url: item.html_url,
+    merged_at: item.pull_request?.merged_at ?? null,
+    author: item.user?.login ?? null,
+    author_type: item.user?.type ?? null,
   };
 }
 

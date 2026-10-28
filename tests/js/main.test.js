@@ -31,6 +31,7 @@ function runScript(script, routes, { staleOutput, env = {} } = {}) {
         LANGS: "pt",
         ...env,
         STUB_ROUTES: JSON.stringify(routes),
+        STUB_LOG: path.join(cwd, "requests.log"),
       },
     },
   );
@@ -39,7 +40,19 @@ function runScript(script, routes, { staleOutput, env = {} } = {}) {
     const file = path.join(cwd, "data", name);
     return fs.existsSync(file) ? fs.readFileSync(file, "utf8") : null;
   };
-  return { ...result, read };
+  // Search queries requested by the script, decoded
+  const searches = () => {
+    const log = path.join(cwd, "requests.log");
+    if (!fs.existsSync(log)) return [];
+    return fs
+      .readFileSync(log, "utf8")
+      .split("\n")
+      .filter(Boolean)
+      .map((line) => new URL(line))
+      .filter((url) => url.pathname.startsWith("/search/"))
+      .map((url) => url.searchParams.get("q"));
+  };
+  return { ...result, read, searches };
 }
 
 const emptySearch = {
@@ -269,6 +282,8 @@ describe("fetch_lang_issues main", () => {
               state: "open",
               labels: [{ name: "lang:pt" }],
               html_url: "https://github.com/o/r/pull/7",
+              pull_request: { merged_at: "2025-01-03T00:00:00Z" },
+              user: { login: "maria", type: "User" },
             },
           ],
         },
@@ -286,6 +301,9 @@ describe("fetch_lang_issues main", () => {
         state: "open",
         labels: ["lang:pt"],
         url: "https://github.com/o/r/pull/7",
+        merged_at: "2025-01-03T00:00:00Z",
+        author: "maria",
+        author_type: "User",
       },
     ]);
   });
@@ -297,5 +315,107 @@ describe("fetch_lang_issues main", () => {
 
     assert.equal(result.status, 1);
     assert.equal(result.read("lang_contributions.json"), null);
+  });
+});
+
+describe("fetch_pr_flow main", () => {
+  const repo = { body: { created_at: "2019-05-01T10:00:00Z" } };
+  const item = {
+    id: 11,
+    number: 7,
+    title: "Translate",
+    created_at: "2021-03-04T09:00:00Z",
+    closed_at: "2021-03-09T09:00:00Z",
+    state: "closed",
+    labels: [{ name: "lang:pt" }],
+    html_url: "https://github.com/o/r/pull/7",
+    pull_request: { merged_at: "2021-03-09T09:00:00Z" },
+    user: { login: "maria", type: "User" },
+  };
+  const search = {
+    body: { total_count: 1, incomplete_results: false, items: [item] },
+  };
+
+  it("fetches every PR of each language since the repository was created", () => {
+    const result = runScript(
+      "fetch_pr_flow.js",
+      { repo, search },
+      { env: { LANGS: "pt,es" } },
+    );
+
+    assert.equal(result.status, 0, result.stderr);
+    const records = JSON.parse(result.read("pr_flow.json"));
+    assert.deepEqual(
+      records.map((record) => record.lang),
+      ["pt", "es"],
+    );
+    assert.deepEqual(records[0], {
+      lang: "pt",
+      number: 7,
+      title: "Translate",
+      created_at: "2021-03-04T09:00:00Z",
+      closed_at: "2021-03-09T09:00:00Z",
+      state: "closed",
+      labels: ["lang:pt"],
+      url: "https://github.com/o/r/pull/7",
+      merged_at: "2021-03-09T09:00:00Z",
+      author: "maria",
+      author_type: "User",
+    });
+
+    const [pt, es] = result.searches();
+    assert.match(
+      pt,
+      /^repo:open-telemetry\/opentelemetry\.io label:"lang:pt" is:pr created:2019-05-01\.\.\d{4}-\d{2}-\d{2}$/,
+    );
+    assert.match(es, /label:"lang:es" is:pr created:2019-05-01\.\./);
+  });
+
+  it("ignores YEAR and TYPE, which only apply to the other pipelines", () => {
+    const result = runScript(
+      "fetch_pr_flow.js",
+      { repo, search },
+      { env: { YEAR: "2022", TYPE: "issues" } },
+    );
+
+    assert.equal(result.status, 0, result.stderr);
+    const [query] = result.searches();
+    assert.match(query, /is:pr created:2019-05-01\.\./);
+    assert.doesNotMatch(query, /2022|is:issue/);
+  });
+
+  it("exits non-zero when the repository cannot be read, keeping the previous data", () => {
+    const result = runScript(
+      "fetch_pr_flow.js",
+      { repo: { status: 404, body: { message: "Not Found" } }, search },
+      { staleOutput: "pr_flow.json" },
+    );
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /Fatal error.*404/s);
+    assert.deepEqual(result.searches(), []);
+    assert.equal(result.read("pr_flow.json"), '[{"stale":true}]');
+  });
+
+  it("exits non-zero when the repository has no creation date", () => {
+    const result = runScript("fetch_pr_flow.js", {
+      repo: { body: {} },
+      search,
+    });
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /Invalid repository creation date/);
+    assert.equal(result.read("pr_flow.json"), null);
+  });
+
+  it("exits non-zero when the search fails", () => {
+    const result = runScript("fetch_pr_flow.js", {
+      repo,
+      search: { status: 422, body: { message: "Validation Failed" } },
+    });
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /422/);
+    assert.equal(result.read("pr_flow.json"), null);
   });
 });

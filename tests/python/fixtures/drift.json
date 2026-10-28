@@ -1,0 +1,25 @@
+{
+  "repo": "open-telemetry/opentelemetry.io",
+  "head": {
+    "sha": "618851c2c99a69fa925a1578ba0d83398a828c23",
+    "committed_at": "2026-10-28T15:48:25Z"
+  },
+  "generated_at": "2026-10-28T18:17:04.512Z",
+  "en_pages": 10,
+  "languages": [
+    { "lang": "es", "pages": 6, "current": 2, "drifted": 3, "unpinned": 0, "orphan": 1, "invalid_pin": 0 },
+    { "lang": "ja", "pages": 8, "current": 7, "drifted": 1, "unpinned": 0, "orphan": 0, "invalid_pin": 0 },
+    { "lang": "ko", "pages": 0, "current": 0, "drifted": 0, "unpinned": 0, "orphan": 0, "invalid_pin": 0 },
+    { "lang": "pt", "pages": 4, "current": 1, "drifted": 2, "unpinned": 1, "orphan": 0, "invalid_pin": 0 },
+    { "lang": "zh", "pages": 5, "current": 1, "drifted": 1, "unpinned": 0, "orphan": 0, "invalid_pin": 3 }
+  ],
+  "pages": [
+    {
+      "lang": "pt",
+      "path": "content/pt/docs/_index.md",
+      "status": "drifted",
+      "pinned_sha": "4fbdd4e54ac36d570cf3ac73b5dd3446f03d33ec",
+      "patched": false
+    }
+  ]
+}

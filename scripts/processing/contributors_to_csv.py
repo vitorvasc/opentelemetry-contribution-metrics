@@ -1,7 +1,6 @@
 import pandas as pd
 
-from common import fail, load_json, resolve_year, to_utc_naive, utc_now, write_csv
-from pr_flow_to_csv import window_months
+from common import fail, load_json, resolve_year, to_utc_naive, utc_now, window_months, write_csv
 
 INPUT_FILE = "data/pr_flow.json"
 MONTHLY_FILE = "data/pr_flow_contributors.csv"

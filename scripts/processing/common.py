@@ -51,3 +51,15 @@ def write_csv(df, path):
 def to_utc_naive(series):
     """Convert timestamps (naive, UTC or any offset) to naive UTC datetimes."""
     return pd.to_datetime(series, utc=True).dt.tz_localize(None)
+
+
+def window_months(year, today):
+    """The months of `year`, up to the month of `today` when `year` is the current one.
+
+    A year after `today` has no months, so its charts are empty rather than flat.
+    """
+    year = int(year)
+    if year > today.year:
+        return []
+    last_month = today.month if year == today.year else 12
+    return [pd.Period(year=year, month=month, freq="M") for month in range(1, last_month + 1)]

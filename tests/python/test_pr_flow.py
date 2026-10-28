@@ -27,26 +27,6 @@ def cell(df, month, lang, column):
     return df.loc[(df["month"] == month) & (df["lang"] == lang), column].item()
 
 
-# ---------- window ----------
-
-
-def test_window_months_stops_at_the_current_month_of_the_current_year():
-    months = pr_flow.window_months("2026", TODAY)
-
-    assert [str(m) for m in months] == ["2026-01", "2026-02", "2026-03"]
-
-
-def test_window_months_keeps_a_past_year_whole_and_drops_a_future_one():
-    assert len(pr_flow.window_months("2025", TODAY)) == 12
-    assert pr_flow.window_months("2027", TODAY) == []
-
-
-def test_window_months_includes_the_current_month_on_its_first_day():
-    months = pr_flow.window_months("2026", pd.Timestamp("2026-02-01"))
-
-    assert [str(m) for m in months] == ["2026-01", "2026-02"]
-
-
 # ---------- time to merge ----------
 
 

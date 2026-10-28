@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Important Guidelines
 
 - **Always document new pipelines**: When creating a new data pipeline or flow, update both `README.md` and this file (`CLAUDE.md`) with the new commands, architecture details, and file references.
-- **Adding a pipeline or chart**: set the pipeline's variables (`<name>.title`, `.fetch`, `.csv`, `.plot`, `.files`) and add its name to `PIPELINES` in the `Makefile`, which generates `fetch-<name>`, `plot-<name>` and `clean-<name>`. Add one line per chart to the `charts` target. Cover new logic with tests.
+- **Adding a pipeline or chart**: set the pipeline's variables (`<name>.title`, `.fetch`, `.csv`, `.plot`, `.files`) and add its name to `PIPELINES` in the `Makefile`, which generates `fetch-<name>`, `plot-<name>` and `clean-<name>`. Add a chart by appending its name to `CHARTS` and setting `chart.<name>` in the `Makefile` (a chart that re-plots another chart's data also depends on it); `make charts` attempts every chart and fails at the end if any was not written. Cover new logic with tests.
 
 ## Project Overview
 
@@ -76,6 +76,7 @@ Fetch errors (failed requests, exhausted retries or rate limits, incomplete sear
 - `tests/js/` - `node --test`, the fetch library and scripts (fetch is stubbed, no network)
 - `tests/python/` - pytest, fixtures in `tests/python/fixtures/`; `pytest.ini` puts `scripts/processing` on `pythonpath`
 - CI (`.github/workflows/ci.yml`): lint, test-js, test-python, renovate-config, dependency-review; the `ci` aggregator job is the required check
+- Charts workflow (`.github/workflows/charts.yml`): monthly (day 2, 06:00 UTC; upstream `YYYY.MM` releases can lag their month by weeks), manual (`year`, `langs` inputs) and on pull requests that edit the workflow (`LANGS=pt`, previous year); runs `make charts` and uploads `out/*.png` + `data/*.csv` as an artifact (90 days), no write-back. Inputs go through `env:`, are normalized (`langs` lowercased, spaces stripped) and validated before `make`; an empty year resolves in that step (scheduled: the year of the month that just ended; pull request: previous year; manual: current year) and is exported through `GITHUB_ENV`. A chart without data (e.g. no release yet for the year) does not stop the others: they are still uploaded, the run ends red, and the job summary lists the charts not written. Token is `secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN`: a full run costs about 1400 core + 160 search requests, over the Actions token's ~1000/hour, so without `METRICS_TOKEN` the fetch waits out hourly resets (180-minute timeout). `METRICS_TOKEN` should be a fine-grained PAT with public read-only access or a classic PAT with no scopes, never `public_repo` (it grants write access)
 
 ### Three Pipelines
 

@@ -1,0 +1,162 @@
+name: Charts
+
+on:
+  schedule:
+    # Upstream YYYY.MM releases can be published weeks after their month, so
+    # a run charts the releases published so far
+    - cron: "0 6 2 * *"
+  workflow_dispatch:
+    inputs:
+      year:
+        description: Year to fetch and plot, four digits (empty for the current year)
+        required: false
+        type: string
+      langs:
+        description: Comma-separated language codes such as pt,es (empty for all)
+        required: false
+        type: string
+  pull_request:
+    paths:
+      - .github/workflows/charts.yml
+
+permissions:
+  contents: read
+
+# Scheduled and manual runs share one group and a run in progress is never
+# cancelled. A group keeps only one pending run, so a newer queued run replaces
+# an older queued one. Each pull request has its own group, so its runs cannot
+# stop a full regeneration that is waiting out a rate limit.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  charts:
+    runs-on: ubuntu-24.04
+    # With the Actions token a run can wait up to an hour for each rate limit
+    # reset, and may need two of them
+    timeout-minutes: 180
+    env:
+      EVENT_NAME: ${{ github.event_name }}
+      INPUT_YEAR: ${{ inputs.year }}
+      # Pull requests only validate the workflow, so they fetch one language
+      INPUT_LANGS: ${{ github.event_name == 'pull_request' && 'pt' || inputs.langs }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Resolve and validate YEAR and LANGS
+        run: |
+          year="$INPUT_YEAR"
+          langs="${INPUT_LANGS,,}"
+          langs="${langs//[[:blank:]]/}"
+
+          if [[ -z "$year" ]]; then
+            case "$EVENT_NAME" in
+              # The year of the month that just ended, so the run on January 2
+              # covers the previous year, not the new one
+              schedule) year="$(date -u -d "$(date -u +%Y-%m-01) -1 day" +%Y)" ;;
+              # A year whose releases are all published, so the run does not
+              # depend on how far the current year has got
+              pull_request) year="$(date -u -d '-1 year' +%Y)" ;;
+              *) year="$(date -u +%Y)" ;;
+            esac
+          fi
+
+          if [[ -n "$year" && ! "$year" =~ ^[0-9]{4}$ ]]; then
+            echo "::error::year must be empty or four digits, got '$year'"
+            exit 1
+          fi
+          if [[ -n "$langs" && ! "$langs" =~ ^[a-z]{2,5}(,[a-z]{2,5})*$ ]]; then
+            echo "::error::langs must be empty or comma-separated codes of 2-5 letters such as pt,es, got '$langs'"
+            exit 1
+          fi
+
+          {
+            echo "YEAR=$year"
+            echo "LANGS=$langs"
+          } >> "$GITHUB_ENV"
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - run: npm ci
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: .python-version
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - run: pip install -r requirements.txt
+
+      # The Actions token reads public repositories but is limited to about
+      # 1000 core requests per hour; a METRICS_TOKEN secret raises it to 5000.
+      - name: Generate the charts
+        run: make charts
+        env:
+          GITHUB_TOKEN: ${{ secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN }}
+          MPLBACKEND: Agg
+
+      - name: Upload the charts and their data
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: charts-${{ env.YEAR || 'unknown' }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            out/*.png
+            data/*.csv
+          retention-days: 90
+          if-no-files-found: warn
+
+      - name: Write the job summary
+        if: always()
+        run: |
+          shopt -s nullglob
+          files=(out/*.png data/*.csv)
+          read -ra charts < <(make -s list-charts 2>/dev/null) || true
+          missing=()
+          for chart in "${charts[@]}"; do
+            [ -f "out/$chart.png" ] || missing+=("$chart")
+          done
+          {
+            echo "## Charts"
+            echo
+            echo "Year: \`${YEAR:-unknown}\`, languages: \`${LANGS:-all}\`"
+            echo
+            if [ "${#files[@]}" -eq 0 ]; then
+              echo "No files were written."
+            else
+              for file in "${files[@]}"; do
+                echo "- \`$file\`"
+              done
+            fi
+            if [ "${#missing[@]}" -gt 0 ]; then
+              echo
+              echo "### Charts not written"
+              echo
+              for chart in "${missing[@]}"; do
+                echo "- \`$chart\`"
+              done
+              if [ "$(jq length data/release_metrics.json 2>/dev/null)" = "0" ]; then
+                echo
+                echo "No releases are published yet for $YEAR, so there is no release data to chart."
+              fi
+            fi
+            echo
+            echo "### GitHub API requests left"
+            echo
+            if limits="$(curl -fsS \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/rate_limit)"; then
+              jq -r '.resources | "- core: \(.core.remaining) of \(.core.limit)", "- search: \(.search.remaining) of \(.search.limit)"' <<<"$limits"
+            else
+              echo "- unavailable"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+        env:
+          GITHUB_TOKEN: ${{ secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN }}

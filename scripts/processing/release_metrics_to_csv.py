@@ -1,45 +1,34 @@
-import pandas as pd
-import sys
-from pathlib import Path
+from common import load_json, write_csv
 
-# Check if input file exists
-input_file = Path("data/release_metrics.json")
-if not input_file.exists():
-    print(f"Error: {input_file} not found. Run 'make fetch-releases' first.")
-    sys.exit(1)
+INPUT_FILE = "data/release_metrics.json"
+OUTPUT_FILE = "data/release_metrics_accumulated.csv"
+FETCH_HINT = "make fetch-release-metrics"
 
-# Read JSON with error handling
-try:
-    df = pd.read_json(input_file)
-except Exception as e:
-    print(f"Error reading JSON: {e}")
-    sys.exit(1)
 
-if df.empty:
-    print("Warning: No data found in release_metrics.json")
-    sys.exit(0)
+def accumulate_releases(df):
+    """Add per-language running totals and month-over-month coverage change."""
+    df = df.sort_values(["lang", "month"]).copy()
+    by_lang = df.groupby("lang")
 
-# Sort by language and month
-df = df.sort_values(["lang", "month"])
+    df["total_lines"] = by_lang["lines_added"].cumsum()
+    df["total_pages"] = by_lang["pages_added"].cumsum()
 
-# Calculate accumulated totals per language
-df["total_lines"] = df.groupby("lang")["lines_added"].cumsum()
-df["total_pages"] = df.groupby("lang")["pages_added"].cumsum()
+    # The first month of each language has no previous month, so its change is 0
+    df["coverage_change"] = by_lang["coverage_pct"].diff().fillna(0).round(1)
+    return df
 
-# Calculate month-over-month coverage change
-df["coverage_change"] = df.groupby("lang")["coverage_pct"].diff()
 
-# Fill NaN coverage_change for first month of each language with 0
-df["coverage_change"] = df["coverage_change"].fillna(0)
+def main():
+    df = load_json(INPUT_FILE, FETCH_HINT)
 
-# Round coverage_change to 1 decimal place
-df["coverage_change"] = df["coverage_change"].round(1)
+    df = accumulate_releases(df)
+    write_csv(df, OUTPUT_FILE)
 
-# Write output
-output_file = Path("data/release_metrics_accumulated.csv")
-df.to_csv(output_file, index=False)
+    print(f"✓ Successfully converted {len(df)} records to accumulated CSV")
+    print(f"  Output: {OUTPUT_FILE}")
+    print(f"  Languages: {', '.join(sorted(df['lang'].unique()))}")
+    print(f"  Months: {df['month'].min()} to {df['month'].max()}")
 
-print(f"✓ Successfully converted {len(df)} records to accumulated CSV")
-print(f"  Output: {output_file}")
-print(f"  Languages: {', '.join(sorted(df['lang'].unique()))}")
-print(f"  Months: {df['month'].min()} to {df['month'].max()}")
+
+if __name__ == "__main__":
+    main()

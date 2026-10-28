@@ -1,52 +1,41 @@
-import pandas as pd
-import sys
 import os
-from pathlib import Path
 
-# Check if input file exists
-input_file = Path("data/merged_prs.json")
-if not input_file.exists():
-    print(f"Error: {input_file} not found. Run 'make fetch-merged-prs' first.")
-    sys.exit(1)
+import pandas as pd
 
-# Read JSON with error handling
-try:
-    df = pd.read_json(input_file)
-except Exception as e:
-    print(f"Error reading JSON: {e}")
-    sys.exit(1)
+from common import load_json, to_utc_naive, write_csv
 
-if df.empty:
-    print("Warning: No data found in merged_prs.json")
-    sys.exit(0)
+INPUT_FILE = "data/merged_prs.json"
+OUTPUT_FILE = "data/merged_prs_accumulated.csv"
+FETCH_HINT = "make fetch-merged-prs"
 
-# Extract month from merged_at
-df["month"] = pd.to_datetime(df["merged_at"]).dt.to_period("M").astype(str)
 
-# Group by month and count PRs
-monthly_counts = df.groupby("month").size().reset_index(name="count")
+def monthly_counts(df, year):
+    """One row per month of `year` with the PR count and the running total."""
+    # Extract month from merged_at
+    months = to_utc_naive(df["merged_at"]).dt.strftime("%Y-%m")
+    counts = months.value_counts()
 
-# Get YEAR from environment variable for filling missing months
-year = os.environ.get("YEAR", str(pd.Timestamp.now().year))
+    # Include months with zero PRs
+    result = pd.DataFrame({"month": [f"{year}-{m:02d}" for m in range(1, 13)]})
+    result["count"] = result["month"].map(counts).fillna(0).astype(int)
+    result["total"] = result["count"].cumsum()
+    return result
 
-# Generate all months for the year
-all_months = [f"{year}-{str(m).zfill(2)}" for m in range(1, 13)]
 
-# Create a dataframe with all months
-all_months_df = pd.DataFrame({"month": all_months})
+def main():
+    df = load_json(INPUT_FILE, FETCH_HINT)
 
-# Merge to include months with zero PRs
-monthly_counts = all_months_df.merge(monthly_counts, on="month", how="left")
-monthly_counts["count"] = monthly_counts["count"].fillna(0).astype(int)
+    # Year used to fill missing months
+    year = os.environ.get("YEAR", str(pd.Timestamp.now().year))
 
-# Calculate cumulative total
-monthly_counts["total"] = monthly_counts["count"].cumsum()
+    result = monthly_counts(df, year)
+    write_csv(result, OUTPUT_FILE)
 
-# Write output
-output_file = Path("data/merged_prs_accumulated.csv")
-monthly_counts.to_csv(output_file, index=False)
+    print(f"✓ Successfully converted {len(df)} merged PRs to accumulated CSV")
+    print(f"  Output: {OUTPUT_FILE}")
+    print(f"  Year: {year}")
+    print(f"  Total merged PRs: {result['total'].iloc[-1]}")
 
-print(f"✓ Successfully converted {len(df)} merged PRs to accumulated CSV")
-print(f"  Output: {output_file}")
-print(f"  Year: {year}")
-print(f"  Total merged PRs: {monthly_counts['total'].iloc[-1]}")
+
+if __name__ == "__main__":
+    main()

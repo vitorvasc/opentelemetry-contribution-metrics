@@ -1,41 +1,31 @@
-import pandas as pd
-import sys
-from pathlib import Path
+from common import load_json, to_utc_naive, write_csv
 
-# Check if input file exists
-input_file = Path("data/lang_contributions.json")
-if not input_file.exists():
-    print(f"Error: {input_file} not found. Run 'make fetch' first.")
-    sys.exit(1)
+INPUT_FILE = "data/lang_contributions.json"
+OUTPUT_FILE = "data/lang_accumulated.csv"
+FETCH_HINT = "make fetch-lang-contributions"
 
-# Read JSON with error handling
-try:
-    df = pd.read_json(input_file)
-except Exception as e:
-    print(f"Error reading JSON: {e}")
-    sys.exit(1)
 
-# Filter PRs only (exclude issues)
-df = df[df["url"].str.contains("/pull/")]
+def accumulate(df):
+    """Cumulative contribution count per language, one row per language and timestamp."""
+    # Use created_at as the date; each row counts as one contribution for its language
+    df = df.assign(date=to_utc_naive(df["created_at"]), count=1)
+    accumulated = df.groupby(["lang", "date"])["count"].sum().groupby(level=0).cumsum()
+    return accumulated.reset_index()
 
-# usar created_at como data
-df["date"] = pd.to_datetime(df["created_at"])
 
-# ordenar
-df = df.sort_values("date")
+def main():
+    df = load_json(INPUT_FILE, FETCH_HINT)
 
-# contador = cada linha vale 1 para aquele idioma
-df["count"] = 1
+    # Filter PRs only (exclude issues)
+    df = df[df["url"].str.contains("/pull/")]
 
-# acumular por idioma
-df_accum = df.groupby(["lang", "date"])["count"].sum().groupby(level=0).cumsum()
+    df_accum = accumulate(df)
+    write_csv(df_accum, OUTPUT_FILE)
 
-df_accum = df_accum.reset_index()
+    print(f"✓ Successfully converted {len(df)} PRs to accumulated CSV")
+    print(f"  Output: {OUTPUT_FILE}")
+    print(f"  Languages: {', '.join(sorted(df['lang'].unique()))}")
 
-# Write output
-output_file = Path("data/lang_accumulated.csv")
-df_accum.to_csv(output_file, index=False)
 
-print(f"✓ Successfully converted {len(df)} PRs to accumulated CSV")
-print(f"  Output: {output_file}")
-print(f"  Languages: {', '.join(sorted(df['lang'].unique()))}")
+if __name__ == "__main__":
+    main()

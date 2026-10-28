@@ -101,6 +101,26 @@ def test_main_writes_csv_for_requested_year(stage, workdir, monkeypatch):
     assert out["total"].iloc[-1] == 23
 
 
+def test_main_ignores_whitespace_around_year(stage, workdir, monkeypatch):
+    stage("merged_prs.json")
+    monkeypatch.setenv("YEAR", " 2024 ")
+
+    merged_csv.main()
+
+    out = pd.read_csv(workdir / "data" / "merged_prs_accumulated.csv")
+    assert out["month"].iloc[0] == "2024-01"
+
+
+def test_main_defaults_year_and_trim_to_the_same_utc_now(stage, workdir, monkeypatch):
+    stage("merged_prs.json")
+    monkeypatch.setattr(merged_csv, "utc_now", lambda: pd.Timestamp("2024-03-15 12:00", tz="UTC"))
+
+    merged_csv.main()
+
+    out = pd.read_csv(workdir / "data" / "merged_prs_accumulated.csv")
+    assert out["month"].tolist() == ["2024-01", "2024-02", "2024-03"]
+
+
 def test_main_fails_when_year_has_no_prs(stage, workdir, monkeypatch, capsys):
     stage("merged_prs.json")
     monkeypatch.setenv("YEAR", "2023")

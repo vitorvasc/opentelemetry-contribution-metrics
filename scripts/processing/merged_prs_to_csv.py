@@ -10,6 +10,10 @@ FETCH_HINT = "make fetch-merged-prs"
 PLOT_HINT = "make plot-merged-prs"
 
 
+def utc_now():
+    return pd.Timestamp.now(tz="UTC")
+
+
 def monthly_counts(df, year, today=None):
     """One row per month of `year` with the PR count and the running total.
 
@@ -17,7 +21,7 @@ def monthly_counts(df, year, today=None):
     total does not continue as a flat line into the future.
     """
     if today is None:
-        today = pd.Timestamp.now(tz="UTC")
+        today = utc_now()
     last_month = today.month if int(year) == today.year else 12
 
     # Extract month from merged_at
@@ -34,12 +38,15 @@ def monthly_counts(df, year, today=None):
 def main():
     df = load_json(INPUT_FILE, FETCH_HINT)
 
+    # One UTC timestamp drives both the default year and the future-month trim
+    today = utc_now()
+
     # Year used to fill missing months
-    year = os.environ.get("YEAR") or str(pd.Timestamp.now().year)
+    year = os.environ.get("YEAR", "").strip() or str(today.year)
     if not (year.isdigit() and len(year) == 4):
         fail(f"YEAR must be a four-digit year, got '{year}'")
 
-    result = monthly_counts(df, year)
+    result = monthly_counts(df, year, today)
     if result["count"].sum() == 0:
         years = sorted(to_utc_naive(df["merged_at"]).dt.year.dropna().astype(int).unique())
         plot_advice = f"'{PLOT_HINT} YEAR={years[-1]}' to plot the data you have, or " if years else ""

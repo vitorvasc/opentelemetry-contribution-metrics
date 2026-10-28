@@ -47,7 +47,7 @@ check-env:
 #   csv    Python script that turns the JSON into the accumulated CSV
 #   plot   extra plot.py flags
 #   files  generated files removed by clean-NAME
-PIPELINES := lang-contributions release-metrics merged-prs
+PIPELINES := lang-contributions release-metrics merged-prs coverage
 
 lang-contributions.title := language contributions
 lang-contributions.fetch := fetch_lang_issues.js
@@ -66,6 +66,12 @@ merged-prs.fetch := fetch_merged_prs.js
 merged-prs.csv := merged_prs_to_csv.py
 merged-prs.plot = --source=merged --mode=$(MODE)
 merged-prs.files := $(DATA_DIR)/merged_prs.json $(DATA_DIR)/merged_prs_accumulated.csv
+
+coverage.title := translation coverage snapshot
+coverage.fetch := fetch_coverage.js
+coverage.csv := coverage_to_csv.py
+coverage.plot := --source=coverage-snapshot
+coverage.files := $(DATA_DIR)/coverage_snapshot.json $(DATA_DIR)/coverage_snapshot.csv
 
 FETCH_TARGETS := $(addprefix fetch-,$(PIPELINES))
 PLOT_TARGETS := $(addprefix plot-,$(PIPELINES))
@@ -93,6 +99,17 @@ $(CLEAN_TARGETS): clean-%:
 	rm -f $($*.files)
 	@echo "✔ Removed $($*.title) data"
 
+# The coverage history is drawn from the release metrics data, so it has no
+# fetch or clean of its own: fetch-release-metrics provides the data
+coverage-history.title := translation coverage history
+coverage-history.csv := release_metrics_to_csv.py
+coverage-history.plot := --source=coverage
+
+plot-coverage-history: ## Plot the coverage of each release from the fetched release metrics
+	@echo "Plotting existing $(coverage-history.title) data..."
+	$(call process_and_plot,coverage-history)
+	@echo "✔ Complete!"
+
 # Every chart the project draws, written headless as a PNG under $(OUT_DIR).
 # Per chart:
 #   chart.NAME  the pipeline target (and variables) that draws $(OUT_DIR)/NAME.png
@@ -102,14 +119,17 @@ $(CLEAN_TARGETS): clean-%:
 OUT_DIR := out
 HEADLESS := MPLBACKEND=Agg
 
-CHARTS := lang-contributions release-metrics merged-prs-accumulated merged-prs-monthly
+CHARTS := lang-contributions release-metrics merged-prs-accumulated merged-prs-monthly coverage-history coverage-snapshot
 chart.lang-contributions := fetch-lang-contributions
 chart.release-metrics := fetch-release-metrics
 chart.merged-prs-accumulated := fetch-merged-prs MODE=accumulated
 chart.merged-prs-monthly := plot-merged-prs MODE=monthly
+chart.coverage-history := plot-coverage-history
+chart.coverage-snapshot := fetch-coverage
 CHART_TARGETS := $(addprefix chart-,$(CHARTS))
 
 chart-merged-prs-monthly: chart-merged-prs-accumulated
+chart-coverage-history: chart-release-metrics
 
 # A stale chart is removed first, so a PNG in $(OUT_DIR) is always from this run
 $(CHART_TARGETS): chart-%:
@@ -155,7 +175,7 @@ help: ## Show this help
 	@echo "  clean-NAME   Remove the generated data files"
 	@echo ""
 	@echo "Targets:"
-	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  %-12s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  %-22s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo ""
 	@echo "Variables:"
 	@echo "  GITHUB_TOKEN  Token for the GitHub API, from the environment or .env"
@@ -170,5 +190,5 @@ help: ## Show this help
 	@echo "  make fetch-merged-prs MODE=monthly"
 	@echo "  make plot-merged-prs OUTPUT=out/merged-prs.png"
 
-.PHONY: $(FETCH_TARGETS) $(PLOT_TARGETS) $(CLEAN_TARGETS)
+.PHONY: $(FETCH_TARGETS) $(PLOT_TARGETS) $(CLEAN_TARGETS) plot-coverage-history
 .PHONY: $(CHART_TARGETS) charts list-charts test lint help check-env setup-check

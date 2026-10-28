@@ -5,7 +5,7 @@ Visualization tool for tracking accumulated contributions — OpenTelemetry.io.
 ## Features
 
 - Fetches contribution data from GitHub API
-- Filters PRs by language labels (bn, es, fr, ja, pt, ro, uk, zh)
+- Filters PRs by language labels (bn, es, fr, ja, ko, pl, pt, ro, uk, zh)
 - **Three tracking modes**:
   - **PR-based**: Track individual PRs over time by language
   - **Release-based**: Measure lines/pages translated per monthly release
@@ -14,11 +14,13 @@ Visualization tool for tracking accumulated contributions — OpenTelemetry.io.
 - Generates accumulated contribution metrics over time
 - Creates Grafana-style dark theme visualizations
 - Configurable colors and display options
+- Shows charts in a window or saves them as PNG files, with no display needed
 
 ## Prerequisites
 
-- **Node.js 18+**
-- **Python 3.8+**
+- **Node.js `^22.18.0 || >=24.2.0`** (24 is pinned in `.node-version`). The fetch
+  scripts use `import.meta.main`, which older 22.x releases lack
+- **Python 3.11+** (3.12 is pinned in `.python-version`)
 - **GitHub Personal Access Token** with `public_repo` scope
 
 ## Installation
@@ -44,6 +46,9 @@ GITHUB_TOKEN=ghp_your_token_here
 
 Get a token at: https://github.com/settings/tokens
 
+You can export `GITHUB_TOKEN` in your shell instead (for example in CI, where
+there is no `.env`). The environment wins over `.env`.
+
 ### 3. Install Node.js dependencies
 
 ```bash
@@ -64,20 +69,26 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+To run the tests and linters, also install the development tools (pytest, Ruff):
+
+```bash
+pip install -r requirements-dev.txt
+```
+
 ### 5. Verify setup
 
 ```bash
 make setup-check
 ```
 
-This validates that all dependencies are installed and the environment is
-configured correctly.
+This validates the Node.js and Python versions, the `GITHUB_TOKEN` (from the
+environment or `.env`) and the installed dependencies.
 
 ## Usage
 
 ### Using Make (Recommended)
 
-The tool provides two automated pipelines - each command fetches data, converts
+The tool provides three automated pipelines - each command fetches data, converts
 to CSV, and generates visualizations automatically:
 
 #### Language Contributions Pipeline
@@ -146,27 +157,83 @@ make fetch-merged-prs YEAR=2024 MODE=monthly
 make clean-merged-prs
 ```
 
+#### All Charts
+
+Run every pipeline and write the charts as PNG files to `out/` (needs
+`GITHUB_TOKEN`, no display needed):
+
+```bash
+make charts
+
+# Same, for one year and some languages
+make charts YEAR=2024 LANGS=pt,es
+```
+
+This writes `out/lang-contributions.png`, `out/release-metrics.png`,
+`out/merged-prs-accumulated.png` and `out/merged-prs-monthly.png`.
+
+To save a single chart, set `OUTPUT` on any `fetch-*` or `plot-*` target:
+
+```bash
+make plot-merged-prs OUTPUT=out/merged-prs.png
+```
+
+`OUTPUT` (or `--output` when calling `plot.py`) saves the chart instead of
+opening a window and creates the folder if needed. On a machine without a
+display, also set `MPLBACKEND=Agg`; `make charts` and `make test` already do.
+
+#### Plot Only (no API calls)
+
+Re-process and re-plot the data from the last fetch:
+
+```bash
+make plot-lang-contributions
+make plot-release-metrics
+make plot-merged-prs MODE=monthly
+```
+
+Use the same `YEAR` as the fetch, see [Parameters](#parameters).
+
 #### Other Commands
 
 ```bash
 make setup-check  # Verify environment configuration
+make test         # JavaScript and Python tests
+make lint         # Biome, Ruff and ShellCheck
 make help         # Show all available commands
 ```
 
 ### Parameters
 
-All commands support the following parameters:
+Pass parameters on the command line (`make fetch-merged-prs YEAR=2024`) or
+through the environment (`YEAR=2024 make fetch-merged-prs`). A parameter that is
+unset or empty uses its default.
 
-| Parameter     | Description                                  | Default     | Example          |
-| ------------- | -------------------------------------------- | ----------- | ---------------- |
-| `YEAR=XXXX`   | Filter by year                               | 2025        | `YEAR=2024`      |
-| `LANGS=xx,yy` | Filter by languages (comma-separated)        | all         | `LANGS=pt,es,fr` |
-| `TYPE=xxx`    | Filter contribution type (prs/issues/both)\* | both        | `TYPE=prs`       |
-| `MODE=xxx`    | Plot mode for merged PRs\*\*                 | accumulated | `MODE=monthly`   |
+| Parameter     | Description                                                | Default            | Example                  |
+| ------------- | ---------------------------------------------------------- | ------------------ | ------------------------ |
+| `YEAR=XXXX`   | Year to fetch and plot                                     | current year (UTC) | `YEAR=2024`              |
+| `LANGS=xx,yy` | Languages to fetch (comma-separated)                       | all                | `LANGS=pt,es,fr`         |
+| `TYPE=xxx`    | Contribution type: `prs`, `issues` or `both`               | both               | `TYPE=prs`               |
+| `MODE=xxx`    | Merged PRs chart: `accumulated` (line) or `monthly` (bars) | accumulated        | `MODE=monthly`           |
+| `OUTPUT=PATH` | Save the chart to a file instead of opening a window       | none               | `OUTPUT=out/chart.png`   |
+| `PYTHON=path` | Python interpreter used by `make`                          | `python3`          | `PYTHON=venv/bin/python` |
 
-\* `TYPE` parameter only applies to `fetch-lang-contributions`
+Not every pipeline reads every parameter:
 
-\*\* `MODE` parameter only applies to `fetch-merged-prs`. Options: `accumulated` (line chart) or `monthly` (bar chart)
+| Pipeline               | Fetch step              | CSV and plot step |
+| ---------------------- | ----------------------- | ----------------- |
+| Language contributions | `YEAR`, `LANGS`, `TYPE` | `TYPE`            |
+| Release metrics        | `YEAR`, `LANGS`         | `YEAR`            |
+| Merged PRs             | `YEAR`                  | `YEAR`, `MODE`    |
+
+- `OUTPUT` applies to every plot step.
+- Use the same `YEAR` for `plot-*` as for the fetch. The release metrics and
+  merged PRs CSV steps exit with a hint when the fetched data has nothing for
+  that year (merged PRs also when `YEAR` is unset and the data is not from the
+  current year). The language contributions CSV step has no year filter and
+  relies on the fetch's.
+- `TYPE` must be `prs`, `issues` or `both`; any other value exits with status 1.
+- `MODE` is a `make` parameter. When calling `plot.py` directly, use `--mode`.
 
 ### Using npm Scripts
 
@@ -178,9 +245,18 @@ npm run clean-lang-contributions  # Clean language data
 npm run clean-release-metrics     # Clean release data
 npm run clean-merged-prs          # Clean merged PRs data
 npm run setup-check               # Verify setup
+npm test                          # JavaScript tests
 ```
 
+The npm scripts call `python3` and cannot pass `MODE` or `OUTPUT`, so
+`npm run fetch-merged-prs` always plots the accumulated chart in a window.
+`YEAR`, `LANGS` and `TYPE` still work from the environment, for example
+`YEAR=2024 npm run fetch-merged-prs`.
+
 ### Direct Script Execution
+
+Run the scripts from the project root: the `data/` paths are relative to the
+current directory.
 
 ```bash
 # Language contributions
@@ -199,6 +275,14 @@ python3 scripts/processing/merged_prs_to_csv.py
 python3 scripts/processing/plot.py --source=merged
 ```
 
+`plot.py` options:
+
+```bash
+python3 scripts/processing/plot.py --source {prs,releases,merged}  # default: prs
+python3 scripts/processing/plot.py --mode {accumulated,monthly}    # merged PRs only
+python3 scripts/processing/plot.py --output out/chart.png          # save instead of opening a window
+```
+
 ## Understanding the Three Pipelines
 
 The tool provides three complementary ways to track OpenTelemetry contributions:
@@ -208,7 +292,7 @@ The tool provides three complementary ways to track OpenTelemetry contributions:
 Tracks **individual PR and issue contributions** over time:
 
 - **What it tracks**: Every PR/issue with a `lang:*` label
-- **Granularity**: Day-by-day accumulation
+- **Granularity**: One step per PR/issue, at its creation time
 - **Use case**: See contribution activity and engagement over time
 - **Filters**: Can filter by type (PRs only, issues only, or both)
 
@@ -238,10 +322,17 @@ For each release month and language:
 
 1. **Lines Added**: Total lines of translated content added in `.md` files
 2. **Pages Added**: Count of new markdown files in `content/{lang}/`
-3. **Coverage %**: Percentage of English content that's been translated
+3. **Coverage %**: Markdown files in `content/{lang}/` as a percentage of the
+   Markdown files in `content/en/`
 4. **Coverage Change**: Month-over-month improvement in coverage
+5. **Files Updated**: Count of modified markdown files in `content/{lang}/`
+6. **PR Count**: Merged PRs labeled `lang:{lang}` that month
 
 ### Output Files
+
+**Language Contributions:**
+- `data/lang_contributions.json` - Raw PR/issue data per language
+- `data/lang_accumulated.csv` - Cumulative contribution count per language
 
 **Release Metrics:**
 - `data/release_metrics.json` - Detailed metrics per release/language
@@ -251,14 +342,18 @@ For each release month and language:
 - `data/merged_prs.json` - Raw merged PR data (number, merged_at)
 - `data/merged_prs_accumulated.csv` - Monthly counts with cumulative totals
 
+**Charts:** `make charts` writes PNG files to `out/`.
+
 ### Example Output
 
+`data/release_metrics_accumulated.csv` (illustrative values):
+
 ```csv
-lang,month,lines_added,pages_added,total_lines,total_pages,coverage_pct,coverage_change,pr_count
-pt,2025-01,423,3,423,3,12.5,0.0,8
-pt,2025-02,567,5,990,8,18.2,5.7,12
-es,2025-01,892,7,892,7,25.3,0.0,15
-es,2025-02,654,4,1546,11,28.9,3.6,11
+lang,month,lines_added,pages_added,files_updated,coverage_pct,pr_count,total_lines,total_pages,coverage_change
+es,2025-01,892,7,6,25.3,15,892,7,0.0
+es,2025-02,654,4,3,28.9,11,1546,11,3.6
+pt,2025-01,423,3,2,12.5,8,423,3,0.0
+pt,2025-02,567,5,4,18.2,12,990,8,5.7
 ```
 
 ## Configuration
@@ -275,6 +370,8 @@ colors:
   es: '#00FF7F' # Spanish - green
   fr: '#3B82F6' # French - blue
   ja: '#F59E0B' # Japanese - amber
+  ko: '#38BDF8' # Korean - sky blue
+  pl: '#A3E635' # Polish - lime
   pt: '#A855F7' # Portuguese - purple
   ro: '#EC4899' # Romanian - pink
   uk: '#14B8A6' # Ukrainian - teal
@@ -284,13 +381,19 @@ colors:
 
 ### Environment Variables
 
-`.env` file (required):
+`GITHUB_TOKEN` (required for `fetch-*` and `charts`), in a `.env` file:
 
 ```bash
 GITHUB_TOKEN=your_token_here
 ```
 
-Command-line parameters (optional):
+or exported in the shell, which wins over `.env`:
+
+```bash
+export GITHUB_TOKEN=your_token_here
+```
+
+Command-line parameters (optional, see [Parameters](#parameters)):
 
 ```bash
 # Filter by languages
@@ -301,6 +404,9 @@ TYPE=prs make fetch-lang-contributions
 
 # Filter by year
 YEAR=2024 make fetch-release-metrics
+
+# Save the chart instead of opening a window
+make plot-merged-prs OUTPUT=out/merged-prs.png
 ```
 
 ## Project Structure
@@ -309,15 +415,23 @@ YEAR=2024 make fetch-release-metrics
 opentelemetry-contribution-metrics/
 ├── scripts/
 │   ├── fetch/                         # Data fetching scripts (Node.js)
+│   │   ├── lib/
+│   │   │   └── github.js              # Shared config, GitHub API client (retries, rate limits, search splitting) and JSON output
 │   │   ├── fetch_lang_issues.js       # Fetches PR-based data from GitHub API
 │   │   ├── fetch_release_metrics.js   # Fetches release-based metrics
 │   │   └── fetch_merged_prs.js        # Fetches total merged PRs
 │   ├── processing/                    # Data processing scripts (Python)
+│   │   ├── common.py                      # Shared helpers: JSON loading, CSV writing, error exit
+│   │   ├── plotting.py                    # Shared matplotlib styling and drawing helpers
 │   │   ├── lang_contributions_to_csv.py   # Converts PR JSON to accumulated CSV
 │   │   ├── release_metrics_to_csv.py      # Converts release JSON to accumulated CSV
 │   │   ├── merged_prs_to_csv.py           # Converts merged PRs JSON to accumulated CSV
 │   │   └── plot.py                        # Generates visualization (supports all modes)
 │   └── check_setup.sh                 # Validates environment setup
+├── tests/
+│   ├── js/                            # Node.js tests (node --test)
+│   └── python/                        # pytest tests and fixtures
+├── .github/workflows/ci.yml           # CI: lint, tests, Renovate config, dependency review
 ├── data/
 │   ├── lang_contributions.json        # Raw PR data (generated)
 │   ├── lang_accumulated.csv           # Accumulated PR data (generated)
@@ -325,15 +439,43 @@ opentelemetry-contribution-metrics/
 │   ├── release_metrics_accumulated.csv # Accumulated release data (generated)
 │   ├── merged_prs.json                # Raw merged PRs data (generated)
 │   └── merged_prs_accumulated.csv     # Accumulated merged PRs data (generated)
+├── out/                               # Charts written by make charts (generated, gitignored)
 ├── config.yaml                        # Plot configuration
 ├── .env.example                       # Environment template
 ├── .env                               # Your environment variables (gitignored)
+├── .node-version                      # Pinned Node.js version
+├── .python-version                    # Pinned Python version
 ├── .gitignore                         # Git ignore rules
 ├── Makefile                           # Build automation
-├── package.json                       # Node.js dependencies
+├── package.json                       # Node.js dependencies and scripts
+├── pytest.ini                         # pytest configuration
+├── renovate.json                      # Dependency update configuration
 ├── requirements.txt                   # Python dependencies
+├── requirements-dev.txt               # Python development tools (pytest, Ruff)
 └── README.md                          # This file
 ```
+
+## Development
+
+```bash
+make test   # npm test (node --test) and pytest, with MPLBACKEND=Agg
+make lint   # Biome, Ruff check and format, ShellCheck
+```
+
+To use a virtualenv for the Python side, pass its interpreter:
+`make test PYTHON=venv/bin/python`. Run the suites separately with `npm test`
+and `MPLBACKEND=Agg python3 -m pytest`. `make lint` expects `ruff` and
+`shellcheck` on your `PATH`.
+
+### CI
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request:
+
+- **lint**: Ruff (check and format), Biome, ShellCheck, actionlint, zizmor
+- **test-js** and **test-python**: the two test suites
+- **renovate-config**: validates `renovate.json` in strict mode
+- **dependency-review**: flags vulnerable dependency changes (pull requests only)
+- **ci**: aggregates all of the above and is the single required check
 
 ## Output
 
@@ -343,17 +485,30 @@ The `plot.py` script generates a presentation-ready graph:
 - Step-style lines with semi-transparent area fills
 - Large fonts optimized for presentations (1k+ viewers)
 - Accumulated contributions over time per language
-- Interactive date range and legend
+- Legend outside the plot area
+- Opens in a matplotlib window (zoom and pan with its toolbar), or saves a PNG
+  with `OUTPUT=` / `--output`
 
 ## Troubleshooting
+
+Errors exit with status 1 and an `Error:` message, so `make` never goes on to
+plot empty or zero data:
+
+- **Fetch step**: failed GitHub requests, exhausted rate limits and retries,
+  incomplete search results and a truncated git tree. The script stops before
+  writing, so data from an earlier run stays untouched.
+- **CSV and plot steps**: a missing, unreadable or empty JSON/CSV file, no
+  records for the requested `YEAR` or `TYPE` (this is also how a fetch that
+  found nothing, such as no releases for the year, is caught), and an invalid
+  `YEAR` or `TYPE`.
 
 ### "Error: GITHUB_TOKEN is not set"
 
 Make sure:
 
-1. `.env` file exists in project root
-2. Contains `GITHUB_TOKEN=your_token_here`
-3. Token has correct permissions (public_repo scope)
+1. `GITHUB_TOKEN` is exported in your shell, or a `.env` file in the project
+   root contains `GITHUB_TOKEN=your_token_here`
+2. Token has correct permissions (public_repo scope)
 
 ### "ModuleNotFoundError: No module named 'pandas'"
 
@@ -372,31 +527,26 @@ pip install -r requirements.txt
 
 ### Python script can't find files
 
-Make sure to run scripts from project root:
+Make sure to run scripts from project root. `config.yaml` is located relative to
+the script, but the `data/` JSON and CSV paths are relative to the current
+directory (the fetch scripts would also write `data/` there):
 
 ```bash
 # Correct
 python3 scripts/processing/plot.py
 
 # Wrong (if in scripts/ or scripts/processing/ directory)
-python3 plot.py  # Will fail to find config.yaml
-```
-
-### "Error: .env file not found"
-
-Copy the example file and configure it:
-
-```bash
-cp .env.example .env
-# Edit .env and add your GITHUB_TOKEN
+python3 plot.py  # Error: data/lang_accumulated.csv not found. Run 'make fetch-lang-contributions' first.
 ```
 
 ### GitHub API Rate Limit
 
-If you see rate limit warnings, the script will display when the limit resets.
-You can:
+The fetch scripts wait and retry when GitHub rate limits a request (up to 5
+attempts, honoring `retry-after` and the limit reset time) and print
+`⚠️ ... Retrying in Ns`. If the request still fails, the script exits with
+status 1. You can:
 
-1. Wait for the reset time
+1. Wait for the reset time and run it again
 2. Use a different GitHub token
 3. Reduce the number of languages fetched with `LANGS=pt,es`
 
@@ -406,6 +556,8 @@ You can:
 - `es` - Spanish
 - `fr` - French
 - `ja` - Japanese
+- `ko` - Korean
+- `pl` - Polish
 - `pt` - Portuguese
 - `ro` - Romanian
 - `uk` - Ukrainian

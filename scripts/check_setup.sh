@@ -3,13 +3,18 @@
 echo "Checking setup..."
 echo ""
 
-# Check Node.js
+# Check Node.js. The fetch scripts rely on import.meta.main, which older 22.x
+# releases lack, so they would silently do nothing.
+NODE_RANGE='^22.18.0 || >=24.2.0'
 if ! command -v node &> /dev/null; then
-    echo "❌ Node.js not found. Please install Node.js 22+"
+    echo "❌ Node.js not found. Please install Node.js $NODE_RANGE"
     exit 1
 fi
-if ! node -e 'process.exit(Number(process.versions.node.split(".")[0]) >= 22 ? 0 : 1)'; then
-    echo "❌ Node.js $(node --version) is too old. Please install Node.js 22+"
+if ! node -e '
+const [major, minor] = process.versions.node.split(".").map(Number);
+process.exit((major === 22 && minor >= 18) || (major === 24 && minor >= 2) || major >= 25 ? 0 : 1);
+'; then
+    echo "❌ Node.js $(node --version) is not supported. Please install Node.js $NODE_RANGE"
     exit 1
 fi
 echo "✓ Node.js $(node --version)"
@@ -25,20 +30,20 @@ if ! python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)';
 fi
 echo "✓ $(python3 --version 2>&1)"
 
-# Check .env
-if [ ! -f .env ]; then
-    echo "❌ .env file not found. Copy .env.example to .env"
+# Check GITHUB_TOKEN, from the environment or from .env
+if [ -n "${GITHUB_TOKEN:-}" ]; then
+    echo "✓ GITHUB_TOKEN set in the environment"
+elif [ ! -f .env ]; then
+    echo "❌ GITHUB_TOKEN is not set and .env was not found"
+    echo "   Export GITHUB_TOKEN, or copy .env.example to .env and add your token"
     exit 1
-fi
-echo "✓ .env file exists"
-
-# Check GITHUB_TOKEN in .env
-if ! grep -q "GITHUB_TOKEN=" .env || grep -q "GITHUB_TOKEN=your_github_token_here" .env; then
+elif ! grep -q '^GITHUB_TOKEN=.' .env || grep -q '^GITHUB_TOKEN=your_github_token_here' .env; then
     echo "❌ GITHUB_TOKEN not configured in .env"
     echo "   Edit .env and add your GitHub personal access token"
     exit 1
+else
+    echo "✓ GITHUB_TOKEN configured in .env"
 fi
-echo "✓ GITHUB_TOKEN configured"
 
 # Check npm packages
 if [ ! -d node_modules ]; then

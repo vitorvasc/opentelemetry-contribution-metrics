@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Important Guidelines
 
 - **Always document new pipelines**: When creating a new data pipeline or flow, update both `README.md` and this file (`CLAUDE.md`) with the new commands, architecture details, and file references.
+- **Adding a pipeline or chart**: set the pipeline's variables (`<name>.title`, `.fetch`, `.csv`, `.plot`, `.files`) and add its name to `PIPELINES` in the `Makefile`, which generates `fetch-<name>`, `plot-<name>` and `clean-<name>`. Add one line per chart to the `charts` target. Cover new logic with tests.
 
 ## Project Overview
 
@@ -24,6 +25,22 @@ make fetch-merged-prs MODE=monthly         # Total merged PRs (bar chart)
 make fetch-lang-contributions YEAR=2024 LANGS=pt,es TYPE=prs
 make fetch-merged-prs YEAR=2024 MODE=monthly
 
+# Re-process and plot existing data (no API calls; use the same YEAR as the fetch)
+make plot-lang-contributions
+make plot-release-metrics
+make plot-merged-prs MODE=monthly
+
+# Save a chart instead of opening a window
+make plot-merged-prs OUTPUT=out/merged-prs.png
+
+# Every chart as a PNG in out/ (fetches, needs GITHUB_TOKEN, headless)
+make charts
+
+# Tests and lint
+make test                                  # npm test + MPLBACKEND=Agg pytest (PYTHON=venv/bin/python to override)
+make lint                                  # Biome, Ruff check + format, ShellCheck
+npm test                                   # JS tests only
+
 # Verify setup
 make setup-check
 
@@ -31,7 +48,12 @@ make setup-check
 make clean-lang-contributions
 make clean-release-metrics
 make clean-merged-prs
+
+# List targets and variables
+make help
 ```
+
+The npm scripts mirror the `fetch-*` and `clean-*` targets but cannot pass `MODE` or `OUTPUT`.
 
 ## Architecture
 
@@ -39,9 +61,21 @@ The project uses a two-stage pipeline: **Node.js for data fetching** → **Pytho
 
 ### Data Flow
 
-1. **Fetch scripts** (`scripts/fetch/*.js`) call GitHub API, output JSON to `data/`
-2. **Processing scripts** (`scripts/processing/*_to_csv.py`) convert JSON to accumulated CSV
-3. **Plot script** (`scripts/processing/plot.py`) reads CSV + `config.yaml`, displays matplotlib chart
+1. **Fetch scripts** (`scripts/fetch/*.js`) call GitHub API through `scripts/fetch/lib/github.js` (config from env, client with retries and rate-limit handling, search range splitting under the 1000-result cap, `writeJson`, `run`), output JSON to `data/`
+2. **Processing scripts** (`scripts/processing/*_to_csv.py`) convert JSON to accumulated CSV, using `common.py` (`load_json`, `write_csv`, `fail`, `to_utc_naive`)
+3. **Plot script** (`scripts/processing/plot.py`) reads CSV + `config.yaml`, draws with `plotting.py`, and either displays the chart or saves it with `--output` (`--source {prs,releases,merged}`, `--mode {accumulated,monthly}`)
+
+Paths under `data/` are relative to the cwd, so run everything from the project root; `config.yaml` is resolved from `__file__`.
+
+### Error Behavior
+
+Fetch errors (failed requests, exhausted retries or rate limits, incomplete search results, truncated git tree) exit 1 through `run()` before anything is written. Missing, unreadable or empty data, no records for the `YEAR`/`TYPE`, and invalid `YEAR`/`TYPE` exit 1 through `fail()` in the CSV/plot steps; a fetch that found nothing (e.g. no releases) writes `[]` and is caught there. Keep new code failing loudly; the Makefile relies on it to stop the pipeline.
+
+### Tests
+
+- `tests/js/` - `node --test`, the fetch library and scripts (fetch is stubbed, no network)
+- `tests/python/` - pytest, fixtures in `tests/python/fixtures/`; `pytest.ini` puts `scripts/processing` on `pythonpath`
+- CI (`.github/workflows/ci.yml`): lint, test-js, test-python, renovate-config, dependency-review; the `ci` aggregator job is the required check
 
 ### Three Pipelines
 
@@ -52,18 +86,24 @@ The project uses a two-stage pipeline: **Node.js for data fetching** → **Pytho
 ### Key Files
 
 - `config.yaml` - Plot appearance (colors per language, display options)
-- `.env` - GitHub token (required, loaded via `dotenv`)
-- `Makefile` - Entry point for all operations
+- `.env` - GitHub token, optional when `GITHUB_TOKEN` is in the environment (loaded via `dotenv`; the environment wins)
+- `Makefile` - Entry point for all operations; the three pipelines share one set of rules driven by per-pipeline variables
+- `out/` - Charts from `make charts` (gitignored, like `data/`)
 
 ## Environment Variables
 
-- `GITHUB_TOKEN` - Required, set in `.env` file
-- `YEAR` - Filter year (default: 2025)
-- `LANGS` - Comma-separated language codes (bn,es,fr,ja,pt,ro,uk,zh)
-- `TYPE` - Contribution type filter: `prs`, `issues`, or `both`
-- `MODE` - Plot mode for merged PRs: `accumulated` (line) or `monthly` (bars)
+- `GITHUB_TOKEN` - Required for `fetch-*` and `charts`; from the environment or `.env`
+- `YEAR` - Year to fetch and plot (default when unset or empty: current year, UTC). Honored by all three fetches and by the release metrics and merged PRs CSV steps, which exit 1 with a hint if the data has no such year, so `plot-*` needs the same `YEAR` as the fetch. The lang contributions CSV step ignores it
+- `LANGS` - Comma-separated language codes (bn,es,fr,ja,ko,pl,pt,ro,uk,zh), default all; lang contributions and release metrics fetches
+- `TYPE` - Contribution type: `prs`, `issues`, or `both` (default `both`; anything else exits 1). Lang contributions fetch and CSV/plot steps
+- `MODE` - Plot mode for merged PRs: `accumulated` (line, default) or `monthly` (bars). Make only; `plot.py` takes `--mode`
+- `OUTPUT` - Path of a PNG to write instead of opening a window; passed to `plot.py` as `--output`
+- `PYTHON`, `NODE` - Interpreters used by `make` (e.g. `PYTHON=venv/bin/python`)
+- `MPLBACKEND=Agg` - Headless matplotlib; `make charts` and `make test` set it
+
+`YEAR`, `LANGS` and `TYPE` are not defaulted in the Makefile: command-line or environment values reach the scripts, which apply the defaults.
 
 ## Dependencies
 
-- Node.js 18+ with `dotenv`, `node-fetch`
-- Python 3.8+ with `matplotlib`, `pandas`, `pyyaml`
+- Node.js `^22.18.0 || >=24.2.0` (`.node-version` pins 24; the fetch scripts guard `main()` with `import.meta.main`) with `dotenv`
+- Python 3.11+ (`.python-version` pins 3.12) with `matplotlib`, `pandas`, `pyyaml`; dev: `pytest`, `ruff` (`requirements-dev.txt`)

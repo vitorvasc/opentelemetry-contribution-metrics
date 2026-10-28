@@ -4,6 +4,9 @@ node_modules/
 data/
 !data/.gitkeep
 
+# Charts written by `make charts`
+out/
+
 # Environment variables
 .env
 

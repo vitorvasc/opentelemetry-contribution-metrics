@@ -1,119 +1,84 @@
-import "dotenv/config";
-import fetch from "node-fetch";
-import fs from "fs";
+import {
+  config,
+  createClient,
+  isEntryPoint,
+  run,
+  writeJson,
+} from "./lib/github.js";
 
-const OWNER = "open-telemetry";
-const REPO = "opentelemetry.io";
-const ALL_LOCALES = ["bn", "es", "fr", "ja", "pt", "ro", "uk", "zh"];
-const TOKEN = process.env.GITHUB_TOKEN;
+const OUTPUT_FILE = "lang_contributions.json";
 
-// Validate GITHUB_TOKEN
-if (!TOKEN) {
-  console.error("Error: GITHUB_TOKEN is not set. Please check your .env file.");
-  process.exit(1);
-}
-
-// Get languages from LANGS environment variable, or use all if not specified
-const LOCALES = process.env.LANGS
-  ? process.env.LANGS.split(",").map(l => l.trim())
-  : ALL_LOCALES;
-
-// Filter by year (default: current year)
-const YEAR = process.env.YEAR || new Date().getFullYear().toString();
-
-// Get contribution type filter (prs, issues, or both)
-const TYPE = process.env.TYPE || "both";
-
-async function searchLang(lang, page = 1) {
+/**
+ * Build the search query for a language's PRs and/or issues
+ * @param {object} params - { owner, repo, lang, type }
+ * @returns {string} - Search query without the date qualifier
+ */
+export function buildQuery({ owner, repo, lang, type }) {
   let typeFilter = "";
-  if (TYPE === "prs") {
+  if (type === "prs") {
     typeFilter = " is:pr";
-  } else if (TYPE === "issues") {
+  } else if (type === "issues") {
     typeFilter = " is:issue";
   }
-  // TYPE === "both" means no additional filter
+  // type === "both" means no additional filter
 
-  const q = `repo:${OWNER}/${REPO} label:"lang:${lang}" created:${YEAR}-01-01..${YEAR}-12-31${typeFilter}`;
-  const url = `https://api.github.com/search/issues?q=${encodeURIComponent(q)}&per_page=100&page=${page}`;
-
-  try {
-    const res = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${TOKEN}`,
-        Accept: "application/vnd.github+json"
-      }
-    });
-
-    // Check rate limit
-    const remaining = res.headers.get("x-ratelimit-remaining");
-    const reset = res.headers.get("x-ratelimit-reset");
-
-    if (remaining === "0") {
-      const resetDate = new Date(reset * 1000);
-      console.warn(`⚠️  Rate limit exceeded. Resets at ${resetDate.toLocaleString()}`);
-    }
-
-    if (!res.ok) {
-      const error = await res.text();
-      throw new Error(`GitHub API error (${res.status}): ${error}`);
-    }
-
-    return res.json();
-  } catch (error) {
-    console.error(`Failed to fetch data for ${lang} (page ${page}):`, error.message);
-    throw error;
-  }
+  return `repo:${owner}/${repo} label:"lang:${lang}"${typeFilter}`;
 }
 
-async function fetchLocale(lang) {
+/**
+ * Convert a search item to a contribution record
+ * @param {string} lang - Language code
+ * @param {object} item - Search API item
+ * @returns {object} - Contribution record
+ */
+export function toContribution(lang, item) {
+  return {
+    lang,
+    number: item.number,
+    title: item.title,
+    created_at: item.created_at,
+    closed_at: item.closed_at,
+    state: item.state,
+    labels: item.labels.map((l) => l.name),
+    url: item.html_url,
+  };
+}
+
+async function fetchLocale(gh, { owner, repo, lang, year, type }) {
   console.log(`Fetching data for language: ${lang}`);
-  let all = [];
-  let page = 1;
 
-  while (true) {
-    const data = await searchLang(lang, page);
-    if (!data.items || data.items.length === 0) break;
-
-    all = all.concat(
-      data.items.map(item => ({
-        lang,
-        number: item.number,
-        title: item.title,
-        created_at: item.created_at,
-        closed_at: item.closed_at,
-        state: item.state,
-        labels: item.labels.map(l => l.name),
-        url: item.html_url
-      }))
-    );
-
-    console.log(`  Page ${page}: ${data.items.length} items (total: ${all.length})`);
-    page++;
-  }
+  const items = await gh.ghSearchIssues({
+    query: buildQuery({ owner, repo, lang, type }),
+    dateField: "created",
+    from: `${year}-01-01`,
+    to: `${year}-12-31`,
+  });
+  const all = items.map((item) => toContribution(lang, item));
 
   console.log(`✓ Completed ${lang}: ${all.length} total contributions`);
   return all;
 }
 
 async function main() {
-  console.log(`\nStarting fetch for languages: ${LOCALES.join(", ")}`);
-  console.log(`Filtering for year: ${YEAR}`);
-  console.log(`Type: ${TYPE === "both" ? "PRs and issues" : TYPE}\n`);
+  const { token, owner, repo, locales, year, type } = config();
+  const gh = createClient({ token });
+
+  console.log(`\nStarting fetch for languages: ${locales.join(", ")}`);
+  console.log(`Filtering for year: ${year}`);
+  console.log(`Type: ${type === "both" ? "PRs and issues" : type}\n`);
 
   let merged = [];
-  for (const lang of LOCALES) {
-    const data = await fetchLocale(lang);
+  for (const lang of locales) {
+    const data = await fetchLocale(gh, { owner, repo, lang, year, type });
     merged = merged.concat(data);
   }
 
-  const outputPath = "data/lang_contributions.json";
-  fs.writeFileSync(outputPath, JSON.stringify(merged, null, 2));
+  const outputPath = writeJson(OUTPUT_FILE, merged);
 
   console.log(`\n✓ Done! Saved ${merged.length} contributions to ${outputPath}`);
-  console.log(`Languages fetched: ${LOCALES.join(", ")}`);
+  console.log(`Languages fetched: ${locales.join(", ")}`);
 }
 
-main().catch(error => {
-  console.error("\n✗ Fatal error:", error.message);
-  process.exit(1);
-});
+if (isEntryPoint(import.meta.url)) {
+  run(main);
+}

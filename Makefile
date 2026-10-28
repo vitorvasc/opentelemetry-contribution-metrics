@@ -13,7 +13,8 @@ PYTHON ?= python3
 # YEAR, LANGS and TYPE reach the scripts straight from the command line
 # (make fetch-lang-contributions YEAR=2024) or the environment. Unset or empty
 # means the script default: current UTC year, all languages, PRs and issues.
-#   YEAR   four-digit year to fetch and plot
+#   YEAR   four-digit year to fetch and plot (the PR flow fetch is all-time:
+#          there YEAR only picks the months drawn)
 #   LANGS  comma-separated language codes (bn,es,fr,ja,ko,pl,pt,ro,uk,zh)
 #   TYPE   prs, issues or both (lang contributions only)
 
@@ -47,7 +48,7 @@ check-env:
 #   csv    Python script that turns the JSON into the accumulated CSV
 #   plot   extra plot.py flags
 #   files  generated files removed by clean-NAME
-PIPELINES := lang-contributions release-metrics merged-prs coverage
+PIPELINES := lang-contributions release-metrics merged-prs coverage pr-flow
 
 lang-contributions.title := language contributions
 lang-contributions.fetch := fetch_lang_issues.js
@@ -72,6 +73,12 @@ coverage.fetch := fetch_coverage.js
 coverage.csv := coverage_to_csv.py
 coverage.plot := --source=coverage-snapshot
 coverage.files := $(DATA_DIR)/coverage_snapshot.json $(DATA_DIR)/coverage_snapshot.csv
+
+pr-flow.title := PR flow
+pr-flow.fetch := fetch_pr_flow.js
+pr-flow.csv := pr_flow_to_csv.py
+pr-flow.plot := --source=time-to-merge
+pr-flow.files := $(DATA_DIR)/pr_flow.json $(DATA_DIR)/pr_flow_time_to_merge.csv $(DATA_DIR)/pr_flow_backlog.csv
 
 FETCH_TARGETS := $(addprefix fetch-,$(PIPELINES))
 PLOT_TARGETS := $(addprefix plot-,$(PIPELINES))
@@ -110,6 +117,17 @@ plot-coverage-history: ## Plot the coverage of each release from the fetched rel
 	$(call process_and_plot,coverage-history)
 	@echo "✔ Complete!"
 
+# The PR backlog is drawn from the PR flow data, so it has no fetch or clean of
+# its own: fetch-pr-flow provides the data (and draws the time to merge)
+pr-backlog.title := open PR backlog
+pr-backlog.csv := pr_flow_to_csv.py
+pr-backlog.plot := --source=backlog
+
+plot-pr-backlog: ## Plot the PRs open at each month end from the fetched PR flow data
+	@echo "Plotting existing $(pr-backlog.title) data..."
+	$(call process_and_plot,pr-backlog)
+	@echo "✔ Complete!"
+
 # Every chart the project draws, written headless as a PNG under $(OUT_DIR).
 # Per chart:
 #   chart.NAME  the pipeline target (and variables) that draws $(OUT_DIR)/NAME.png
@@ -119,17 +137,20 @@ plot-coverage-history: ## Plot the coverage of each release from the fetched rel
 OUT_DIR := out
 HEADLESS := MPLBACKEND=Agg
 
-CHARTS := lang-contributions release-metrics merged-prs-accumulated merged-prs-monthly coverage-history coverage-snapshot
+CHARTS := lang-contributions release-metrics merged-prs-accumulated merged-prs-monthly coverage-history coverage-snapshot time-to-merge backlog
 chart.lang-contributions := fetch-lang-contributions
 chart.release-metrics := fetch-release-metrics
 chart.merged-prs-accumulated := fetch-merged-prs MODE=accumulated
 chart.merged-prs-monthly := plot-merged-prs MODE=monthly
 chart.coverage-history := plot-coverage-history
 chart.coverage-snapshot := fetch-coverage
+chart.time-to-merge := fetch-pr-flow
+chart.backlog := plot-pr-backlog
 CHART_TARGETS := $(addprefix chart-,$(CHARTS))
 
 chart-merged-prs-monthly: chart-merged-prs-accumulated
 chart-coverage-history: chart-release-metrics
+chart-backlog: chart-time-to-merge
 
 # A stale chart is removed first, so a PNG in $(OUT_DIR) is always from this run
 $(CHART_TARGETS): chart-%:
@@ -179,7 +200,7 @@ help: ## Show this help
 	@echo ""
 	@echo "Variables:"
 	@echo "  GITHUB_TOKEN  Token for the GitHub API, from the environment or .env"
-	@echo "  YEAR=XXXX     Year to fetch and plot (default: current year, UTC)"
+	@echo "  YEAR=XXXX     Year to fetch and plot (default: current year, UTC; PR flow fetches all time)"
 	@echo "  LANGS=xx,yy   Languages to fetch (default: all of bn,es,fr,ja,ko,pl,pt,ro,uk,zh)"
 	@echo "  TYPE=xxx      prs, issues or both (default: both, lang contributions only)"
 	@echo "  MODE=xxx      Merged PRs chart: accumulated or monthly (default: accumulated)"
@@ -190,5 +211,5 @@ help: ## Show this help
 	@echo "  make fetch-merged-prs MODE=monthly"
 	@echo "  make plot-merged-prs OUTPUT=out/merged-prs.png"
 
-.PHONY: $(FETCH_TARGETS) $(PLOT_TARGETS) $(CLEAN_TARGETS) plot-coverage-history
+.PHONY: $(FETCH_TARGETS) $(PLOT_TARGETS) $(CLEAN_TARGETS) plot-coverage-history plot-pr-backlog
 .PHONY: $(CHART_TARGETS) charts list-charts test lint help check-env setup-check

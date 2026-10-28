@@ -10,11 +10,13 @@
     "fetch-merged-prs": "node scripts/fetch/fetch_merged_prs.js && python3 scripts/processing/merged_prs_to_csv.py && python3 scripts/processing/plot.py --source=merged",
     "fetch-coverage": "node scripts/fetch/fetch_coverage.js && python3 scripts/processing/coverage_to_csv.py && python3 scripts/processing/plot.py --source=coverage-snapshot",
     "fetch-pr-flow": "node scripts/fetch/fetch_pr_flow.js && python3 scripts/processing/pr_flow_to_csv.py --only=time-to-merge && python3 scripts/processing/plot.py --source=time-to-merge",
+    "fetch-drift": "node scripts/fetch/fetch_drift.js && python3 scripts/processing/drift_to_csv.py && python3 scripts/processing/plot.py --source=drift",
     "clean-lang-contributions": "rm -f data/lang_contributions.json data/lang_accumulated.csv",
     "clean-release-metrics": "rm -f data/release_metrics.json data/release_metrics_accumulated.csv",
     "clean-merged-prs": "rm -f data/merged_prs.json data/merged_prs_accumulated.csv",
     "clean-coverage": "rm -f data/coverage_snapshot.json data/coverage_snapshot.csv",
     "clean-pr-flow": "rm -f data/pr_flow.json data/pr_flow_time_to_merge.csv data/pr_flow_backlog.csv data/pr_flow_contributors.csv data/pr_flow_contributors_year.csv",
+    "clean-drift": "rm -f data/drift.json data/drift.csv",
     "setup-check": "bash scripts/check_setup.sh",
     "test": "node --test \"tests/js/**/*.test.js\"",
     "lint": "biome ci ."
